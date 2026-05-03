@@ -1,12 +1,8 @@
-﻿using MTGCreateYourOwnCreature.Model;
-using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+
+using MTGCreateYourOwnCreature.Model;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 {
@@ -15,10 +11,13 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static Dictionary<string, Action<MTGCreatureCard, string, List<MTGCreatureCard>>> ms_ParseActions = new Dictionary<string, Action<MTGCreatureCard, string, List<MTGCreatureCard>>>()
         {
             { "card", CardName },
+            { "inherits", CardInherits },
             { "category", CardCategory },
             { "mana", CardMana },
+            { "stats", CardStats },
+            { "traits", CardTraits },
+            { "text", CardText },
         };
-
 
         public static List<MTGCreatureCard> Parse(string filePath)
         {
@@ -34,7 +33,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 
             return cards;
         }
-
 
         protected static MTGCreatureCard CreateMTGCreatureCard(string cardEntry, List<MTGCreatureCard> cards)
         {
@@ -73,6 +71,21 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             card.Name = data;
         }
 
+
+        protected static void CardInherits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
+        {
+            foreach (MTGCreatureCard creatureCard in cards)
+            {
+                if (creatureCard.Name == data)
+                {
+                    card.ParentCreatureCard = creatureCard;
+                    return;
+                }
+            }
+
+            Debug.WriteLine($"Creature {card.Name} inherits from {data} but can't find base creature card.");
+        }
+
         protected static void CardCategory(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             card.Category = data;
@@ -80,23 +93,46 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 
         protected static void CardMana(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
-            Dictionary<string, int> manaColors = new Dictionary<string, int>();
+            Dictionary<string, string> manaColors = GetBlockInformation(data);
+            card.Mana = new MTGCreatureCard.MTGCreatureMana(manaColors.GetInt("colorless"), manaColors.GetInt("white"),
+                manaColors.GetInt("blue"), manaColors.GetInt("black"), manaColors.GetInt("red"), manaColors.GetInt("green"));
+        }
 
-            string[] dataManaColors = data.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        protected static void CardStats(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
+        {
+            Dictionary<string, string> stats = GetBlockInformation(data);
+            card.Stats = new MTGCreatureCard.MTGCreatureStats(stats.GetInt("power"), stats.GetInt("toughness"));
+        }
 
-            foreach (string manaColor in dataManaColors)
+        protected static void CardTraits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
+        {
+            Dictionary<string, string> traits = GetBlockInformation(data);
+            card.Traits = new MTGCreatureCard.MTGCreatureTraits(traits.GetStringArray("tags"), traits.GetStringArray("keywords"));
+        }
+
+        protected static void CardText(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
+        {
+            Dictionary<string, string> texts = GetBlockInformation(data);
+            card.Description = texts.GetString("description");
+            card.Lore = texts.GetString("lore");
+        }
+
+        protected static Dictionary<string, string> GetBlockInformation(string data)
+        {
+            Dictionary<string, string> blockInformation = new Dictionary<string, string>();
+
+            string[] blockData = data.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string block in blockData)
             {
-                string[] manaColorAndQuantity = manaColor.Trim().Split(':', 2);
-                if (manaColorAndQuantity.Length == 2)
+                string[] keyAndValue = block.Trim().Split(':', 2);
+                if (keyAndValue.Length == 2)
                 {
-                    manaColors[manaColorAndQuantity[0].Trim()] = int.Parse(manaColorAndQuantity[1].Trim());
+                    blockInformation[keyAndValue[0].Trim()] = keyAndValue[1].Trim();
                 }
             }
 
-            int GetMana(string manaColor) => manaColors.TryGetValue(key: manaColor, out int value) ? value : 0;
-
-            card.Mana = new MTGCreatureCard.MTGCreatureMana(GetMana("colorless"), GetMana("white"), GetMana("blue"),
-                GetMana("black"), GetMana("red"), GetMana("green"));
+            return blockInformation;
         }
     }
 }

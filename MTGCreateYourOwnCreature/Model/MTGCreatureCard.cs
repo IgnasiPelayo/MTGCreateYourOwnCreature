@@ -60,10 +60,10 @@ namespace MTGCreateYourOwnCreature.Model
 
             public List<string> Keywords { get; set; }
 
-            public MTGCreatureTraits(List<string> tags, List<string> keywords)
+            public MTGCreatureTraits(string[] tags, string[] keywords)
             {
-                Tags = tags;
-                Keywords = keywords;
+                Tags = tags.ToList();
+                Keywords = keywords.ToList();
             }
         }
 
@@ -81,7 +81,7 @@ namespace MTGCreateYourOwnCreature.Model
             Category = string.Empty;
             Mana = new MTGCreatureMana(colorless: 0, white: 0, blue: 0, black: 0, red: 0, green: 0);
             Stats = new MTGCreatureStats(power: 0, toughness: 0);
-            Traits = new MTGCreatureTraits(new List<string>(), new List<string>());
+            Traits = new MTGCreatureTraits([], []);
             Description = string.Empty;
             Lore = string.Empty;
         }

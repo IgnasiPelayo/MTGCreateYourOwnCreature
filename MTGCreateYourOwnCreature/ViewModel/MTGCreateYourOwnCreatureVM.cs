@@ -1,14 +1,9 @@
-﻿using MTGCreateYourOwnCreature.Model;
+﻿using System.ComponentModel;
+using System.Collections.ObjectModel;
+
+using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 using MTGCreateYourOwnCreature.ViewModel.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
