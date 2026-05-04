@@ -12,27 +12,33 @@ namespace MTGCreateYourOwnCreature.Model
 
         public class MTGCreatureMana
         {
-            public int Colorless { get; set; }
+            public enum ManaType
+            {
+                Colorless,
+                White,
+                Blue,
+                Black,
+                Red,
+                Green
+            }
 
-            public int White { get; set; }
-
-            public int Blue { get; set; }
-
-            public int Black { get; set; }
-
-            public int Red { get; set; }
-
-            public int Green { get; set; }
-
+            public Dictionary<ManaType, int> Manas { get; set; }
 
             public MTGCreatureMana(int colorless, int white, int blue, int black, int red, int green)
             {
-                Colorless = colorless;
-                White = white;
-                Blue = blue;
-                Black = black;
-                Red = red;
-                Green = green;
+                Manas = new Dictionary<ManaType, int>();
+
+                Manas.Add(ManaType.Colorless, colorless);
+                Manas.Add(ManaType.White, white);
+                Manas.Add(ManaType.Blue, blue);
+                Manas.Add(ManaType.Black, black);
+                Manas.Add(ManaType.Red, red);
+                Manas.Add(ManaType.Green, green);
+            }
+
+            public int GetManaValue(ManaType type)
+            {
+                return Manas.GetValueOrDefault(type);
             }
         }
 
