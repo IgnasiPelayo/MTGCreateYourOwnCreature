@@ -20,13 +20,13 @@ namespace MTGCreateYourOwnCreature.View.Controls
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
             nameof(Value), typeof(String), typeof(ManaSymbolControl), new PropertyMetadata(null));
 
-        public Brush Fill
+        public Brush Brush
         {
-            get => (Brush)GetValue(FillProperty);
-            set => SetValue(FillProperty, value);
+            get => (Brush)GetValue(BrushProperty);
+            set => SetValue(BrushProperty, value);
         }
 
-        public static readonly DependencyProperty FillProperty = DependencyProperty.Register(
-            nameof(Fill), typeof(Brush), typeof(ManaSymbolControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty BrushProperty = DependencyProperty.Register(
+            nameof(Brush), typeof(Brush), typeof(ManaSymbolControl), new PropertyMetadata(null));
     }
 }

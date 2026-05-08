@@ -8,4 +8,20 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\ManaTextures\black.png" />
+    <None Remove="Resources\ManaTextures\blue.png" />
+    <None Remove="Resources\ManaTextures\green.png" />
+    <None Remove="Resources\ManaTextures\red.png" />
+    <None Remove="Resources\ManaTextures\white.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\ManaTextures\black.png" />
+    <Resource Include="Resources\ManaTextures\blue.png" />
+    <Resource Include="Resources\ManaTextures\green.png" />
+    <Resource Include="Resources\ManaTextures\red.png" />
+    <Resource Include="Resources\ManaTextures\white.png" />
+  </ItemGroup>
+
 </Project>

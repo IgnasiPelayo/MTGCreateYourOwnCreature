@@ -4,6 +4,17 @@
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature"
              StartupUri="View/MTGCreatureEditor.xaml">
     <Application.Resources>
-         
+
+        <ImageBrush x:Key="WhiteManaBrush"
+                    ImageSource="Resources/ManaTextures/white.png"/>
+        <ImageBrush x:Key="BlueManaBrush"
+                    ImageSource="Resources/ManaTextures/blue.png"/>
+        <ImageBrush x:Key="BlackManaBrush"
+                    ImageSource="Resources/ManaTextures/black.png"/>
+        <ImageBrush x:Key="RedManaBrush"
+                    ImageSource="Resources/ManaTextures/red.png"/>
+        <ImageBrush x:Key="GreenManaBrush"
+                    ImageSource="Resources/ManaTextures/green.png"/>
+
     </Application.Resources>
 </Application>

@@ -15,7 +15,7 @@
              StretchDirection="DownOnly"
              HorizontalAlignment="Right">
 
-        <ItemsControl ItemsSource="{Binding Mana.Manas, Converter={StaticResource ManaConverter}}">
+        <ItemsControl ItemsSource="{Binding TotalMana, Converter={StaticResource ManaConverter}}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"/>
@@ -24,8 +24,9 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:ManaSymbolControl Fill="{Binding Fill}"
-                                             Value="{Binding Value}"/>
+                    <local:ManaSymbolControl Brush="{Binding Brush}"
+                                             Value="{Binding Value}"
+                                             Padding="2,0,2,0"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 

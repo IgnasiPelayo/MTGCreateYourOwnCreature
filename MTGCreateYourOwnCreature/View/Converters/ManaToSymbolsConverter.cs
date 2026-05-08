@@ -3,23 +3,24 @@ using System.Globalization;
 using System.Windows.Media;
 
 using MTGCreateYourOwnCreature.Model;
+using MTGCreateYourOwnCreature.Model.Mana;
 
 namespace MTGCreateYourOwnCreature.View.Converters
 {
     public class ManaToSymbolsConverter : IValueConverter
     {
-        static Dictionary<MTGCreatureCard.MTGCreatureMana.ManaType, Brush> ms_ManaBruses = new Dictionary<MTGCreatureCard.MTGCreatureMana.ManaType, Brush>()
+        static Dictionary<ManaType, Brush?> ms_ManaBruses = new Dictionary<ManaType, Brush?>()
         {
-            { MTGCreatureCard.MTGCreatureMana.ManaType.White, Brushes.White },
-            { MTGCreatureCard.MTGCreatureMana.ManaType.Blue, Brushes.Blue },
-            { MTGCreatureCard.MTGCreatureMana.ManaType.Black, Brushes.Black },
-            { MTGCreatureCard.MTGCreatureMana.ManaType.Red, Brushes.Red },
-            { MTGCreatureCard.MTGCreatureMana.ManaType.Green, Brushes.Green },
+            { ManaType.White, App.Current.Resources["WhiteManaBrush"] as Brush },
+            { ManaType.Blue, App.Current.Resources["BlueManaBrush"] as Brush },
+            { ManaType.Black, App.Current.Resources["BlackManaBrush"] as Brush },
+            { ManaType.Red, App.Current.Resources["RedManaBrush"] as Brush },
+            { ManaType.Green, App.Current.Resources["GreenManaBrush"] as Brush },
         };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Dictionary<MTGCreatureCard.MTGCreatureMana.ManaType, int>? manas = value as Dictionary<MTGCreatureCard.MTGCreatureMana.ManaType, int>;
+            Dictionary<ManaType, int>? manas = value as Dictionary<ManaType, int>;
             if (manas == null)
             {
                 return null;
@@ -27,20 +28,23 @@ namespace MTGCreateYourOwnCreature.View.Converters
 
             List<MTGManaSymbol> symbols = new List<MTGManaSymbol>();
 
-            foreach (KeyValuePair<MTGCreatureCard.MTGCreatureMana.ManaType, int> pair in manas)
+            foreach (KeyValuePair<ManaType, int> pair in manas)
             {
                 if (pair.Value <= 0)
                 {
                     continue;
                 }
 
-                if (pair.Key == MTGCreatureCard.MTGCreatureMana.ManaType.Colorless)
+                if (pair.Key == ManaType.Colorless)
                 {
                     symbols.Add(new MTGManaSymbol(pair.Value.ToString(), Brushes.LightGray));
                 }
                 else
                 {
-                    symbols.Add(new MTGManaSymbol("", ms_ManaBruses[pair.Key]));
+                    for (int i = 0; i < pair.Value; ++i)
+                    {
+                        symbols.Add(new MTGManaSymbol("", ms_ManaBruses[pair.Key]));
+                    }
                 }
             }
 

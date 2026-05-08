@@ -6,12 +6,12 @@ namespace MTGCreateYourOwnCreature.Model
     {
         public String Value { get; set; }
 
-        public Brush Fill { get; set; }
+        public Brush? Brush { get; set; }
 
-        public MTGManaSymbol(String value, Brush fill) 
+        public MTGManaSymbol(String value, Brush? brush) 
         {
             Value = value;
-            Fill = fill;
+            Brush = brush;
         }
     }
 }

@@ -7,19 +7,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
-    <Grid Width="24" Height="24">
+    <Grid Width="24"
+          Height="24">
 
         <Ellipse Margin="0,1,1,-1"
                  Fill="#FF000000"/>
         
-        <Ellipse Fill="{Binding Fill}"/>
+        <Ellipse Fill="{Binding Brush}"/>
 
-        <TextBlock Text="{Binding Value}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Foreground="Black"
-                   FontSize="12"
-                   FontWeight="Bold"/>
+        <Viewbox Stretch="Uniform"
+                 StretchDirection="Both"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Center">
+
+            <TextBlock Text="{Binding Value}"
+                       Foreground="Black"
+                       FontSize="20"
+                       FontWeight="Bold"/>
+        </Viewbox>
 
     </Grid>
 </UserControl>

@@ -15,15 +15,15 @@ using System.Windows.Shapes;
 
 namespace MTGCreateYourOwnCreature.View.Controls
 {
-    public partial class CardHeaderControl : UserControl
+    public partial class CardListItemControl : UserControl
     {
-        public CardHeaderControl()
+        public CardListItemControl()
         {
             InitializeComponent();
         }
 
         public static readonly DependencyProperty IsNameReadOnlyProperty = DependencyProperty.Register(
-            nameof(IsNameReadOnly), typeof(bool), typeof(CardHeaderControl), new PropertyMetadata(true));
+            nameof(IsNameReadOnly), typeof(bool), typeof(CardListItemControl), new PropertyMetadata(true));
 
         public bool IsNameReadOnly
         {

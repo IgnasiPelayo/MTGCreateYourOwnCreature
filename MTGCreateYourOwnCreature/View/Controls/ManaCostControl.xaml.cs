@@ -1,4 +1,5 @@
 ﻿using MTGCreateYourOwnCreature.Model;
+using MTGCreateYourOwnCreature.Model.Mana;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,13 @@ namespace MTGCreateYourOwnCreature.View.Controls
             InitializeComponent();
         }
 
-        public MTGCreatureCard.MTGCreatureMana Mana
+        public Dictionary<ManaType, int> Mana
         {
-            get => (MTGCreatureCard.MTGCreatureMana)GetValue(ManaProperty);
+            get => (Dictionary<ManaType, int>)GetValue(ManaProperty);
             set => SetValue(ManaProperty, value);
         }
 
         public static readonly DependencyProperty ManaProperty = DependencyProperty.Register(
-            nameof(Mana), typeof(MTGCreatureCard.MTGCreatureMana), typeof(ManaCostControl), new PropertyMetadata(null));
+            nameof(Mana), typeof(Dictionary<ManaType, int>), typeof(ManaCostControl), new PropertyMetadata(null));
     }
 }

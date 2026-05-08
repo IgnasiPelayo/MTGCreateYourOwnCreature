@@ -93,8 +93,15 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static void CardMana(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> manaColors = GetBlockInformation(data);
-            card.Mana = new MTGCreatureCard.MTGCreatureMana(manaColors.GetInt("colorless"), manaColors.GetInt("white"),
-                manaColors.GetInt("blue"), manaColors.GetInt("black"), manaColors.GetInt("red"), manaColors.GetInt("green"));
+
+            card.Mana = new Dictionary<Model.Mana.ManaType, int>();
+
+            card.Mana[Model.Mana.ManaType.Colorless] = manaColors.GetInt("colorless");
+            card.Mana[Model.Mana.ManaType.White] = manaColors.GetInt("white");
+            card.Mana[Model.Mana.ManaType.Blue] = manaColors.GetInt("blue");
+            card.Mana[Model.Mana.ManaType.Black] = manaColors.GetInt("black");
+            card.Mana[Model.Mana.ManaType.Red] = manaColors.GetInt("red");
+            card.Mana[Model.Mana.ManaType.Green] = manaColors.GetInt("green");
         }
 
         protected static void CardStats(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)

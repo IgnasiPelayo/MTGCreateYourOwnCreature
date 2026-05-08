@@ -1,4 +1,7 @@
 ﻿
+using MTGCreateYourOwnCreature.Model.Mana;
+using System.Windows.Controls;
+
 namespace MTGCreateYourOwnCreature.Model
 {
     public class MTGCreatureCard
@@ -9,40 +12,9 @@ namespace MTGCreateYourOwnCreature.Model
 
         public string Category { get; set; }
 
+        public Dictionary<ManaType, int> Mana { get; set; }
 
-        public class MTGCreatureMana
-        {
-            public enum ManaType
-            {
-                Colorless,
-                White,
-                Blue,
-                Black,
-                Red,
-                Green
-            }
-
-            public Dictionary<ManaType, int> Manas { get; set; }
-
-            public MTGCreatureMana(int colorless, int white, int blue, int black, int red, int green)
-            {
-                Manas = new Dictionary<ManaType, int>();
-
-                Manas.Add(ManaType.Colorless, colorless);
-                Manas.Add(ManaType.White, white);
-                Manas.Add(ManaType.Blue, blue);
-                Manas.Add(ManaType.Black, black);
-                Manas.Add(ManaType.Red, red);
-                Manas.Add(ManaType.Green, green);
-            }
-
-            public int GetManaValue(ManaType type)
-            {
-                return Manas.GetValueOrDefault(type);
-            }
-        }
-
-        public MTGCreatureMana Mana { get; set; }
+        public Dictionary<ManaType, int> TotalMana { get => GetTotalMana(); }
 
 
         public class MTGCreatureStats
@@ -85,11 +57,28 @@ namespace MTGCreateYourOwnCreature.Model
             Name = string.Empty;
             ParentCreatureCard = null;
             Category = string.Empty;
-            Mana = new MTGCreatureMana(colorless: 0, white: 0, blue: 0, black: 0, red: 0, green: 0);
+            Mana = new Dictionary<ManaType, int>();
             Stats = new MTGCreatureStats(power: 0, toughness: 0);
             Traits = new MTGCreatureTraits([], []);
             Description = string.Empty;
             Lore = string.Empty;
+        }
+
+
+        protected Dictionary<ManaType, int> GetTotalMana()
+        {
+            Dictionary<ManaType, int> mana = new Dictionary<ManaType, int>(Mana);
+
+            if (ParentCreatureCard != null)
+            {
+                Dictionary<ManaType, int> parentMana = ParentCreatureCard.TotalMana;
+                foreach (KeyValuePair<ManaType, int> manaPair in parentMana)
+                {
+                    mana[manaPair.Key] += manaPair.Value;
+                }
+            }
+
+            return mana;
         }
     }
 }
