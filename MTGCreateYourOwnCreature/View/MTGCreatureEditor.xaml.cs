@@ -15,12 +15,9 @@ using System.Windows.Shapes;
 
 namespace MTGCreateYourOwnCreature.View
 {
-    /// <summary>
-    /// Lógica de interacción para MTGCreateYourOwnCreature.xaml
-    /// </summary>
-    public partial class MTGCreateYourOwnCreature : Window
+    public partial class MTGCreatureEditor : Window
     {
-        public MTGCreateYourOwnCreature()
+        public MTGCreatureEditor()
         {
             InitializeComponent();
         }

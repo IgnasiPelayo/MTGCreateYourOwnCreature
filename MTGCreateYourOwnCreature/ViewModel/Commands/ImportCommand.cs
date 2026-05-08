@@ -10,11 +10,11 @@ namespace MTGCreateYourOwnCreature.ViewModel.Commands
 {
     internal class ImportCommand : ICommand
     {
-        public MTGCreateYourOwnCreatureVM VM { get; set; }
+        public MTGCreatureEditorVM VM { get; set; }
 
         public event EventHandler? CanExecuteChanged;
 
-        public ImportCommand(MTGCreateYourOwnCreatureVM vm)
+        public ImportCommand(MTGCreatureEditorVM vm)
         {
             VM = vm;
         }

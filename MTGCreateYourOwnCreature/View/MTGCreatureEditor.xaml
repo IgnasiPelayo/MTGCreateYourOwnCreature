@@ -1,0 +1,75 @@
+﻿<Window x:Class="MTGCreateYourOwnCreature.View.MTGCreatureEditor"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View"
+      xmlns:controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls"
+      xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
+      mc:Ignorable="d"
+      Title="Magic the Gathering: Create your own Creature" Height="450" Width="800">
+
+    <Window.Resources>
+        <vm:MTGCreatureEditorVM x:Key="vm"/>
+    </Window.Resources>
+
+    <Grid DataContext="{StaticResource vm}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Import"
+                  Command="{Binding ImportCommand}"/>
+                <MenuItem Header="Export"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    BorderBrush="#DDD"
+                    BorderThickness="0,0,1,0"
+                    Padding="4">
+
+                <ScrollViewer Grid.Column="0"
+                              VerticalScrollBarVisibility="Auto"
+                              Padding="4">
+                    
+                    <ItemsControl ItemsSource="{Binding Cards}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:CardHeaderControl IsNameReadOnly="True"
+                                                            Margin="0,0,0,4"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Column="1"
+                    BorderBrush="#DDD"
+                    BorderThickness="0,0,1,0"
+                    Padding="4">
+                
+                <TextBlock Text="Current Card Information"/>
+            </Border>
+            
+            <Border Grid.Column="2"
+                    BorderBrush="#DDD"
+                    BorderThickness="0,0,1,0"
+                    Padding="4">
+                
+                <TextBlock Text="Current Card Preview"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

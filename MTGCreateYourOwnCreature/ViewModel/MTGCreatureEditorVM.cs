@@ -7,15 +7,18 @@ using MTGCreateYourOwnCreature.ViewModel.Helpers;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
-    internal class MTGCreateYourOwnCreatureVM : INotifyPropertyChanged
+    internal class MTGCreatureEditorVM : INotifyPropertyChanged
     {
         public ObservableCollection<MTGCreatureCard> Cards { get; set; }
+
+        public MTGCreatureCard? CurrentCard { get; set; }
+
 
         public ImportCommand ImportCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public MTGCreateYourOwnCreatureVM()
+        public MTGCreatureEditorVM()
         {
             Cards = new ObservableCollection<MTGCreatureCard>();
 

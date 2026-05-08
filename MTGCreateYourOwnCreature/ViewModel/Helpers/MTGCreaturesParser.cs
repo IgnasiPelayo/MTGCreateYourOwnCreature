@@ -71,7 +71,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             card.Name = data;
         }
 
-
         protected static void CardInherits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             foreach (MTGCreatureCard creatureCard in cards)

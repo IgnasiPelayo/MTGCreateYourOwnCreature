@@ -7,12 +7,30 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="View\MTGCreateYourOwnCreature.xaml.cs">
+    <Compile Update="View\Controls\CardHeaderControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Controls\ManaCostControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Controls\ManaSymbolControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\MTGCreatureEditor.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="View\MTGCreateYourOwnCreature.xaml">
+    <Page Update="View\Controls\CardHeaderControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\ManaCostControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\ManaSymbolControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\MTGCreatureEditor.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
