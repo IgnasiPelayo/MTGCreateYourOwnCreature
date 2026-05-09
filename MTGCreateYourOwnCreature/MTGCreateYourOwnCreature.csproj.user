@@ -7,13 +7,16 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="View\Controls\CardInspectorControl.xaml.cs">
+    <Compile Update="View\Controls\Inspector\CardInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Controls\CardListItemControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\CardNameInspectorControl.xaml.cs">
+    <Compile Update="View\Controls\Inspector\CardNameInspectorControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Controls\Inspector\CardParentInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Controls\Mana\ManaCostControl.xaml.cs">
@@ -27,13 +30,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="View\Controls\CardInspectorControl.xaml">
+    <Page Update="Resources\Styles\Brushes.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\Inspector\CardInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\CardListItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\CardNameInspectorControl.xaml">
+    <Page Update="View\Controls\Inspector\CardNameInspectorControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\Inspector\CardParentInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Mana\ManaCostControl.xaml">

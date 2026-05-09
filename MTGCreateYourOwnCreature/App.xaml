@@ -3,18 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature"
              StartupUri="View/MTGCreatureEditor.xaml">
+
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
 
-        <ImageBrush x:Key="WhiteManaBrush"
-                    ImageSource="Resources/ManaTextures/white.png"/>
-        <ImageBrush x:Key="BlueManaBrush"
-                    ImageSource="Resources/ManaTextures/blue.png"/>
-        <ImageBrush x:Key="BlackManaBrush"
-                    ImageSource="Resources/ManaTextures/black.png"/>
-        <ImageBrush x:Key="RedManaBrush"
-                    ImageSource="Resources/ManaTextures/red.png"/>
-        <ImageBrush x:Key="GreenManaBrush"
-                    ImageSource="Resources/ManaTextures/green.png"/>
+                <ResourceDictionary Source="Resources/Styles/Brushes.xaml"/>
 
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
+
 </Application>

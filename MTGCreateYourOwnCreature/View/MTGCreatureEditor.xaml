@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View"
       xmlns:controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls"
+      xmlns:inspector="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
       xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
       mc:Ignorable="d"
       Title="Magic the Gathering: Create your own Creature" Height="450" Width="800">
@@ -81,7 +82,7 @@
                     BorderThickness="0,0,1,0"
                     Padding="4">
 
-                <controls:CardInspectorControl DataContext="{Binding CurrentCard}"/>
+                <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"/>
             </Border>
             
             <Border Grid.Column="2"

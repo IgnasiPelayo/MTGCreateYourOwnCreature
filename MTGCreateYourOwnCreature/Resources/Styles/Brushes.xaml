@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ImageBrush x:Key="WhiteManaBrush"
+                ImageSource="/Resources/ManaTextures/white.png"/>
+    <ImageBrush x:Key="BlueManaBrush"
+                ImageSource="/Resources/ManaTextures/blue.png"/>
+    <ImageBrush x:Key="BlackManaBrush"
+                ImageSource="/Resources/ManaTextures/black.png"/>
+    <ImageBrush x:Key="RedManaBrush"
+                ImageSource="/Resources/ManaTextures/red.png"/>
+    <ImageBrush x:Key="GreenManaBrush"
+                ImageSource="/Resources/ManaTextures/green.png"/>
+
+</ResourceDictionary>

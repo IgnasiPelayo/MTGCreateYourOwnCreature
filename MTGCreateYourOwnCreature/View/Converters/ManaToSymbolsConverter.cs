@@ -11,11 +11,11 @@ namespace MTGCreateYourOwnCreature.View.Converters
     {
         static Dictionary<ManaType, Brush?> ms_ManaBruses = new Dictionary<ManaType, Brush?>()
         {
-            { ManaType.White, App.Current.Resources["WhiteManaBrush"] as Brush },
-            { ManaType.Blue, App.Current.Resources["BlueManaBrush"] as Brush },
-            { ManaType.Black, App.Current.Resources["BlackManaBrush"] as Brush },
-            { ManaType.Red, App.Current.Resources["RedManaBrush"] as Brush },
-            { ManaType.Green, App.Current.Resources["GreenManaBrush"] as Brush },
+            { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
+            { ManaType.Blue, App.Current.TryFindResource("BlueManaBrush") as Brush },
+            { ManaType.Black, App.Current.TryFindResource("BlackManaBrush") as Brush },
+            { ManaType.Red, App.Current.TryFindResource("RedManaBrush") as Brush },
+            { ManaType.Green, App.Current.TryFindResource("GreenManaBrush") as Brush },
         };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

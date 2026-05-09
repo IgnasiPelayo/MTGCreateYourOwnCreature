@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MTGCreateYourOwnCreature.View.Controls
+namespace MTGCreateYourOwnCreature.View.Controls.Inspector
 {
     /// <summary>
     /// Lógica de interacción para CardInspectorControl.xaml
