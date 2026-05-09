@@ -11,8 +11,17 @@ namespace MTGCreateYourOwnCreature.ViewModel
     {
         public ObservableCollection<MTGCreatureCard> Cards { get; set; }
 
-        public MTGCreatureCard? CurrentCard { get; set; }
 
+        protected MTGCreatureCard? m_CurrentCard;
+        public MTGCreatureCard? CurrentCard
+        {
+            get => m_CurrentCard;
+            set
+            {
+                m_CurrentCard = value;
+                OnPropertyChanged(nameof(CurrentCard));
+            }
+        }
 
         public ImportCommand ImportCommand { get; set; }
 
@@ -24,6 +33,13 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             ImportCommand = new ImportCommand(this);
         }
+
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
 
         public void ImportFile(string filePath)
         {

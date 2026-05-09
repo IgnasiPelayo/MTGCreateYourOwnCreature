@@ -15,9 +15,12 @@ using System.Windows.Shapes;
 
 namespace MTGCreateYourOwnCreature.View.Controls
 {
-    public partial class CardListItemControl : UserControl
+    /// <summary>
+    /// Lógica de interacción para CardInspectorControl.xaml
+    /// </summary>
+    public partial class CardInspectorControl : UserControl
     {
-        public CardListItemControl()
+        public CardInspectorControl()
         {
             InitializeComponent();
         }

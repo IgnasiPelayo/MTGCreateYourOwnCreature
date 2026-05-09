@@ -7,6 +7,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\Controls\CardInspectorControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\CardListItemControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -21,6 +24,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="View\Controls\CardInspectorControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\Controls\CardListItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
