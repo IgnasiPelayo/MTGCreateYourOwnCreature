@@ -13,10 +13,13 @@
     <Compile Update="View\Controls\CardListItemControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\ManaCostControl.xaml.cs">
+    <Compile Update="View\Controls\CardNameInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\ManaSymbolControl.xaml.cs">
+    <Compile Update="View\Controls\Mana\ManaCostControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Controls\Mana\ManaSymbolControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\MTGCreatureEditor.xaml.cs">
@@ -30,10 +33,13 @@
     <Page Update="View\Controls\CardListItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\ManaCostControl.xaml">
+    <Page Update="View\Controls\CardNameInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\ManaSymbolControl.xaml">
+    <Page Update="View\Controls\Mana\ManaCostControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\Mana\ManaSymbolControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MTGCreatureEditor.xaml">
