@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Controls;
 
-namespace MTGCreateYourOwnCreature.View.Controls
+namespace MTGCreateYourOwnCreature.View.Controls.Mana
 {
     public partial class ManaSymbolControl : UserControl
     {

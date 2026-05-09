@@ -1,14 +1,9 @@
-﻿using MTGCreateYourOwnCreature.Model;
-using MTGCreateYourOwnCreature.Model.Mana;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace MTGCreateYourOwnCreature.View.Controls
+using MTGCreateYourOwnCreature.Model.Mana;
+
+namespace MTGCreateYourOwnCreature.View.Controls.Mana
 {
     public partial class ManaCostControl : UserControl
     {

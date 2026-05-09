@@ -4,25 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
+             xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <StackPanel Orientation="Horizontal">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Parent Card"
-                   FontWeight="SemiBold"
-                   Foreground="#999"
-                   FontSize="11"/>
+        <TextBlock Style="{StaticResource InspectorPropertyTitle}"
+                   Text="Parent Card"/>
 
-        <Button Margin="10,0,0,0"
-                Width="Auto">
+        <Button Grid.Column="1"
+                Style="{StaticResource RoundedButton}"
+                Margin="10,-5,0,0"
+                HorizontalContentAlignment="Stretch">
 
-            <TextBlock Text="{Binding ParentCreatureCard.Name, TargetNullValue=None}"
-                       HorizontalAlignment="Center"/>
+            <TextBlock TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                
+                <Run Text="{Binding ParentCreatureCardDisplayName, Mode=OneWay}"/>
+                
+                <Run Text=" "/>
 
+                <InlineUIContainer BaselineAlignment="Center">
+                    <mana:ManaCostControl DataContext="{Binding ParentCreatureCard}"
+                                          Height="15"/>
+                </InlineUIContainer>
+
+            </TextBlock>
+            
         </Button>
-        
-        
-    </StackPanel>
+
+    </Grid>
 
 </UserControl>

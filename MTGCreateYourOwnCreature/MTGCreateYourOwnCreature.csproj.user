@@ -33,6 +33,9 @@
     <Page Update="Resources\Styles\Brushes.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Resources\Styles\Styles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\Controls\Inspector\CardInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>

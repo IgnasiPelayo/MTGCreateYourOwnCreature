@@ -10,6 +10,8 @@ namespace MTGCreateYourOwnCreature.Model
 
         public MTGCreatureCard? ParentCreatureCard { get; set; }
 
+        public string ParentCreatureCardDisplayName => ParentCreatureCard?.Name ?? "Base Creature";
+
         public string Category { get; set; }
 
         public Dictionary<ManaType, int> Mana { get; set; }
