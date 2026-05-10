@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
 
     <Style x:Key="RoundedBorder" TargetType="Border">
@@ -10,22 +11,12 @@
 
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, ElementName=root}" Value="True">
-                <Setter Property="Background" Value="#FFF1F1F1"/>
+                <Setter Property="Background" Value="{StaticResource ControlBackgroundHoverBrush}"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
 
-    <Style x:Key="ListBoxItemRoundedBorder" BasedOn="{StaticResource RoundedBorder}" TargetType="Border">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
-                <Setter Property="Background" Value="#FFF1F1F1"/>
-                <Setter Property="BorderBrush" Value="#FF8A8A8A"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
-    
     <Style x:Key="InspectorPropertyTitle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="#999"/>
         <Setter Property="FontSize" Value="11"/>
@@ -72,7 +63,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#FFF1F1F1"/>
+                            <Setter Property="Background" Value="{StaticResource ControlBackgroundHoverBrush}"/>
                         </Trigger>
 
                         <Trigger Property="IsPressed" Value="True">
@@ -82,9 +73,9 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.6"/>
                         </Trigger>
-                        
+
                     </ControlTemplate.Triggers>
-                    
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

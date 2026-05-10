@@ -4,11 +4,14 @@
 
     <Color x:Key="ControlBackgroundColor">#FFF8F8F8</Color>
     <Color x:Key="BorderColor">#FFD8D8D8</Color>
-
+    <Color x:Key="ControlBackgroundHoverColor">#FFF1F1F1</Color>
+    
     <SolidColorBrush x:Key="ControlBackgroundBrush"
                      Color="{StaticResource ControlBackgroundColor}"/>
     <SolidColorBrush x:Key="BorderBrush"
                      Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="ControlBackgroundHoverBrush"
+                     Color="{StaticResource ControlBackgroundHoverColor}"/>
 
     <ImageBrush x:Key="WhiteManaBrush"
                 ImageSource="/Resources/ManaTextures/white.png"/>
