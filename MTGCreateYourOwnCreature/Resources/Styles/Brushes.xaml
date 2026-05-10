@@ -2,26 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-    <Color x:Key="ControlBackgroundColor">#FFF8F8F8</Color>
-    <Color x:Key="BorderColor">#FFD8D8D8</Color>
-    <Color x:Key="ControlBackgroundHoverColor">#FFF1F1F1</Color>
-    
-    <SolidColorBrush x:Key="ControlBackgroundBrush"
-                     Color="{StaticResource ControlBackgroundColor}"/>
-    <SolidColorBrush x:Key="BorderBrush"
-                     Color="{StaticResource BorderColor}"/>
-    <SolidColorBrush x:Key="ControlBackgroundHoverBrush"
-                     Color="{StaticResource ControlBackgroundHoverColor}"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#FFD8D8D8"/>
+    <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFF8F8F8"/>
+    <SolidColorBrush x:Key="ControlBackgroundHoverBrush" Color="#FFF1F1F1"/>
+    <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="#FFE8E8E8"/>
 
-    <ImageBrush x:Key="WhiteManaBrush"
-                ImageSource="/Resources/ManaTextures/white.png"/>
-    <ImageBrush x:Key="BlueManaBrush"
-                ImageSource="/Resources/ManaTextures/blue.png"/>
-    <ImageBrush x:Key="BlackManaBrush"
-                ImageSource="/Resources/ManaTextures/black.png"/>
-    <ImageBrush x:Key="RedManaBrush"
-                ImageSource="/Resources/ManaTextures/red.png"/>
-    <ImageBrush x:Key="GreenManaBrush"
-                ImageSource="/Resources/ManaTextures/green.png"/>
+    <ImageBrush x:Key="WhiteManaBrush" ImageSource="/Resources/ManaTextures/white.png"/>
+    <ImageBrush x:Key="BlueManaBrush" ImageSource="/Resources/ManaTextures/blue.png"/>
+    <ImageBrush x:Key="BlackManaBrush" ImageSource="/Resources/ManaTextures/black.png"/>
+    <ImageBrush x:Key="RedManaBrush" ImageSource="/Resources/ManaTextures/red.png"/>
+    <ImageBrush x:Key="GreenManaBrush" ImageSource="/Resources/ManaTextures/green.png"/>
 
 </ResourceDictionary>

@@ -15,8 +15,8 @@
         <TextBlock Style="{StaticResource InspectorPropertyTitle}"
                Text="Category"/>
 
-        <ComboBox Grid.Column="1"
-                  Margin="20,-5,0,0">
+        <ComboBox Style="{DynamicResource RoundedComboBox}" Grid.Column="1"
+                  Margin="22,-5,0,0">
             <ComboBoxItem IsSelected="True">Creature</ComboBoxItem>
             <ComboBoxItem>Legendary Creature</ComboBoxItem>
             <ComboBoxItem>Artifact Creature</ComboBoxItem>
