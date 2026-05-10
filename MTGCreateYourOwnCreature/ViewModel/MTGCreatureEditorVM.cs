@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 using MTGCreateYourOwnCreature.ViewModel.Helpers;
-using MTGCreateYourOwnCreature.Model.Category;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
@@ -50,6 +49,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
             for (int i = 0; i < cards.Count; ++i)
             {
                 Cards.Add(cards[i]);
+            }
+
+            if (cards.Count > 0)
+            {
+                CurrentCard = Cards[0];
             }
         }
     }

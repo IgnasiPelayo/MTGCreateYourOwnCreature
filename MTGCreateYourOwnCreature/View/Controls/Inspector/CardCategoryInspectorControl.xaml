@@ -24,7 +24,7 @@
         <ComboBox Grid.Column="1"
                   Style="{DynamicResource RoundedComboBox}"
                   ItemsSource="{Binding AvailableCategories}"
-                  SelectedItem="{Binding Category, Mode=TwoWay}"
+                  SelectedItem="{Binding ResolvedCategory}"
                   Margin="22,-5,0,0"
                   MinHeight="24">
 

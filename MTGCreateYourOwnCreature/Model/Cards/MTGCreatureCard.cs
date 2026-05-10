@@ -15,7 +15,44 @@ namespace MTGCreateYourOwnCreature.Model
 
         public CategoryType Category { get; set; }
 
-        public Array AvailableCategories => Enum.GetValues<CategoryType>();
+        public CategoryType ResolvedCategory
+        {
+            get
+            {
+                if (Category != CategoryType.None)
+                {
+                    return Category;
+                }
+
+                if (ParentCreatureCard != null)
+                {
+                    return ParentCreatureCard.ResolvedCategory;
+                }
+
+                return CategoryType.None;
+            }
+
+            set => Category = value;
+        }
+
+        public Array AvailableCategories
+        {
+            get
+            {
+                CategoryType[] categories = Enum.GetValues<CategoryType>();
+                List<CategoryType> availableCategories = new List<CategoryType>();
+
+                foreach (CategoryType category in categories)
+                {
+                    if (category != CategoryType.None)
+                    {
+                        availableCategories.Add(category);
+                    }
+                }
+
+                return availableCategories.ToArray();
+            }
+        }
 
         public Dictionary<ManaType, int> Mana { get; set; }
 
@@ -61,7 +98,7 @@ namespace MTGCreateYourOwnCreature.Model
         {
             Name = string.Empty;
             ParentCreatureCard = null;
-            Category = CategoryType.Creature;
+            Category = CategoryType.None;
             Mana = new Dictionary<ManaType, int>();
             Stats = new MTGCreatureStats(power: 0, toughness: 0);
             Traits = new MTGCreatureTraits([], []);
