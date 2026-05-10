@@ -22,6 +22,9 @@
     <Compile Update="View\Controls\Inspector\CardParentInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Controls\Inspector\CardTabInspectorControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\Mana\ManaCostControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -52,6 +55,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Inspector\CardParentInspectorControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\Inspector\CardTabInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Mana\ManaCostControl.xaml">

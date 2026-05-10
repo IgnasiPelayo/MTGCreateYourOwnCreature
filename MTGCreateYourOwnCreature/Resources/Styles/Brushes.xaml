@@ -12,5 +12,5 @@
     <ImageBrush x:Key="BlackManaBrush" ImageSource="/Resources/ManaTextures/black.png"/>
     <ImageBrush x:Key="RedManaBrush" ImageSource="/Resources/ManaTextures/red.png"/>
     <ImageBrush x:Key="GreenManaBrush" ImageSource="/Resources/ManaTextures/green.png"/>
-
+    
 </ResourceDictionary>

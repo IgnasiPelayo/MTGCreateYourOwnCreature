@@ -5,6 +5,7 @@ namespace MTGCreateYourOwnCreature.Model.Category
 {
     public enum CategoryType
     {
+        None,
         Creature,
         [Display(Name = "Legendary Creature")]
         LegendaryCreature,
