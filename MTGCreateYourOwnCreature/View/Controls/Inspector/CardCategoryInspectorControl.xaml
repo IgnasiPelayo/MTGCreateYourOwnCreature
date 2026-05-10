@@ -4,8 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
+             xmlns:converters="clr-namespace:MTGCreateYourOwnCreature.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:EnumDisplayConverter x:Key="EnumConverter"/>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -15,15 +21,19 @@
         <TextBlock Style="{StaticResource InspectorPropertyTitle}"
                Text="Category"/>
 
-        <ComboBox Style="{DynamicResource RoundedComboBox}" Grid.Column="1"
-                  Margin="22,-5,0,0">
-            <ComboBoxItem IsSelected="True">Creature</ComboBoxItem>
-            <ComboBoxItem>Legendary Creature</ComboBoxItem>
-            <ComboBoxItem>Artifact Creature</ComboBoxItem>
-            <ComboBoxItem>Legendary Artifact Creature</ComboBoxItem>
-            <ComboBoxItem>Enchantment Creature</ComboBoxItem>
-            <ComboBoxItem>Legendary Enchantment Creature</ComboBoxItem>
+        <ComboBox Grid.Column="1"
+                  Style="{DynamicResource RoundedComboBox}"
+                  ItemsSource="{Binding AvailableCategories}"
+                  SelectedItem="{Binding Category, Mode=TwoWay}"
+                  Margin="22,-5,0,0"
+                  MinHeight="24">
+
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+            
         </ComboBox>
-        
     </Grid>
 </UserControl>

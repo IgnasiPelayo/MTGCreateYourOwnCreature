@@ -1,4 +1,5 @@
 ﻿
+using MTGCreateYourOwnCreature.Model.Category;
 using MTGCreateYourOwnCreature.Model.Mana;
 using System.Windows.Controls;
 
@@ -12,7 +13,9 @@ namespace MTGCreateYourOwnCreature.Model
 
         public string ParentCreatureCardDisplayName => ParentCreatureCard?.Name ?? "Base Creature";
 
-        public string Category { get; set; }
+        public CategoryType Category { get; set; }
+
+        public Array AvailableCategories => Enum.GetValues<CategoryType>();
 
         public Dictionary<ManaType, int> Mana { get; set; }
 
@@ -58,7 +61,7 @@ namespace MTGCreateYourOwnCreature.Model
         {
             Name = string.Empty;
             ParentCreatureCard = null;
-            Category = string.Empty;
+            Category = CategoryType.Creature;
             Mana = new Dictionary<ManaType, int>();
             Stats = new MTGCreatureStats(power: 0, toughness: 0);
             Traits = new MTGCreatureTraits([], []);

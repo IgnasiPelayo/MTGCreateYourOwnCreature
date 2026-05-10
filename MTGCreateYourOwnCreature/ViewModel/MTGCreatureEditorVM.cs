@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 using MTGCreateYourOwnCreature.ViewModel.Helpers;
+using MTGCreateYourOwnCreature.Model.Category;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {

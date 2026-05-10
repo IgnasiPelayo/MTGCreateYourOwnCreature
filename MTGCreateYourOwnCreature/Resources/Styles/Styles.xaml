@@ -107,7 +107,6 @@
                                 BorderThickness="1"
                                 HorizontalAlignment="Right"
                                 Margin="0"
-                                SnapsToDevicePixels="true"
                                 Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
 
                             <TextBlock Text="▾"
@@ -133,8 +132,7 @@
 
     
     <ControlTemplate x:Key="ComboBoxTemplate" TargetType="ComboBox">
-        <Grid x:Name="templateRoot"
-              SnapsToDevicePixels="true">
+        <Grid x:Name="templateRoot">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -157,10 +155,9 @@
                     <ScrollViewer x:Name="DropDownScrollViewer">
                         <Grid x:Name="grid"
                                 RenderOptions.ClearTypeHint="Enabled">
-                                
+
                             <ItemsPresenter x:Name="ItemsPresenter"
-                                            KeyboardNavigation.DirectionalNavigation="Contained"
-                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
                         </Grid>
                     </ScrollViewer>
                 </Border>
@@ -182,7 +179,6 @@
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               IsHitTestVisible="false"
                               Margin="{TemplateBinding Padding}"
-                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                               VerticalAlignment="Center"/>
         </Grid>
         
@@ -237,11 +233,7 @@
         <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="Padding" Value="6,3,5,3"/>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         
         <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
         <Setter Property="ItemContainerStyle" Value="{StaticResource RoundedComboBoxItem}"/>

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 using MTGCreateYourOwnCreature.Model;
+using MTGCreateYourOwnCreature.Model.Category;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 {
@@ -87,7 +88,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 
         protected static void CardCategory(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
-            card.Category = data;
+            card.Category = Enum.Parse<CategoryType>(data.Replace(" ", ""), ignoreCase: true);
         }
 
         protected static void CardMana(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
