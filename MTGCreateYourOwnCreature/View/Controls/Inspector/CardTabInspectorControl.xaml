@@ -23,7 +23,8 @@
             <TabItem Style="{DynamicResource RoundedTabItem}"
                  Tag="TopLeft"
                  Header="Stats">
-                <TextBlock Text="Stats content"/>
+
+                <local:CardManaCostInspectorControl/>
             </TabItem>
 
             <TabItem Style="{DynamicResource RoundedTabItem}"

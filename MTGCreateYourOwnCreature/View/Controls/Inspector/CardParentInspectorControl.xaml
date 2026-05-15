@@ -31,8 +31,8 @@
                 <Run Text=" "/>
 
                 <InlineUIContainer BaselineAlignment="Center">
-                    <mana:ManaCostControl DataContext="{Binding ParentCreatureCard}"
-                                          Height="15"/>
+                    <mana:ManaTotalCostControl DataContext="{Binding ParentCreatureCard}"
+                                               Height="15"/>
                 </InlineUIContainer>
 
             </TextBlock>

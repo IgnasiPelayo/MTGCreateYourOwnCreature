@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-using MTGCreateYourOwnCreature.Model.Mana;
+using MTGCreateYourOwnCreature.Model;
 
 namespace MTGCreateYourOwnCreature.View.Controls.Mana
 {
@@ -12,13 +12,13 @@ namespace MTGCreateYourOwnCreature.View.Controls.Mana
             InitializeComponent();
         }
 
-        public Dictionary<ManaType, int> Mana
+        public IEnumerable<MTGManaSymbol> ItemsSource
         {
-            get => (Dictionary<ManaType, int>)GetValue(ManaProperty);
-            set => SetValue(ManaProperty, value);
+            get => (IEnumerable<MTGManaSymbol>)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
-        public static readonly DependencyProperty ManaProperty = DependencyProperty.Register(
-            nameof(Mana), typeof(Dictionary<ManaType, int>), typeof(ManaCostControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
+            nameof(ItemsSource), typeof(IEnumerable<MTGManaSymbol>), typeof(ManaCostControl));
     }
 }

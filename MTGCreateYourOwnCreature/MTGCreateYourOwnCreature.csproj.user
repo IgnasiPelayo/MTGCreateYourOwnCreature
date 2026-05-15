@@ -16,6 +16,9 @@
     <Compile Update="View\Controls\CardListItemControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Controls\Inspector\CardManaCostInspectorControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\Inspector\CardNameInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -29,6 +32,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Controls\Mana\ManaSymbolControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Controls\Mana\ManaTotalCostControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\MTGCreatureEditor.xaml.cs">
@@ -51,6 +57,9 @@
     <Page Update="View\Controls\CardListItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="View\Controls\Inspector\CardManaCostInspectorControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\Controls\Inspector\CardNameInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -64,6 +73,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Mana\ManaSymbolControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\Mana\ManaTotalCostControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MTGCreatureEditor.xaml">

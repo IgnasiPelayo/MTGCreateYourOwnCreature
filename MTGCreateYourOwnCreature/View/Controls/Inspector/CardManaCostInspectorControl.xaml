@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="MTGCreateYourOwnCreature.View.Controls.Inspector.CardManaCostInspectorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
+             xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
+             xmlns:converters="clr-namespace:MTGCreateYourOwnCreature.View.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:ManaInspectorDisplayConverter x:Key="ManaInspectorDisplayConverter"/>
+    </UserControl.Resources>
+
+    <ItemsControl ItemsSource="{Binding Converter={StaticResource ManaInspectorDisplayConverter}}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <mana:ManaSymbolControl DataContext="{Binding DisplaySymbol}"/>
+
+                    <TextBox Grid.Column="1"
+                             Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             HorizontalContentAlignment="Center"
+                             VerticalContentAlignment="Center"/>
+
+                    <mana:ManaCostControl Grid.Column="2"
+                                          ItemsSource="{Binding Symbols}"/>
+
+                    <mana:ManaCostControl Grid.Column="3"
+                                          ItemsSource="{Binding InheritedSymbols}"
+                                          Opacity="0.7"/>
+
+                </Grid>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+
+    </ItemsControl>
+
+</UserControl>

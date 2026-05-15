@@ -9,7 +9,7 @@ namespace MTGCreateYourOwnCreature.View.Converters
 {
     public class ManaToSymbolsConverter : IValueConverter
     {
-        static Dictionary<ManaType, Brush?> ms_ManaBruses = new Dictionary<ManaType, Brush?>()
+        public static Dictionary<ManaType, Brush?> ManaBrushes = new Dictionary<ManaType, Brush?>()
         {
             { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
             { ManaType.Blue, App.Current.TryFindResource("BlueManaBrush") as Brush },
@@ -43,7 +43,7 @@ namespace MTGCreateYourOwnCreature.View.Converters
                 {
                     for (int i = 0; i < pair.Value; ++i)
                     {
-                        symbols.Add(new MTGManaSymbol("", ms_ManaBruses[pair.Key]));
+                        symbols.Add(new MTGManaSymbol("", ManaBrushes[pair.Key]));
                     }
                 }
             }
