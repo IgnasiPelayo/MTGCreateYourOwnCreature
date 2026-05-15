@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View"
       xmlns:controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls"
+      xmlns:cardslist="clr-namespace:MTGCreateYourOwnCreature.View.Controls.CardsList"
       xmlns:inspector="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
       xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
       mc:Ignorable="d"
@@ -41,40 +42,8 @@
                     BorderThickness="0,0,1,0"
                     Padding="4">
 
-                <ScrollViewer Grid.Column="0"
-                              VerticalScrollBarVisibility="Auto"
-                              Padding="4">
+                <cardslist:CardListControl/>
 
-                    <ListBox ItemsSource="{Binding Cards}"
-                             SelectedItem="{Binding CurrentCard, Mode=TwoWay}"
-                             BorderThickness="0"
-                             Background="Transparent"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             HorizontalContentAlignment="Stretch">
-
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ListBoxItem">
-                                            <ContentPresenter/>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <controls:CardListItemControl Margin="0,0,0,4"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        
-                    </ListBox>
-                </ScrollViewer>
             </Border>
 
             <Border Grid.Column="1"
@@ -90,7 +59,9 @@
                     BorderThickness="0,0,1,0"
                     Padding="4">
                 
+                <!--
                 <TextBlock Text="Current Card Preview"/>
+                -->
             </Border>
         </Grid>
     </Grid>

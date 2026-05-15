@@ -12,6 +12,6 @@
         <converters:ManaToSymbolsConverter x:Key="ManaConverter"/>
     </UserControl.Resources>
 
-    <local:ManaCostControl ItemsSource="{Binding TotalMana, Converter={StaticResource ManaConverter}}"/>
+    <local:ManaCostControl ItemsSource="{Binding ResolvedTotalMana, Converter={StaticResource ManaConverter}}"/>
 
 </UserControl>

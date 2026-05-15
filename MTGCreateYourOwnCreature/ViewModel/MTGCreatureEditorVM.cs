@@ -2,18 +2,19 @@
 using System.Collections.ObjectModel;
 
 using MTGCreateYourOwnCreature.Model;
-using MTGCreateYourOwnCreature.ViewModel.Commands;
+using MTGCreateYourOwnCreature.ViewModel.Cards;
 using MTGCreateYourOwnCreature.ViewModel.Helpers;
+using MTGCreateYourOwnCreature.ViewModel.Commands;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
     internal class MTGCreatureEditorVM : INotifyPropertyChanged
     {
-        public ObservableCollection<MTGCreatureCard> Cards { get; set; }
+        public ObservableCollection<MTGCreatureCardVM> Cards { get; set; }
 
 
-        protected MTGCreatureCard? m_CurrentCard;
-        public MTGCreatureCard? CurrentCard
+        protected MTGCreatureCardVM? m_CurrentCard = null;
+        public MTGCreatureCardVM? CurrentCard
         {
             get => m_CurrentCard;
             set
@@ -23,13 +24,14 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
         }
 
+
         public ImportCommand ImportCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public MTGCreatureEditorVM()
         {
-            Cards = new ObservableCollection<MTGCreatureCard>();
+            Cards = new ObservableCollection<MTGCreatureCardVM>();
 
             ImportCommand = new ImportCommand(this);
         }
@@ -46,9 +48,9 @@ namespace MTGCreateYourOwnCreature.ViewModel
             Cards.Clear();
 
             List<MTGCreatureCard> cards = MTGCreaturesParser.Parse(filePath);
-            for (int i = 0; i < cards.Count; ++i)
+            foreach (MTGCreatureCard card in cards)
             {
-                Cards.Add(cards[i]);
+                Cards.Add(new MTGCreatureCardVM(card));
             }
 
             if (cards.Count > 0)

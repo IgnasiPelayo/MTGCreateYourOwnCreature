@@ -26,14 +26,18 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center">
                 
-                <Run Text="{Binding ParentCreatureCardDisplayName, Mode=OneWay}"/>
+                <Run Text="{Binding ResolvedParentCardName, Mode=OneWay}"/>
+                
+                <!--
                 
                 <Run Text=" "/>
 
                 <InlineUIContainer BaselineAlignment="Center">
                     <mana:ManaTotalCostControl DataContext="{Binding ParentCreatureCard}"
                                                Height="15"/>
+                
                 </InlineUIContainer>
+                -->
 
             </TextBlock>
             

@@ -22,7 +22,7 @@
                 Padding="2">
 
             <Grid>
-                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding Card.Name, UpdateSourceTrigger=PropertyChanged}"
                          FontSize="20"
                          FontWeight="SemiBold"
                          Background="Transparent"

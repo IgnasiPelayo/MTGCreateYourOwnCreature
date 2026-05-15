@@ -7,13 +7,16 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\Controls\CardsList\CardListControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\Inspector\CardCategoryInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Controls\Inspector\CardInspectorControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\CardListItemControl.xaml.cs">
+    <Compile Update="View\Controls\CardsList\CardListItemControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\Controls\Inspector\CardManaCostInspectorControl.xaml.cs">
@@ -48,13 +51,16 @@
     <Page Update="Resources\Styles\Styles.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="View\Controls\CardsList\CardListControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\Controls\Inspector\CardCategoryInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Inspector\CardInspectorControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\Controls\CardListItemControl.xaml">
+    <Page Update="View\Controls\CardsList\CardListItemControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Inspector\CardManaCostInspectorControl.xaml">

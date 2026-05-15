@@ -4,6 +4,7 @@ using System.Windows.Media;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
+using MTGCreateYourOwnCreature.ViewModel.Cards;
 
 namespace MTGCreateYourOwnCreature.View.Converters
 {
@@ -11,6 +12,7 @@ namespace MTGCreateYourOwnCreature.View.Converters
     {
         public static Dictionary<ManaType, Brush?> ManaBrushes = new Dictionary<ManaType, Brush?>()
         {
+            { ManaType.Colorless, Brushes.LightGray },
             { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
             { ManaType.Blue, App.Current.TryFindResource("BlueManaBrush") as Brush },
             { ManaType.Black, App.Current.TryFindResource("BlackManaBrush") as Brush },
@@ -20,30 +22,29 @@ namespace MTGCreateYourOwnCreature.View.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Dictionary<ManaType, int>? manas = value as Dictionary<ManaType, int>;
-            if (manas == null)
+            List<MTGManaEntryVM> mana = value as List<MTGManaEntryVM>;
+            if (mana == null)
             {
                 return null;
             }
 
             List<MTGManaSymbol> symbols = new List<MTGManaSymbol>();
-
-            foreach (KeyValuePair<ManaType, int> pair in manas)
+            foreach (MTGManaEntryVM entry in mana)
             {
-                if (pair.Value <= 0)
+                if (entry.Value <= 0)
                 {
                     continue;
                 }
 
-                if (pair.Key == ManaType.Colorless)
+                if (entry.ManaType == ManaType.Colorless)
                 {
-                    symbols.Add(new MTGManaSymbol(pair.Value.ToString(), Brushes.LightGray));
+                    symbols.Add(new MTGManaSymbol(entry.Value.ToString(), ManaBrushes[entry.ManaType]));
                 }
                 else
                 {
-                    for (int i = 0; i < pair.Value; ++i)
+                    for (int i = 0; i < entry.Value; ++i)
                     {
-                        symbols.Add(new MTGManaSymbol("", ManaBrushes[pair.Key]));
+                        symbols.Add(new MTGManaSymbol("", ManaBrushes[entry.ManaType]));
                     }
                 }
             }

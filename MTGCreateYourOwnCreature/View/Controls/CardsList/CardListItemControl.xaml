@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="MTGCreateYourOwnCreature.View.Controls.CardListItemControl"
+﻿<UserControl x:Class="MTGCreateYourOwnCreature.View.Controls.CardsList.CardListItemControl"
              x:Name="root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls"
+             xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.CardsList"
              xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -26,7 +26,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
-                           Text="{Binding Name}"
+                           Text="{Binding Card.Name}"
                            TextWrapping="Wrap"
                            Background="Transparent"
                            VerticalAlignment="Top"
@@ -43,7 +43,7 @@
             </Grid>
 
             <TextBlock Grid.Row="1"
-                       Text="{Binding ParentCreatureCard.Name}"
+                       Text="{Binding Card.ParentCreatureCard.Name}"
                        TextWrapping="Wrap"
                        FontSize="10"
                        FontWeight="Light"

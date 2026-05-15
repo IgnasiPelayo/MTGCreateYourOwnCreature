@@ -28,8 +28,10 @@
         <Separator Grid.Row="3"
                    Margin="0,15,0,0"/>
         
+        <!--
         <local:CardTabInspectorControl Grid.Row="4"
                                        Padding="0,15,0,0"/>
+        -->
         
     </Grid>
 </UserControl>

@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MTGCreateYourOwnCreature.View.Controls
+namespace MTGCreateYourOwnCreature.View.Controls.CardsList
 {
-    public partial class CardListItemControl : UserControl
+    public partial class CardListControl : UserControl
     {
-        public CardListItemControl()
+        public CardListControl()
         {
             InitializeComponent();
         }
