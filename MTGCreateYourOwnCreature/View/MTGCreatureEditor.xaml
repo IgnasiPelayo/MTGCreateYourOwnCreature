@@ -9,7 +9,7 @@
       xmlns:inspector="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
       xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
       mc:Ignorable="d"
-      Title="Magic the Gathering: Create your own Creature" Height="450" Width="800">
+      Title="Magic the Gathering: Create your own Creature" Height="550" Width="980">
 
     <Window.Resources>
         <vm:MTGCreatureEditorVM x:Key="vm"/>

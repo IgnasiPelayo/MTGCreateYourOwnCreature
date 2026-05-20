@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
              xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
+             xmlns:converters="clr-namespace:MTGCreateYourOwnCreature.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:ManaToSymbolsConverter x:Key="ManaConverter"/>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -28,16 +33,14 @@
                 
                 <Run Text="{Binding ResolvedParentCardName, Mode=OneWay}"/>
                 
-                <!--
-                
                 <Run Text=" "/>
 
                 <InlineUIContainer BaselineAlignment="Center">
-                    <mana:ManaTotalCostControl DataContext="{Binding ParentCreatureCard}"
-                                               Height="15"/>
+                    
+                    <mana:ManaCostControl ItemsSource="{Binding ResolvedInheritedMana, Converter={StaticResource ManaConverter}}"
+                                          Height="15"/>
                 
                 </InlineUIContainer>
-                -->
 
             </TextBlock>
             

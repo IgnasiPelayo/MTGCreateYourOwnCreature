@@ -1,16 +1,13 @@
-﻿using System.Windows.Data;
-using System.Globalization;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
-using MTGCreateYourOwnCreature.ViewModel.Cards;
 
-namespace MTGCreateYourOwnCreature.View.Converters
+namespace MTGCreateYourOwnCreature.Rendering
 {
-    public class ManaToSymbolsConverter : IValueConverter
+    public static class ManaRenderService
     {
-        public static Dictionary<ManaType, Brush?> ManaBrushes = new Dictionary<ManaType, Brush?>()
+        public static Dictionary<ManaType, Brush?> ms_ManaBrushes = new Dictionary<ManaType, Brush?>()
         {
             { ManaType.Colorless, Brushes.LightGray },
             { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
@@ -20,41 +17,40 @@ namespace MTGCreateYourOwnCreature.View.Converters
             { ManaType.Green, App.Current.TryFindResource("GreenManaBrush") as Brush },
         };
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            IReadOnlyDictionary<ManaType, int> mana = value as IReadOnlyDictionary<ManaType, int>;
-            if (mana == null)
-            {
-                return null;
-            }
 
+        public static MTGManaSymbol CreatePreviewSymbol(ManaType manaType)
+        {
+            return new MTGManaSymbol(manaType == ManaType.Colorless ? "X" : "", ms_ManaBrushes[manaType]);
+        }
+
+
+        public static IReadOnlyList<MTGManaSymbol> CreateSymbols(IReadOnlyDictionary<ManaType, int> mana, bool inherited = false)
+        {
             List<MTGManaSymbol> symbols = new List<MTGManaSymbol>();
+
             foreach (KeyValuePair<ManaType, int> manaEntry in mana)
             {
-                if (manaEntry.Value == 0)
+                if (manaEntry.Value <= 0)
                 {
                     continue;
                 }
 
+                Brush? brush = ms_ManaBrushes[manaEntry.Key];
+
                 if (manaEntry.Key == ManaType.Colorless)
                 {
-                    symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), ManaBrushes[manaEntry.Key]));
+                    symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), brush));
                 }
                 else
                 {
                     for (int i = 0; i < manaEntry.Value; ++i)
                     {
-                        symbols.Add(new MTGManaSymbol("", ManaBrushes[manaEntry.Key]));
+                        symbols.Add(new MTGManaSymbol("", brush));
                     }
                 }
             }
 
             return symbols;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

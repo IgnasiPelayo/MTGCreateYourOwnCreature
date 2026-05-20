@@ -37,9 +37,6 @@
     <Compile Update="View\Controls\Mana\ManaSymbolControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\Controls\Mana\ManaTotalCostControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\MTGCreatureEditor.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -79,9 +76,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Mana\ManaSymbolControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\Controls\Mana\ManaTotalCostControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MTGCreatureEditor.xaml">

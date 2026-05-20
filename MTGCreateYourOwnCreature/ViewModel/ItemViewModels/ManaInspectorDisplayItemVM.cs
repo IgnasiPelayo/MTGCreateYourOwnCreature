@@ -3,12 +3,14 @@ using System.ComponentModel;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
+using MTGCreateYourOwnCreature.ViewModel.Cards;
 
 namespace MTGCreateYourOwnCreature.ViewModel.ItemViewModels
 {
-    public class ManaInspectorDisplayItemVM : INotifyPropertyChanged
+    public class ManaInspectorDisplayItemVM /*: INotifyPropertyChanged*/
     {
-        protected MTGCreatureCard m_Card;
+        /*
+        protected MTGCreatureCardVM m_CardVM;
 
         public ManaType ManaType { get; }
 
@@ -24,9 +26,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.ItemViewModels
             set
             {
                 m_Card.Mana[ManaType] = Math.Max(0, value);
-
-                OnPropertyChanged(nameof(Value));
-                OnPropertyChanged(nameof(Symbols));
             }
         }
 
@@ -82,5 +81,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.ItemViewModels
 
             return symbols;
         }
+        */
     }
 }

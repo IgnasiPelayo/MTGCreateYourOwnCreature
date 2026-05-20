@@ -1,13 +1,13 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
 using MTGCreateYourOwnCreature.Model.Category;
+using System.ComponentModel;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
-    public class MTGCreatureCardVM
+    public class MTGCreatureCardVM : INotifyPropertyChanged
     {
         public MTGCreatureCard Card { get; set; }
 
@@ -19,9 +19,10 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             Card = card;
 
             Mana = new ObservableCollection<MTGManaEntryVM>();
-            foreach (KeyValuePair<ManaType, int> manaCost in Card.Mana)
+            ManaType[] manaTypes = Enum.GetValues<ManaType>();
+            foreach (ManaType manaType in manaTypes)
             {
-                Mana.Add(new MTGManaEntryVM(manaCost.Key, manaCost.Value));
+                Mana.Add(new MTGManaEntryVM(this, manaType));
             }
         }
 
@@ -50,31 +51,34 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
-        public List<MTGManaEntryVM> ResolvedTotalMana
+        public IReadOnlyDictionary<ManaType, int> ResolvedTotalMana => GetTotalManaFromCard(Card);
+
+        public IReadOnlyDictionary<ManaType, int> ResolvedInheritedMana => GetTotalManaFromCard(Card.ParentCreatureCard);
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public IReadOnlyDictionary<ManaType, int> GetTotalManaFromCard(MTGCreatureCard? card)
         {
-            get
+            Dictionary<ManaType, int> mana = new Dictionary<ManaType, int>();
+
+            ManaType[] manaTypes = Enum.GetValues<ManaType>();
+            foreach (ManaType manaType in manaTypes)
             {
-                Dictionary<ManaType, int> rawMana = new Dictionary<ManaType, int>();
-
-                MTGCreatureCard? currentCard = Card;
-                while (currentCard != null)
-                {
-                    foreach (KeyValuePair<ManaType, int> manaCost in currentCard.Mana)
-                    {
-                        rawMana[manaCost.Key] = rawMana.GetValueOrDefault(manaCost.Key) + manaCost.Value;
-                    }
-
-                    currentCard = currentCard.ParentCreatureCard;
-                }
-
-                List<MTGManaEntryVM> mana = new List<MTGManaEntryVM>();
-                foreach (KeyValuePair<ManaType, int> manaCost in rawMana)
-                {
-                    mana.Add(new MTGManaEntryVM(manaCost.Key, manaCost.Value));
-                }
-
-                return mana;
+                mana[manaType] = 0;
             }
+
+            MTGCreatureCard? currentCard = card;
+            while (currentCard != null)
+            {
+                foreach (KeyValuePair<ManaType, int> manaCost in currentCard.Mana)
+                {
+                    mana[manaCost.Key] += manaCost.Value;
+                }
+
+                currentCard = currentCard.ParentCreatureCard;
+            }
+
+            return mana;
         }
 
 
@@ -95,6 +99,17 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
                 return availableCategories.ToArray();
             }
+        }
+
+        public void NotifyManaChanged(ManaType type)
+        {
+            OnPropertyChanged(nameof(ResolvedTotalMana));
+            OnPropertyChanged(nameof(ResolvedInheritedMana));
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

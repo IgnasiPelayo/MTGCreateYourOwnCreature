@@ -5,43 +5,70 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
              xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
-             xmlns:converters="clr-namespace:MTGCreateYourOwnCreature.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.Resources>
-        <converters:ManaInspectorDisplayConverter x:Key="ManaInspectorDisplayConverter"/>
-    </UserControl.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Style="{StaticResource InspectorPropertyTitle}"
+                   Text="Mana"/>
 
-    <ItemsControl ItemsSource="{Binding Converter={StaticResource ManaInspectorDisplayConverter}}">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+        <ItemsControl Grid.Row="1"
+                      ItemsSource="{Binding Mana}">
+        
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
 
-                    <mana:ManaSymbolControl DataContext="{Binding DisplaySymbol}"/>
+                        </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="1"
-                             Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             HorizontalContentAlignment="Center"
-                             VerticalContentAlignment="Center"/>
+                        <Viewbox Stretch="Uniform"
+                                 StretchDirection="DownOnly"
+                                 HorizontalAlignment="Right"
+                                 Height="15"
+                                 VerticalAlignment="Top">
 
-                    <mana:ManaCostControl Grid.Column="2"
-                                          ItemsSource="{Binding Symbols}"/>
+                            <mana:ManaSymbolControl DataContext="{Binding PreviewManaSymbol}"/>
+                        </Viewbox>
 
-                    <mana:ManaCostControl Grid.Column="3"
-                                          ItemsSource="{Binding InheritedSymbols}"
-                                          Opacity="0.7"/>
+                        <TextBox Grid.Column="1"
+                                 Margin="4,0,0,0"
+                                 Text="{Binding Value}"/>
 
-                </Grid>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
+                        <Border Grid.Column="3"
+                                Height="15"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right">
+                            <mana:ManaCostControl ItemsSource="{Binding ManaSymbols}"
+                                                  HorizontalAlignment="Right"/>
+                        </Border>
 
-    </ItemsControl>
+
+                        <Border Grid.Column="4"
+                                Height="15"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right">
+                            <mana:ManaCostControl ItemsSource="{Binding InheritedManaSymbols}"
+                                                  HorizontalAlignment="Right"/>
+                        </Border>
+
+                    </Grid>
+                    
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            
+        </ItemsControl>
+
+    </Grid>
 
 </UserControl>

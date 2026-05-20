@@ -6,8 +6,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.CardsList"
              xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
+             xmlns:converters="clr-namespace:MTGCreateYourOwnCreature.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+
+    <UserControl.Resources>
+        <converters:ManaToSymbolsConverter x:Key="ManaConverter"/>
+    </UserControl.Resources>
 
     <Border Style="{StaticResource ListBoxItemRoundedBorder}"
             Padding="8"
@@ -37,7 +43,7 @@
                         Padding="5,0,0,0"
                         VerticalAlignment="Top">
 
-                    <mana:ManaTotalCostControl/>
+                    <mana:ManaCostControl ItemsSource="{Binding ResolvedTotalMana, Converter={StaticResource ManaConverter}}"/>
 
                 </Border>
             </Grid>
