@@ -50,12 +50,34 @@ namespace MTGCreateYourOwnCreature.ViewModel
             List<MTGCreatureCard> cards = MTGCreaturesParser.Parse(filePath);
             foreach (MTGCreatureCard card in cards)
             {
-                Cards.Add(new MTGCreatureCardVM(card));
+                MTGCreatureCardVM creatureCard = new MTGCreatureCardVM(card);
+                creatureCard.PropertyChanged += OnCardChanged;
+
+                Cards.Add(creatureCard);
             }
 
             if (cards.Count > 0)
             {
                 CurrentCard = Cards[0];
+            }
+        }
+
+        protected void OnCardChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is not MTGCreatureCardVM creatureCard)
+            {
+                return;
+            }
+
+            if (e.PropertyName == nameof(MTGCreatureCardVM.ResolvedTotalMana))
+            {
+                foreach (MTGCreatureCardVM card in Cards)
+                {
+                    if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
+                    {
+                        card.Refresh();
+                    }
+                }
             }
         }
     }

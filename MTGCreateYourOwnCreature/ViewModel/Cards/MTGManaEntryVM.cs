@@ -8,23 +8,15 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
     public class MTGManaEntryVM : INotifyPropertyChanged
     {
-        protected readonly MTGCreatureCardVM m_Owner;
         protected readonly ManaType m_Type;
-
-
         public ManaType Type => m_Type;
 
-        public MTGManaEntryVM(MTGCreatureCardVM owner, ManaType type)
-        {
-            m_Owner = owner;
-            m_Type = type;
-        }
-
+        protected int m_Value;
         public int Value
         {
             get
             {
-                return m_Owner.Card.Mana[m_Type];
+                return m_Value;
             }
             set
             {
@@ -33,17 +25,30 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                     value = 0;
                 }
 
-                m_Owner.Card.Mana[m_Type] = value;
+                if (value == m_Value)
+                {
+                    return;
+                }
+
+                m_Value = value;
                 OnPropertyChanged(nameof(Value));
                 OnPropertyChanged(nameof(ManaSymbols));
-
-                m_Owner.NotifyManaChanged(m_Type);
             }
         }
 
+        protected readonly int m_InheritedValue;
+
+        public MTGManaEntryVM(ManaType type, int value, int inheritedValue)
+        {
+            m_Type = type;
+
+            m_Value = value;
+            m_InheritedValue = inheritedValue;
+        }
+
         public MTGManaSymbol PreviewManaSymbol => ManaRenderService.CreatePreviewSymbol(m_Type);
-        public IReadOnlyList<MTGManaSymbol> ManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_Owner.Card.Mana[m_Type] } });
-        public IReadOnlyList<MTGManaSymbol> InheritedManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_Owner.Card.ParentCreatureCard?.Mana[m_Type] ?? 0 } });
+        public IReadOnlyList<MTGManaSymbol> ManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_Value } });
+        public IReadOnlyList<MTGManaSymbol> InheritedManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_InheritedValue } });
 
 
         public event PropertyChangedEventHandler? PropertyChanged;

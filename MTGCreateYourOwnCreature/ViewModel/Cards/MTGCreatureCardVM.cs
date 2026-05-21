@@ -22,7 +22,10 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             ManaType[] manaTypes = Enum.GetValues<ManaType>();
             foreach (ManaType manaType in manaTypes)
             {
-                Mana.Add(new MTGManaEntryVM(this, manaType));
+                MTGManaEntryVM manaEntry = new MTGManaEntryVM(manaType, Card.Mana[manaType], ResolvedInheritedMana[manaType]);
+                manaEntry.PropertyChanged += OnManaEntryChanged;
+
+                Mana.Add(manaEntry);
             }
         }
 
@@ -81,7 +84,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             return mana;
         }
 
-
         public Array AvailableCategories
         {
             get
@@ -101,10 +103,26 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
         }
 
-        public void NotifyManaChanged(ManaType type)
+        public void Refresh()
         {
             OnPropertyChanged(nameof(ResolvedTotalMana));
-            OnPropertyChanged(nameof(ResolvedInheritedMana));
+        }
+
+        protected void OnManaEntryChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is not MTGManaEntryVM entry)
+            {
+                return;
+            }
+
+            if (e.PropertyName != nameof(MTGManaEntryVM.Value))
+            {
+                return;
+            }
+
+            Card.Mana[entry.Type] = entry.Value;
+
+            Refresh();
         }
 
         protected virtual void OnPropertyChanged(string propertyName)
