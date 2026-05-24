@@ -22,10 +22,11 @@
         
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="0,5,0,0">
+                    <Grid Margin="0,10,10,0"
+                          Height="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="70"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -36,17 +37,16 @@
                                  StretchDirection="DownOnly"
                                  HorizontalAlignment="Right"
                                  Height="15"
-                                 VerticalAlignment="Top">
+                                 VerticalAlignment="Center">
 
                             <mana:ManaSymbolControl DataContext="{Binding PreviewManaSymbol}"/>
                         </Viewbox>
 
-                        <TextBox Grid.Column="1"
-                                 Margin="4,0,0,0"
-                                 Text="{Binding Value}"/>
+                        <local:NumericSpinnerControl Grid.Column="1"
+                                                     Margin="10,0,0,0"
+                                                     Value="{Binding Value}"/>
 
                         <Border Grid.Column="3"
-                                Height="15"
                                 VerticalAlignment="Top"
                                 HorizontalAlignment="Right">
                             <mana:ManaCostControl ItemsSource="{Binding ManaSymbols}"
@@ -55,7 +55,6 @@
 
 
                         <Border Grid.Column="4"
-                                Height="15"
                                 VerticalAlignment="Top"
                                 HorizontalAlignment="Right">
                             <mana:ManaCostControl ItemsSource="{Binding InheritedManaSymbols}"

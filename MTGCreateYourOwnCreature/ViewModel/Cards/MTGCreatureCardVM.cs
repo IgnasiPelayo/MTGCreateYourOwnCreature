@@ -4,6 +4,7 @@ using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
 using MTGCreateYourOwnCreature.Model.Category;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
@@ -106,6 +107,11 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public void Refresh()
         {
             OnPropertyChanged(nameof(ResolvedTotalMana));
+
+            foreach (MTGManaEntryVM entry in Mana)
+            {
+                entry.InheritedValue = ResolvedInheritedMana[entry.Type];
+            }
         }
 
         protected void OnManaEntryChanged(object? sender, PropertyChangedEventArgs e)
@@ -122,7 +128,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
             Card.Mana[entry.Type] = entry.Value;
 
-            Refresh();
+            OnPropertyChanged(nameof(ResolvedTotalMana));
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

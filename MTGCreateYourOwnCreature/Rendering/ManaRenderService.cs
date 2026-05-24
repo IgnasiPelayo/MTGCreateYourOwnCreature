@@ -39,13 +39,13 @@ namespace MTGCreateYourOwnCreature.Rendering
 
                 if (manaEntry.Key == ManaType.Colorless)
                 {
-                    symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), brush));
+                    symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), brush, inherited));
                 }
                 else
                 {
                     for (int i = 0; i < manaEntry.Value; ++i)
                     {
-                        symbols.Add(new MTGManaSymbol("", brush));
+                        symbols.Add(new MTGManaSymbol("", brush, inherited));
                     }
                 }
             }

@@ -6,24 +6,41 @@
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
     <Grid Width="24"
           Height="24">
 
         <Ellipse Margin="0,1,1,-1"
                  Fill="#FF000000"/>
-        
+
         <Ellipse Fill="{Binding Brush}"/>
 
+        <Ellipse Fill="Transparent"
+                 Margin="-2"
+                 Stroke="MediumPurple"
+                 StrokeThickness="2"
+                 IsHitTestVisible="False">
+            <Ellipse.Style>
+                <Style TargetType="Ellipse">
+                    <Setter Property="Opacity" Value="0"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsInherited}" Value="True">
+                            <Setter Property="Opacity" Value="0.9"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Ellipse.Style>
+        </Ellipse>
+        
         <Viewbox Stretch="Uniform"
                  StretchDirection="Both"
                  VerticalAlignment="Center"
                  HorizontalAlignment="Center">
 
             <TextBlock Text="{Binding Value}"
-                       Foreground="Black"
-                       FontSize="20"
-                       FontWeight="Bold"/>
+                    Foreground="Black"
+                    FontSize="20"
+                    FontWeight="Bold"/>
         </Viewbox>
 
     </Grid>

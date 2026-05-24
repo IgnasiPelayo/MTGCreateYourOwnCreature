@@ -36,7 +36,26 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
         }
 
-        protected readonly int m_InheritedValue;
+        protected int m_InheritedValue;
+        public int InheritedValue
+        {
+            get => m_InheritedValue;
+            set
+            {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+
+                if (value == m_InheritedValue)
+                {
+                    return;
+                }
+
+                m_InheritedValue = value;
+                OnPropertyChanged(nameof(InheritedManaSymbols));
+            }
+        }
 
         public MTGManaEntryVM(ManaType type, int value, int inheritedValue)
         {
@@ -48,7 +67,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public MTGManaSymbol PreviewManaSymbol => ManaRenderService.CreatePreviewSymbol(m_Type);
         public IReadOnlyList<MTGManaSymbol> ManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_Value } });
-        public IReadOnlyList<MTGManaSymbol> InheritedManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_InheritedValue } });
+        public IReadOnlyList<MTGManaSymbol> InheritedManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_InheritedValue } }, true);
 
 
         public event PropertyChangedEventHandler? PropertyChanged;

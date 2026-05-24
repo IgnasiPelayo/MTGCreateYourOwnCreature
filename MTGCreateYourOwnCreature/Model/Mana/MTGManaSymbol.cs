@@ -8,10 +8,13 @@ namespace MTGCreateYourOwnCreature.Model
 
         public Brush? Brush { get; set; }
 
-        public MTGManaSymbol(String value, Brush? brush) 
+        public bool IsInherited { get; set; }
+
+        public MTGManaSymbol(String value, Brush? brush, bool isInherited = false)
         {
             Value = value;
             Brush = brush;
+            IsInherited = isInherited;
         }
     }
 }
