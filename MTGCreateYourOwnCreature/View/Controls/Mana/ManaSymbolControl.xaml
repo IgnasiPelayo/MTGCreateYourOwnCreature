@@ -17,7 +17,7 @@
 
         <Ellipse Fill="Transparent"
                  Margin="-2"
-                 Stroke="MediumPurple"
+                 Stroke="RoyalBlue"
                  StrokeThickness="2"
                  IsHitTestVisible="False">
             <Ellipse.Style>
