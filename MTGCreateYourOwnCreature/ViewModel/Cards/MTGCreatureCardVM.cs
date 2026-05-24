@@ -31,6 +31,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
+        public bool HasParentCard => Card.ParentCreatureCard != null;
+
         public String ResolvedParentCardName => Card.ParentCreatureCard?.Name ?? "Base Creature";
 
         public CategoryType ResolvedCategory
@@ -58,6 +60,51 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public IReadOnlyDictionary<ManaType, int> ResolvedTotalMana => GetTotalManaFromCard(Card);
 
         public IReadOnlyDictionary<ManaType, int> ResolvedInheritedMana => GetTotalManaFromCard(Card.ParentCreatureCard);
+
+
+        public int Power
+        {
+            get => Card.Power;
+            set
+            {
+                if (Card.Power == value)
+                {
+                    return;
+                }
+
+                Card.Power = value;
+
+                OnPropertyChanged(nameof(Power));
+                OnPropertyChanged(nameof(ResolvedTotalPower));
+            }
+        }
+
+        public int ResolvedTotalPower => Card.Power + ResolvedInheritedPower;
+
+        public int ResolvedInheritedPower => Card.ParentCreatureCard?.Power ?? 0;
+
+
+        public int Toughness
+        {
+            get => Card.Toughness;
+            set
+            {
+                if (Card.Toughness == value)
+                {
+                    return;
+                }
+
+                Card.Toughness = value;
+
+                OnPropertyChanged(nameof(Toughness));
+                OnPropertyChanged(nameof(ResolvedTotalToughness));
+            }
+        }
+
+        public int ResolvedTotalToughness => Card.Toughness + ResolvedInheritedToughness;
+
+        public int ResolvedInheritedToughness => Card.ParentCreatureCard?.Toughness ?? 0;
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

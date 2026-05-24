@@ -108,7 +108,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static void CardStats(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> stats = GetBlockInformation(data);
-            card.Stats = new MTGCreatureCard.MTGCreatureStats(stats.GetInt("power"), stats.GetInt("toughness"));
+            card.Power = stats.GetInt("power");
+            card.Toughness = stats.GetInt("toughness");
         }
 
         protected static void CardTraits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)

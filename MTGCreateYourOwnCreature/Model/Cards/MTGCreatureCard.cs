@@ -14,23 +14,9 @@ namespace MTGCreateYourOwnCreature.Model
 
         public Dictionary<ManaType, int> Mana { get; set; }
 
+        public int Power { get; set; }
 
-
-
-        public class MTGCreatureStats
-        {
-            public int Power { get; set; }
-
-            public int Toughness { get; set; }
-
-            public MTGCreatureStats(int power, int toughness)
-            {
-                Power = power;
-                Toughness = toughness;
-            }
-        }
-
-        public MTGCreatureStats Stats { get; set; }
+        public int Toughness { get; set; }
 
         public class MTGCreatureTraits
         {
@@ -58,7 +44,8 @@ namespace MTGCreateYourOwnCreature.Model
             ParentCreatureCard = null;
             Category = CategoryType.None;
             Mana = new Dictionary<ManaType, int>();
-            Stats = new MTGCreatureStats(power: 0, toughness: 0);
+            Power = 0;
+            Toughness = 0;
             Traits = new MTGCreatureTraits([], []);
             Description = string.Empty;
             Lore = string.Empty;
