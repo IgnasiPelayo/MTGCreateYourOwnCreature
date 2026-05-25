@@ -31,24 +31,29 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="10"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <local:CardManaCostInspectorControl/>
 
-                        <local:CardInheritedNumericInspectorControl Grid.Row="2"
-                                                                    Label="Power"
-                                                                    LocalValue="{Binding Power}"
-                                                                    InheritedValue="{Binding ResolvedInheritedPower}"
-                                                                    TotalValue="{Binding ResolvedTotalPower}"
-                                                                    HasInheritance="{Binding HasParentCard}"/>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <local:CardInheritedNumericInspectorControl Grid.Row="3"
-                                                                    Label="Toughness"
-                                                                    LocalValue="{Binding Toughness}"
-                                                                    InheritedValue="{Binding ResolvedInheritedToughness}"
-                                                                    TotalValue="{Binding ResolvedTotalToughness}"
-                                                                    HasInheritance="{Binding HasParentCard}"/>
+                            <local:CardInheritedNumericInspectorControl Label="Power"
+                                                                        LocalValue="{Binding Power}"
+                                                                        InheritedValue="{Binding ResolvedInheritedPower}"
+                                                                        TotalValue="{Binding ResolvedTotalPower}"
+                                                                        HasInheritance="{Binding HasParentCard}"/>
+
+                            <local:CardInheritedNumericInspectorControl Grid.Column="1"
+                                                                        Label="Toughness"
+                                                                        LocalValue="{Binding Toughness}"
+                                                                        InheritedValue="{Binding ResolvedInheritedToughness}"
+                                                                        TotalValue="{Binding ResolvedTotalToughness}"
+                                                                        HasInheritance="{Binding HasParentCard}"/>
+                        </Grid>
                     </Grid>
 
                 </ScrollViewer>
