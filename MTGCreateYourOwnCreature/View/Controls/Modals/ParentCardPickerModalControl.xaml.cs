@@ -1,11 +1,11 @@
 ﻿using System.Windows.Input;
 using System.Windows.Controls;
 
-namespace MTGCreateYourOwnCreature.View.Controls.CardsList
+namespace MTGCreateYourOwnCreature.View.Controls.Modals
 {
-    public partial class CardListControl : UserControl
+    public partial class ParentCardPickerModalControl : UserControl
     {
-        public CardListControl()
+        public ParentCardPickerModalControl()
         {
             InitializeComponent();
         }

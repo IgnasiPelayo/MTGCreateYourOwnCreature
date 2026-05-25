@@ -4,65 +4,89 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View"
-      xmlns:controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls"
       xmlns:cardslist="clr-namespace:MTGCreateYourOwnCreature.View.Controls.CardsList"
       xmlns:inspector="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
+      xmlns:modals="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Modals"
       xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
       mc:Ignorable="d"
       Title="Magic the Gathering: Create your own Creature" Height="550" Width="980">
 
-    <Window.Resources>
-        <vm:MTGCreatureEditorVM x:Key="vm"/>
-    </Window.Resources>
+    <Window.DataContext>
+        <vm:MTGCreatureEditorVM/>
+    </Window.DataContext>
+    
+    <Grid>
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <BlurEffect Radius="0"/>
+                        </Setter.Value>
+                    </Setter>
 
-    <Grid DataContext="{StaticResource vm}">
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <Menu Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="Import"
-                  Command="{Binding ImportCommand}"/>
-                <MenuItem Header="Export"/>
-            </MenuItem>
-        </Menu>
-
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-
-            <Border Grid.Column="0"
-                    BorderBrush="#DDD"
-                    BorderThickness="0,0,1,0"
-                    Padding="4">
-
-                <cardslist:CardListControl/>
-
-            </Border>
-
-            <Border Grid.Column="1"
-                    BorderBrush="#DDD"
-                    BorderThickness="0,0,1,0"
-                    Padding="4">
-
-                <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"/>
-            </Border>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ParentPickerVisibility}" Value="Visible">
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect Radius="12"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
             
-            <Border Grid.Column="2"
-                    BorderBrush="#DDD"
-                    BorderThickness="0,0,1,0"
-                    Padding="4">
-                
-                <!--
-                <TextBlock Text="Current Card Preview"/>
-                -->
-            </Border>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Menu Grid.Row="0">
+                <MenuItem Header="File">
+                    <MenuItem Header="Import"
+                              Command="{Binding ImportCommand}"/>
+                    <MenuItem Header="Export"/>
+                </MenuItem>
+            </Menu>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        BorderBrush="#DDD"
+                        BorderThickness="0,0,1,0"
+                        Padding="4">
+
+                    <cardslist:CardListControl/>
+
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderBrush="#DDD"
+                        BorderThickness="0,0,1,0"
+                        Padding="4">
+
+                    <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"/>
+                    
+                </Border>
+
+                <Border Grid.Column="2"
+                        BorderBrush="#DDD"
+                        BorderThickness="0,0,1,0"
+                        Padding="4">
+
+
+                </Border>
+            </Grid>
         </Grid>
+
+        <modals:ParentCardPickerModalControl Visibility="{Binding ParentPickerVisibility}"/>
+
     </Grid>
 </Window>

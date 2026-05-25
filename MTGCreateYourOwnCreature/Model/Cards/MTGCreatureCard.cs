@@ -50,5 +50,20 @@ namespace MTGCreateYourOwnCreature.Model
             Description = string.Empty;
             Lore = string.Empty;
         }
+
+        public static MTGCreatureCard CreateBaseCreatureCard()
+        {
+            MTGCreatureCard baseCreatureCard = new MTGCreatureCard();
+
+            baseCreatureCard.Name = "Base Creature";
+
+            ManaType[] manaTypes = Enum.GetValues<ManaType>();
+            foreach (ManaType manaType in manaTypes)
+            {
+                baseCreatureCard.Mana[manaType] = 0;
+            }
+
+            return baseCreatureCard;
+        }
     }
 }

@@ -25,7 +25,8 @@
         <Button Grid.Column="1"
                 Style="{StaticResource RoundedButton}"
                 Margin="10,-5,0,0"
-                HorizontalContentAlignment="Stretch">
+                HorizontalContentAlignment="Stretch"
+                Command="{Binding DataContext.OpenParentPickerCommand, RelativeSource={RelativeSource AncestorType=Window}}">
 
             <TextBlock TextWrapping="Wrap"
                        HorizontalAlignment="Center"

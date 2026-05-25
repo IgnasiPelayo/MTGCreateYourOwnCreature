@@ -33,7 +33,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public bool HasParentCard => Card.ParentCreatureCard != null;
 
-        public String ResolvedParentCardName => Card.ParentCreatureCard?.Name ?? "Base Creature";
+        public string ParentCardName => Card.ParentCreatureCard?.Name ?? "";
+
+        public string ResolvedParentCardName => Card.ParentCreatureCard?.Name ?? "Base Creature";
 
         public CategoryType ResolvedCategory
         {
@@ -159,7 +161,32 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             {
                 entry.InheritedValue = ResolvedInheritedMana[entry.Type];
             }
+
+            OnPropertyChanged(nameof(ResolvedInheritedMana));
         }
+
+
+        public void ChangeParent(MTGCreatureCard parent)
+        {
+            Card.ParentCreatureCard = parent;
+
+            OnPropertyChanged(nameof(HasParentCard));
+            OnPropertyChanged(nameof(ParentCardName));
+            OnPropertyChanged(nameof(ResolvedParentCardName));
+
+            OnPropertyChanged(nameof(ResolvedCategory));
+            
+            Refresh();
+
+            OnPropertyChanged(nameof(Power));
+            OnPropertyChanged(nameof(ResolvedTotalPower));
+            OnPropertyChanged(nameof(ResolvedInheritedPower));
+
+            OnPropertyChanged(nameof(Toughness));
+            OnPropertyChanged(nameof(ResolvedTotalToughness));
+            OnPropertyChanged(nameof(ResolvedInheritedToughness));
+        }
+
 
         protected void OnManaEntryChanged(object? sender, PropertyChangedEventArgs e)
         {

@@ -5,6 +5,9 @@ using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.ViewModel.Cards;
 using MTGCreateYourOwnCreature.ViewModel.Helpers;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
+using System.Windows.Input;
+using Microsoft.Win32;
+using System.Windows;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
@@ -24,8 +27,50 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
         }
 
+        protected readonly ICommand m_ImportCommand;
+        public ICommand ImportCommand => m_ImportCommand;
 
-        public ImportCommand ImportCommand { get; set; }
+
+        public Visibility ParentPickerVisibility { get; set; }
+
+        public ObservableCollection<MTGCreatureCardVM> AvailableParentCards { get; set; }
+
+        protected MTGCreatureCardVM BaseCreatureCard { get; set; }
+
+        protected MTGCreatureCardVM? m_SelectedParentCard;
+        public MTGCreatureCardVM? SelectedParentCard
+        {
+            get => m_SelectedParentCard;
+            set
+            {
+                if (m_SelectedParentCard == null || CurrentCard == null || value == null)
+                {
+                    return;
+                }
+
+                MTGCreatureCardVM? newSelectedCard = value;
+                if (m_SelectedParentCard == value || (newSelectedCard != null && CurrentCard.Card.ParentCreatureCard == newSelectedCard.Card))
+                {
+                    OnParentPickerClosed();
+                    return;
+                }
+
+                CurrentCard.ChangeParent(newSelectedCard == BaseCreatureCard ? null : newSelectedCard.Card);
+
+                OnPropertyChanged(nameof(Cards));
+                OnPropertyChanged(nameof(CurrentCard));
+
+                OnParentPickerClosed();
+            }
+        }
+
+
+
+        protected readonly ICommand m_OpenParentPickerCommand;
+        public ICommand OpenParentPickerCommand => m_OpenParentPickerCommand;
+
+        protected readonly ICommand m_CloseParentPickerCommand;
+        public ICommand CloseParentPickerCommand => m_CloseParentPickerCommand;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -33,7 +78,38 @@ namespace MTGCreateYourOwnCreature.ViewModel
         {
             Cards = new ObservableCollection<MTGCreatureCardVM>();
 
-            ImportCommand = new ImportCommand(this);
+            m_ImportCommand = new RelayCommand(_ =>
+            {
+                OpenFileDialog dialog = new OpenFileDialog()
+                {
+                    Multiselect = true,
+                    DefaultExt = ".txt",
+                    Filter = "Text documents (.txt)|*.txt"
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    ImportFile(dialog.FileName);
+                }
+            });
+
+
+            ParentPickerVisibility = Visibility.Collapsed;
+
+            AvailableParentCards = new ObservableCollection<MTGCreatureCardVM>();
+            BaseCreatureCard = new MTGCreatureCardVM(MTGCreatureCard.CreateBaseCreatureCard());
+
+            m_SelectedParentCard = null;
+
+            m_OpenParentPickerCommand = new RelayCommand(_ =>
+            {
+                OnParentPickerOpened();
+            });
+
+            m_CloseParentPickerCommand = new RelayCommand(_ =>
+            {
+                OnParentPickerClosed();
+            });
         }
 
 
@@ -43,7 +119,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
         }
 
 
-        public void ImportFile(string filePath)
+        protected void ImportFile(string filePath)
         {
             Cards.Clear();
 
@@ -79,6 +155,51 @@ namespace MTGCreateYourOwnCreature.ViewModel
                     }
                 }
             }
+        }
+
+        protected void OnParentPickerOpened()
+        {
+            ParentPickerVisibility = Visibility.Visible;
+
+            AvailableParentCards.Clear();
+            AvailableParentCards.Add(BaseCreatureCard);
+
+            foreach (MTGCreatureCardVM card in Cards)
+            {
+                if (card != CurrentCard)
+                {
+                    AvailableParentCards.Add(card);
+                }
+            }
+
+            m_SelectedParentCard = BaseCreatureCard;
+
+            if (CurrentCard != null && CurrentCard.HasParentCard)
+            {
+                foreach (MTGCreatureCardVM card in Cards)
+                {
+                    if (card.Card == CurrentCard.Card.ParentCreatureCard)
+                    {
+                        m_SelectedParentCard = card;
+                        break;
+                    }
+                }
+            }
+
+            OnPropertyChanged(nameof(SelectedParentCard));
+            OnPropertyChanged(nameof(AvailableParentCards));
+            OnPropertyChanged(nameof(ParentPickerVisibility));
+        }
+
+        protected void OnParentPickerClosed()
+        {
+            ParentPickerVisibility = Visibility.Collapsed;
+
+            AvailableParentCards.Clear();
+
+            m_SelectedParentCard = null;
+
+            OnPropertyChanged(nameof(ParentPickerVisibility));
         }
     }
 }
