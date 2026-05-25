@@ -10,7 +10,7 @@
         <Setter Property="CornerRadius" Value="4"/>
 
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsMouseOver, ElementName=root}" Value="True">
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
                 <Setter Property="Background" Value="{StaticResource ControlBackgroundHoverBrush}"/>
             </DataTrigger>
         </Style.Triggers>
