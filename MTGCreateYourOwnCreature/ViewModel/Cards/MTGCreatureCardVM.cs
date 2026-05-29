@@ -5,6 +5,8 @@ using MTGCreateYourOwnCreature.Model.Mana;
 using MTGCreateYourOwnCreature.Model.Category;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Windows.Input;
+using MTGCreateYourOwnCreature.ViewModel.Commands;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
@@ -13,6 +15,28 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public MTGCreatureCard Card { get; set; }
 
         public ObservableCollection<MTGManaEntryVM> Mana { get; set; }
+
+        public ObservableCollection<MTGTraitEntryVM> Tags { get; set; }
+
+        public string NewTag { get; set; }
+
+
+        public ObservableCollection<MTGTraitEntryVM> Keywords { get; set; }
+
+        public string NewKeyword { get; set; }
+
+
+        protected readonly ICommand m_AddTagCommand;
+        public ICommand AddTagCommand => m_AddTagCommand;
+
+        protected readonly ICommand m_RemoveTagCommand;
+        public ICommand RemoveTagCommand => m_RemoveTagCommand;
+
+        protected readonly ICommand m_AddKeywordCommand;
+        public ICommand AddKeywordCommand => m_AddKeywordCommand;
+
+        protected readonly ICommand m_RemoveKeywordCommand;
+        public ICommand RemoveKeywordCommand => m_RemoveKeywordCommand;
 
 
         public MTGCreatureCardVM(MTGCreatureCard card)
@@ -28,6 +52,60 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
                 Mana.Add(manaEntry);
             }
+
+            Tags = new ObservableCollection<MTGTraitEntryVM>(GetTagsFromCard(Card));
+            NewTag = string.Empty;
+
+            Keywords = new ObservableCollection<MTGTraitEntryVM>(GetKeywordsFromCard(Card));
+            NewKeyword = string.Empty;
+
+            m_AddTagCommand = new RelayCommand(_ =>
+            {
+                if (OnTraitAdded(Tags, NewTag, nameof(Tags)))
+                {
+                    Card.Tags.Add(NewTag);
+
+                    NewTag = string.Empty;
+                    OnPropertyChanged(nameof(NewTag));
+                }
+            });
+
+            m_RemoveTagCommand = new RelayCommand(param =>
+            {
+                if (param is not MTGTraitEntryVM trait)
+                {
+                    return;
+                }
+
+                Card.Tags.Remove(trait.Value);
+
+                Tags.Remove(trait);
+                OnPropertyChanged(nameof(Tags));
+            });
+
+            m_AddKeywordCommand = new RelayCommand(_ =>
+            {
+                if (OnTraitAdded(Keywords, NewKeyword, nameof(Keywords)))
+                {
+                    Card.Keywords.Add(NewKeyword);
+
+                    NewKeyword = string.Empty;
+                    OnPropertyChanged(nameof(NewKeyword));
+                }
+            });
+
+            m_RemoveKeywordCommand = new RelayCommand(param =>
+            {
+                if (param is not MTGTraitEntryVM trait)
+                {
+                    return;
+                }
+
+                Card.Keywords.Remove(trait.Value);
+
+                Keywords.Remove(trait);
+                OnPropertyChanged(nameof(Keywords));
+            });
         }
 
 
@@ -85,7 +163,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public int ResolvedInheritedPower => Card.ParentCreatureCard?.Power ?? 0;
 
-
         public int Toughness
         {
             get => Card.Toughness;
@@ -110,7 +187,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public IReadOnlyDictionary<ManaType, int> GetTotalManaFromCard(MTGCreatureCard? card)
+        protected IReadOnlyDictionary<ManaType, int> GetTotalManaFromCard(MTGCreatureCard? card)
         {
             Dictionary<ManaType, int> mana = new Dictionary<ManaType, int>();
 
@@ -134,6 +211,49 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             return mana;
         }
 
+
+        protected IReadOnlyCollection<MTGTraitEntryVM> GetTagsFromCard(MTGCreatureCard? card)
+        {
+            return GetTraitsFromCard(card, c => c.Tags);
+        }
+
+        protected IReadOnlyCollection<MTGTraitEntryVM> GetKeywordsFromCard(MTGCreatureCard? card)
+        {
+            return GetTraitsFromCard(card, c => c.Keywords);
+        }
+
+        protected IReadOnlyCollection<MTGTraitEntryVM> GetTraitsFromCard(MTGCreatureCard? card, Func<MTGCreatureCard, IEnumerable<string>> selector)
+        {
+            List<List<MTGTraitEntryVM>> cardsTraits = new List<List<MTGTraitEntryVM>>();
+
+            MTGCreatureCard? currentCard = card;
+            while (currentCard != null)
+            {
+                List<MTGTraitEntryVM> cardTraits = new List<MTGTraitEntryVM>();
+
+                bool isInherited = currentCard != card;
+
+                foreach (string trait in selector(currentCard))
+                {
+                    cardTraits.Add(new MTGTraitEntryVM(trait, isInherited));
+                }
+
+                cardsTraits.Add(cardTraits);
+
+                currentCard = currentCard.ParentCreatureCard;
+            }
+
+            List<MTGTraitEntryVM> traits = new List<MTGTraitEntryVM>();
+
+            for (int i = cardsTraits.Count - 1; i >= 0; --i)
+            {
+                traits.AddRange(cardsTraits[i]);
+            }
+
+            return traits;
+        }
+
+
         public Array AvailableCategories
         {
             get
@@ -153,7 +273,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
         }
 
-        public void Refresh()
+        public void RecalculateMana()
         {
             OnPropertyChanged(nameof(ResolvedTotalMana));
 
@@ -166,6 +286,33 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
+        public void UpdateTags()
+        {
+            Tags.Clear();
+
+            List<MTGTraitEntryVM> newTags = GetTagsFromCard(Card).ToList();
+            foreach (MTGTraitEntryVM tag in newTags)
+            {
+                Tags.Add(tag);
+            }
+
+            OnPropertyChanged(nameof(Tags));
+        }
+
+        public void UpdateKeywords()
+        {
+            Keywords.Clear();
+
+            List<MTGTraitEntryVM> newKeywords = GetKeywordsFromCard(Card).ToList();
+            foreach (MTGTraitEntryVM keyword in newKeywords)
+            {
+                Keywords.Add(keyword);
+            }
+
+            OnPropertyChanged(nameof(Keywords));
+        }
+
+
         public void ChangeParent(MTGCreatureCard parent)
         {
             Card.ParentCreatureCard = parent;
@@ -175,8 +322,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             OnPropertyChanged(nameof(ResolvedParentCardName));
 
             OnPropertyChanged(nameof(ResolvedCategory));
-            
-            Refresh();
+
+            RecalculateMana();
 
             OnPropertyChanged(nameof(Power));
             OnPropertyChanged(nameof(ResolvedTotalPower));
@@ -185,6 +332,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             OnPropertyChanged(nameof(Toughness));
             OnPropertyChanged(nameof(ResolvedTotalToughness));
             OnPropertyChanged(nameof(ResolvedInheritedToughness));
+
+            UpdateTags();
+            UpdateKeywords();
         }
 
 
@@ -203,6 +353,31 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             Card.Mana[entry.Type] = entry.Value;
 
             OnPropertyChanged(nameof(ResolvedTotalMana));
+        }
+
+
+        protected bool OnTraitAdded(ObservableCollection<MTGTraitEntryVM> traits, string newValue, string traitsPropertyName)
+        {
+            string value = newValue.Trim();
+
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            foreach (MTGTraitEntryVM trait in traits)
+            {
+                if (string.Equals(trait.Value, value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
+
+            traits.Add(new MTGTraitEntryVM(value, false));
+
+            OnPropertyChanged(traitsPropertyName);
+
+            return true;
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

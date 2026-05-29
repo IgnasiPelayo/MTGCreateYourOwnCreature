@@ -9,7 +9,7 @@ namespace MTGCreateYourOwnCreature.Rendering
     {
         public static Dictionary<ManaType, Brush?> ms_ManaBrushes = new Dictionary<ManaType, Brush?>()
         {
-            { ManaType.Colorless, Brushes.LightGray },
+            { ManaType.Generic, Brushes.LightGray },
             { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
             { ManaType.Blue, App.Current.TryFindResource("BlueManaBrush") as Brush },
             { ManaType.Black, App.Current.TryFindResource("BlackManaBrush") as Brush },
@@ -20,7 +20,7 @@ namespace MTGCreateYourOwnCreature.Rendering
 
         public static MTGManaSymbol CreatePreviewSymbol(ManaType manaType)
         {
-            return new MTGManaSymbol(manaType == ManaType.Colorless ? "X" : "", ms_ManaBrushes[manaType]);
+            return new MTGManaSymbol(manaType == ManaType.Generic ? "X" : "", ms_ManaBrushes[manaType]);
         }
 
 
@@ -37,7 +37,7 @@ namespace MTGCreateYourOwnCreature.Rendering
 
                 Brush? brush = ms_ManaBrushes[manaEntry.Key];
 
-                if (manaEntry.Key == ManaType.Colorless)
+                if (manaEntry.Key == ManaType.Generic)
                 {
                     symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), brush, inherited));
                 }

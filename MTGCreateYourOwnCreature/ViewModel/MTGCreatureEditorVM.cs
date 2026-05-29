@@ -151,7 +151,27 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 {
                     if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
                     {
-                        card.Refresh();
+                        card.RecalculateMana();
+                    }
+                }
+            }
+            else if (e.PropertyName == nameof(MTGCreatureCardVM.Tags))
+            {
+                foreach (MTGCreatureCardVM card in Cards)
+                {
+                    if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
+                    {
+                        card.UpdateTags();
+                    }
+                }
+            }
+            else if (e.PropertyName == nameof(MTGCreatureCardVM.Keywords))
+            {
+                foreach (MTGCreatureCardVM card in Cards)
+                {
+                    if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
+                    {
+                        card.UpdateTags();
                     }
                 }
             }
@@ -166,7 +186,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             foreach (MTGCreatureCardVM card in Cards)
             {
-                if (card != CurrentCard)
+                if (card != CurrentCard && !IsAncestorCard(CurrentCard.Card, card))
                 {
                     AvailableParentCards.Add(card);
                 }
@@ -190,6 +210,25 @@ namespace MTGCreateYourOwnCreature.ViewModel
             OnPropertyChanged(nameof(AvailableParentCards));
             OnPropertyChanged(nameof(ParentPickerVisibility));
         }
+
+
+        protected bool IsAncestorCard(MTGCreatureCard potentialParent, MTGCreatureCardVM child)
+        {
+            MTGCreatureCard? current = child.Card.ParentCreatureCard;
+
+            while (current != null)
+            {
+                if (current == potentialParent)
+                {
+                    return true;
+                }
+
+                current = current.ParentCreatureCard;
+            }
+
+            return false;
+        }
+
 
         protected void OnParentPickerClosed()
         {

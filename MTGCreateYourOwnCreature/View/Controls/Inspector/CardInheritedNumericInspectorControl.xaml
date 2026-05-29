@@ -21,18 +21,17 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="{Binding Label, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                   VerticalAlignment="Center"
-                   Style="{StaticResource InspectorPropertyTitle}"/>
+                       VerticalAlignment="Center"
+                       Style="{StaticResource InspectorPropertyTitle}"/>
 
             <local:NumericSpinnerControl Grid.Column="1"
-                             Value="{Binding LocalValue, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Value="{Binding LocalValue, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         
         <Grid Grid.Row="1">
             <Grid.Style>
                 <Style TargetType="Grid">
-                    <Setter Property="Visibility"
-                    Value="Collapsed"/>
+                    <Setter Property="Visibility" Value="Collapsed"/>
 
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding HasInheritance, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">

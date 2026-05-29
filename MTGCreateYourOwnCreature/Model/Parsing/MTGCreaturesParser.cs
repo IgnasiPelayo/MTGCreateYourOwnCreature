@@ -97,7 +97,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 
             card.Mana = new Dictionary<Model.Mana.ManaType, int>();
 
-            card.Mana[Model.Mana.ManaType.Colorless] = manaColors.GetInt("colorless");
+            card.Mana[Model.Mana.ManaType.Generic] = manaColors.GetInt("generic");
             card.Mana[Model.Mana.ManaType.White] = manaColors.GetInt("white");
             card.Mana[Model.Mana.ManaType.Blue] = manaColors.GetInt("blue");
             card.Mana[Model.Mana.ManaType.Black] = manaColors.GetInt("black");
@@ -115,7 +115,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static void CardTraits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> traits = GetBlockInformation(data);
-            card.Traits = new MTGCreatureCard.MTGCreatureTraits(traits.GetStringArray("tags"), traits.GetStringArray("keywords"));
+            card.Tags = traits.GetStringArray("tags").ToList();
+            card.Keywords = traits.GetStringArray("keywords").ToList();
         }
 
         protected static void CardText(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)

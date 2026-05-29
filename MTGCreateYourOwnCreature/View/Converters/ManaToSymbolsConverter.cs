@@ -12,7 +12,7 @@ namespace MTGCreateYourOwnCreature.View.Converters
     {
         public static Dictionary<ManaType, Brush?> ManaBrushes = new Dictionary<ManaType, Brush?>()
         {
-            { ManaType.Colorless, Brushes.LightGray },
+            { ManaType.Generic, Brushes.LightGray },
             { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
             { ManaType.Blue, App.Current.TryFindResource("BlueManaBrush") as Brush },
             { ManaType.Black, App.Current.TryFindResource("BlackManaBrush") as Brush },
@@ -36,7 +36,7 @@ namespace MTGCreateYourOwnCreature.View.Converters
                     continue;
                 }
 
-                if (manaEntry.Key == ManaType.Colorless)
+                if (manaEntry.Key == ManaType.Generic)
                 {
                     symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), ManaBrushes[manaEntry.Key]));
                 }

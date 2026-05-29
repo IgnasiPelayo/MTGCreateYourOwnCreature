@@ -18,20 +18,9 @@ namespace MTGCreateYourOwnCreature.Model
 
         public int Toughness { get; set; }
 
-        public class MTGCreatureTraits
-        {
-            public List<string> Tags { get; set; }
+        public List<string> Tags { get; set; }
 
-            public List<string> Keywords { get; set; }
-
-            public MTGCreatureTraits(string[] tags, string[] keywords)
-            {
-                Tags = tags.ToList();
-                Keywords = keywords.ToList();
-            }
-        }
-
-        public MTGCreatureTraits Traits { get; set; }
+        public List<string> Keywords { get; set; }
 
         public string Description { get; set; }
 
@@ -46,7 +35,8 @@ namespace MTGCreateYourOwnCreature.Model
             Mana = new Dictionary<ManaType, int>();
             Power = 0;
             Toughness = 0;
-            Traits = new MTGCreatureTraits([], []);
+            Tags = new List<string>();
+            Keywords = new List<string>();
             Description = string.Empty;
             Lore = string.Empty;
         }

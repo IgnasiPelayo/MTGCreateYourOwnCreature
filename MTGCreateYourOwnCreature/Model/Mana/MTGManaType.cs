@@ -3,7 +3,7 @@ namespace MTGCreateYourOwnCreature.Model.Mana
 {
     public enum ManaType
     {
-        Colorless,
+        Generic,
         White,
         Blue,
         Black,
