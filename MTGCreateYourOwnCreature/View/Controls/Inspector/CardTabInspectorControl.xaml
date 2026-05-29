@@ -23,7 +23,8 @@
             
             <TabItem Style="{DynamicResource RoundedTabItem}"
                      Tag="TopLeft"
-                     Header="Stats">
+                     Header="Stats"
+                     Padding="10,1,10,0">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
 
@@ -61,7 +62,8 @@
             </TabItem>
 
             <TabItem Style="{DynamicResource RoundedTabItem}"
-                 Header="Traits">
+                     Header="Traits"
+                     Padding="10,1,10,0">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid>
@@ -87,8 +89,9 @@
             </TabItem>
 
             <TabItem Style="{DynamicResource RoundedTabItem}"
-                 Tag="TopRight"
-                 Header="Information">
+                     Tag="TopRight"
+                     Header="Information"
+                     Padding="10,1,10,0">
                 <TextBlock Text="Information content"/>
             </TabItem>
         </TabControl>

@@ -10,12 +10,11 @@
         <Setter Property="CornerRadius" Value="4"/>
 
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+            <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource ControlBackgroundHoverBrush}"/>
-            </DataTrigger>
+            </Trigger>
         </Style.Triggers>
     </Style>
-
 
     <Style x:Key="ListBoxItemRoundedBorder" BasedOn="{StaticResource RoundedBorder}" TargetType="Border">
         <Style.Triggers>
@@ -28,7 +27,7 @@
 
     
     <Style x:Key="InspectorPropertyTitle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#999"/>
+        <Setter Property="Foreground" Value="#333"/>
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
@@ -273,14 +272,14 @@
                             Style="{StaticResource DynamicRoundedBorder}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1,1,1,0"
+                            BorderThickness="2,2,2,0"
                             Margin="0">
 
                             <Border x:Name="innerBorder"
                                 Style="{StaticResource DynamicRoundedBorder}"
                                 Background="{StaticResource ControlBackgroundBrush}"
                                 BorderBrush="{StaticResource BorderBrush}"
-                                BorderThickness="1,1,1,0"
+                                BorderThickness="2,2,2,0"
                                 Margin="-1"
                                 Opacity="0"/>
                         </Border>
