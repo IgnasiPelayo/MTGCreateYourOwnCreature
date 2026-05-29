@@ -23,10 +23,19 @@
                    Text="Parent Card"/>
 
         <Button Grid.Column="1"
-                Style="{StaticResource RoundedButton}"
                 Margin="10,-5,0,0"
                 HorizontalContentAlignment="Stretch"
                 Command="{Binding DataContext.OpenParentPickerCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+
+            <Button.Style>
+               <Style TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasParentCard}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource ControlInheritedBorderBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
 
             <TextBlock TextWrapping="Wrap"
                        HorizontalAlignment="Center"

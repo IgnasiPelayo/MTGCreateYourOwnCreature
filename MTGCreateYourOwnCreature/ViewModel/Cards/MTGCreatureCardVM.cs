@@ -20,7 +20,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public string NewTag { get; set; }
 
-
         public ObservableCollection<MTGTraitEntryVM> Keywords { get; set; }
 
         public string NewKeyword { get; set; }
@@ -117,25 +116,22 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public CategoryType ResolvedCategory
         {
-            get
+            get => GetCategoryFromCard(Card);
+            set
             {
-                MTGCreatureCard? currentCard = Card;
-                while (currentCard != null)
+                if (Card.Category == value)
                 {
-                    if (currentCard.Category != CategoryType.None)
-                    {
-                        return currentCard.Category;
-                    }
-
-                    currentCard = currentCard.ParentCreatureCard;
+                    return;
                 }
 
-                return CategoryType.None;
-            }
+                Card.Category = value;
 
-            set => Card.Category = value;
+                OnPropertyChanged(nameof(ResolvedCategory));
+                OnPropertyChanged(nameof(HasInheritedCategory));
+            }
         }
 
+        public bool HasInheritedCategory => HasParentCard && ResolvedCategory == GetCategoryFromCard(Card.ParentCreatureCard);
 
         public IReadOnlyDictionary<ManaType, int> ResolvedTotalMana => GetTotalManaFromCard(Card);
 
@@ -186,6 +182,24 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+
+        protected CategoryType GetCategoryFromCard(MTGCreatureCard? card)
+        {
+            MTGCreatureCard? currentCard = card;
+            while (currentCard != null)
+            {
+                if (currentCard.Category != CategoryType.None)
+                {
+                    return currentCard.Category;
+                }
+
+                currentCard = currentCard.ParentCreatureCard;
+            }
+
+            return CategoryType.None;
+        }
+
 
         protected IReadOnlyDictionary<ManaType, int> GetTotalManaFromCard(MTGCreatureCard? card)
         {
@@ -322,6 +336,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             OnPropertyChanged(nameof(ResolvedParentCardName));
 
             OnPropertyChanged(nameof(ResolvedCategory));
+            OnPropertyChanged(nameof(HasInheritedCategory));
 
             RecalculateMana();
 

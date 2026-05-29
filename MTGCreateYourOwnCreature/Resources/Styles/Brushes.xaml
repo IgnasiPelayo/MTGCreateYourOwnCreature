@@ -6,6 +6,8 @@
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFF8F8F8"/>
     <SolidColorBrush x:Key="ControlBackgroundHoverBrush" Color="#FFF1F1F1"/>
     <SolidColorBrush x:Key="ControlBackgroundSelectedBrush" Color="#FFE8E8E8"/>
+    
+    <SolidColorBrush x:Key="ControlInheritedBorderBrush" Color="RoyalBlue"/>
 
     <ImageBrush x:Key="WhiteManaBrush" ImageSource="/Resources/ManaTextures/white.png"/>
     <ImageBrush x:Key="BlueManaBrush" ImageSource="/Resources/ManaTextures/blue.png"/>

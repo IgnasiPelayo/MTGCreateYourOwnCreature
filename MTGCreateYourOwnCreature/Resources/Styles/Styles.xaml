@@ -101,7 +101,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border x:Name="templateRoot"
-                            Style="{StaticResource RoundedBorder}">
+                            Style="{StaticResource RoundedBorder}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
                         <Border x:Name="splitBorder"
                                 BorderBrush="Transparent"
                                 BorderThickness="1"

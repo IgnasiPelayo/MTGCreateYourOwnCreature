@@ -58,6 +58,7 @@
 
             <Border Grid.Column="1"
                     Style="{StaticResource RoundedBorder}"
+                    BorderBrush="{StaticResource ControlInheritedBorderBrush}"
                     Height="20"
                     Margin="0,4,0,2"
                     Background="{StaticResource ControlBackgroundSelectedBrush}">

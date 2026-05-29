@@ -17,7 +17,7 @@
 
         <Ellipse Fill="Transparent"
                  Margin="-2"
-                 Stroke="RoyalBlue"
+                 Stroke="{StaticResource ControlInheritedBorderBrush}"
                  StrokeThickness="2"
                  IsHitTestVisible="False">
             <Ellipse.Style>

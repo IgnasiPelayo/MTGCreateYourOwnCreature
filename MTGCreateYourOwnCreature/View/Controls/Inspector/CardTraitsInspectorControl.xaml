@@ -86,7 +86,7 @@
 
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsInherited}" Value="True">
-                                        <Setter Property="BorderBrush" Value="RoyalBlue"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource ControlInheritedBorderBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

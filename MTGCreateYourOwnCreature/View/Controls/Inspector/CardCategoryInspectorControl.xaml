@@ -19,14 +19,23 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Style="{StaticResource InspectorPropertyTitle}"
-               Text="Category"/>
+                   Text="Category"/>
 
         <ComboBox Grid.Column="1"
-                  Style="{DynamicResource RoundedComboBox}"
                   ItemsSource="{Binding AvailableCategories}"
                   SelectedItem="{Binding ResolvedCategory}"
                   Margin="22,-5,0,0"
                   MinHeight="24">
+
+            <ComboBox.Style>
+                <Style TargetType="ComboBox" BasedOn="{StaticResource RoundedComboBox}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasInheritedCategory}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource ControlInheritedBorderBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ComboBox.Style>
 
             <ComboBox.ItemTemplate>
                 <DataTemplate>
