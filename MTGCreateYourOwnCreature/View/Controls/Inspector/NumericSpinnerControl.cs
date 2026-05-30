@@ -73,7 +73,7 @@ namespace MTGCreateYourOwnCreature.View.Controls.Inspector
 
             m_TextBox = GetTemplateChild("PART_TextBox") as TextBox;
 
-            if (m_TextBox != null )
+            if (m_TextBox != null)
             {
                 m_TextBox.PreviewTextInput += OnPreviewTextInput;
 

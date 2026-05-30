@@ -1,19 +1,21 @@
-﻿using System.ComponentModel;
+﻿using System.Windows;
+using Microsoft.Win32;
+using System.Windows.Input;
+using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.ViewModel.Cards;
 using MTGCreateYourOwnCreature.ViewModel.Helpers;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
-using System.Windows.Input;
-using Microsoft.Win32;
-using System.Windows;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
     internal class MTGCreatureEditorVM : INotifyPropertyChanged
     {
         public ObservableCollection<MTGCreatureCardVM> Cards { get; set; }
+
+        protected Dictionary<MTGCreatureCard, MTGCreatureCardVM> m_CardsToVM = new Dictionary<MTGCreatureCard, MTGCreatureCardVM>();
 
 
         protected MTGCreatureCardVM? m_CurrentCard = null;
@@ -31,11 +33,15 @@ namespace MTGCreateYourOwnCreature.ViewModel
         public ICommand ImportCommand => m_ImportCommand;
 
 
+        protected Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>> m_Ancestors = new Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>>();
+
+
         public Visibility ParentPickerVisibility { get; set; }
 
         public ObservableCollection<MTGCreatureCardVM> AvailableParentCards { get; set; }
 
         protected MTGCreatureCardVM BaseCreatureCard { get; set; }
+
 
         protected MTGCreatureCardVM? m_SelectedParentCard;
         public MTGCreatureCardVM? SelectedParentCard
@@ -55,7 +61,18 @@ namespace MTGCreateYourOwnCreature.ViewModel
                     return;
                 }
 
+                if (CurrentCard.Card.ParentCreatureCard != null)
+                {
+                    MTGCreatureCardVM parentCard = m_CardsToVM[CurrentCard.Card.ParentCreatureCard];
+                    m_Ancestors[parentCard].Remove(CurrentCard);
+                }
+                
                 CurrentCard.ChangeParent(newSelectedCard == BaseCreatureCard ? null : newSelectedCard.Card);
+
+                if (newSelectedCard != BaseCreatureCard)
+                {
+                    m_Ancestors[newSelectedCard].Add(CurrentCard);
+                }
 
                 OnPropertyChanged(nameof(Cards));
                 OnPropertyChanged(nameof(CurrentCard));
@@ -129,12 +146,25 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 MTGCreatureCardVM creatureCard = new MTGCreatureCardVM(card);
                 creatureCard.PropertyChanged += OnCardChanged;
 
+                m_CardsToVM[card] = creatureCard;
+
+                m_Ancestors[creatureCard] = new List<MTGCreatureCardVM>();
+
                 Cards.Add(creatureCard);
             }
 
             if (cards.Count > 0)
             {
                 CurrentCard = Cards[0];
+            }
+
+            foreach (MTGCreatureCardVM card in Cards)
+            {
+                if (card.Card.ParentCreatureCard != null)
+                {
+                    MTGCreatureCardVM parentCardVM = m_CardsToVM[card.Card.ParentCreatureCard];
+                    m_Ancestors[parentCardVM].Add(card);
+                }
             }
         }
 
@@ -147,32 +177,23 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             if (e.PropertyName == nameof(MTGCreatureCardVM.ResolvedTotalMana))
             {
-                foreach (MTGCreatureCardVM card in Cards)
+                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
                 {
-                    if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
-                    {
-                        card.RecalculateMana();
-                    }
+                    ancestorCard.RecalculateMana();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.Tags))
             {
-                foreach (MTGCreatureCardVM card in Cards)
+                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
                 {
-                    if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
-                    {
-                        card.UpdateTags();
-                    }
+                    ancestorCard.UpdateTags();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.Keywords))
             {
-                foreach (MTGCreatureCardVM card in Cards)
+                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
                 {
-                    if (creatureCard != card && creatureCard.Card == card.Card.ParentCreatureCard)
-                    {
-                        card.UpdateTags();
-                    }
+                    ancestorCard.UpdateTags();
                 }
             }
         }
