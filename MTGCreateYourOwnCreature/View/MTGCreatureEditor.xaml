@@ -7,6 +7,7 @@
       xmlns:cardslist="clr-namespace:MTGCreateYourOwnCreature.View.Controls.CardsList"
       xmlns:inspector="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
       xmlns:modals="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Modals"
+      xmlns:preview="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Preview"
       xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
       mc:Ignorable="d"
       Title="Magic the Gathering: Create your own Creature" Height="550" Width="980">
@@ -81,6 +82,7 @@
                         BorderThickness="0,0,1,0"
                         Padding="4">
 
+                    <preview:CardPreviewControl DataContext="{Binding CurrentCard}"/>
 
                 </Border>
             </Grid>

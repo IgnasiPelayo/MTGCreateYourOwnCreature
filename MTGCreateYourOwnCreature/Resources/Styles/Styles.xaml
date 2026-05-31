@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
-                    xmlns:inspector_controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector">
+                    xmlns:inspector_controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
+                    xmlns:preview="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Preview">
 
     <Style x:Key="RoundedBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}"/>
