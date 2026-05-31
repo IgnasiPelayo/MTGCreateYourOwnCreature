@@ -196,6 +196,13 @@ namespace MTGCreateYourOwnCreature.ViewModel
                     ancestorCard.UpdateTags();
                 }
             }
+            else if (e.PropertyName == nameof(MTGCreatureCardVM.Description))
+            {
+                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                {
+                    ancestorCard.UpdateDescription();
+                }
+            }
         }
 
         protected void OnParentPickerOpened()

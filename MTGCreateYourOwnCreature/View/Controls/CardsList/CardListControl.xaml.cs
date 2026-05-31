@@ -17,7 +17,7 @@ namespace MTGCreateYourOwnCreature.View.Controls.CardsList
                 return;
             }
 
-            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - (e.Delta * 0.5));
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - (e.Delta * 0.1));
             e.Handled = true;
         }
     }

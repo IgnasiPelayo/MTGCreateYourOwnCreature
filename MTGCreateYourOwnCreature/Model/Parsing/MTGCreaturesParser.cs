@@ -108,6 +108,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static void CardStats(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> stats = GetBlockInformation(data);
+
             card.Power = stats.GetInt("power");
             card.Toughness = stats.GetInt("toughness");
         }
@@ -115,6 +116,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static void CardTraits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> traits = GetBlockInformation(data);
+
             card.Tags = traits.GetStringArray("tags").ToList();
             card.Keywords = traits.GetStringArray("keywords").ToList();
         }
@@ -122,8 +124,12 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         protected static void CardText(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> texts = GetBlockInformation(data);
+
+            card.OverridesDescription = texts.GetBool("overrides_description", true);
             card.Description = texts.GetString("description");
-            card.Lore = texts.GetString("lore");
+
+            card.OverridesFlavorText = texts.GetBool("overrides_flavor_text", true);
+            card.FlavorText = texts.GetString("flavor_text");
         }
 
         protected static Dictionary<string, string> GetBlockInformation(string data)

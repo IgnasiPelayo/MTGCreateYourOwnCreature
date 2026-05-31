@@ -3,6 +3,11 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
 {
     public static class DictionaryExtensions
     {
+        public static bool GetBool(this IReadOnlyDictionary<string, string> values, string key, bool defaultValue = false)
+        {
+            return values.TryGetValue(key, out string? value) && bool.TryParse(value, out bool parsed) ? parsed : defaultValue;
+        }
+
         public static int GetInt(this IReadOnlyDictionary<string, string> values, string key, int defaultValue = 0)
         {
             return values.TryGetValue(key, out string? value) && int.TryParse(value, out int parsed) ? parsed : defaultValue;

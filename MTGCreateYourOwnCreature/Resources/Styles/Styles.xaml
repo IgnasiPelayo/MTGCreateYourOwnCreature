@@ -435,4 +435,69 @@
         </Setter>
     </Style>
 
+
+    <Style x:Key="RoundedCheckBox" TargetType="CheckBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+
+                    <Border x:Name="Root"
+                            Background="Transparent"
+                            Padding="{TemplateBinding Padding}">
+
+                        <Grid VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border x:Name="Box"
+                                    Width="15"
+                                    Height="15"
+                                    CornerRadius="3"
+                                    BorderThickness="2"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    Background="{StaticResource ControlBackgroundBrush}"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left">
+
+                                <TextBlock x:Name="XMark"
+                                           Text="✕"
+                                           FontSize="10"
+                                           FontWeight="UltraBlack"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="Transparent"/>
+                            </Border>
+
+                            <ContentPresenter Grid.Column="1"
+                                              Margin="5,0,0,0"
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource ControlBackgroundSelectedBrush}"/>
+                            <Setter TargetName="XMark" Property="Foreground" Value="Black"/>
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource ControlBackgroundHoverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

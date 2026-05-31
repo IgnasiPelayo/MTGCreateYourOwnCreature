@@ -22,9 +22,13 @@ namespace MTGCreateYourOwnCreature.Model
 
         public List<string> Keywords { get; set; }
 
+        public bool OverridesDescription { get; set; }
+
         public string Description { get; set; }
 
-        public string Lore { get; set; }
+        public bool OverridesFlavorText { get; set; }
+
+        public string FlavorText { get; set; }
 
 
         public MTGCreatureCard()
@@ -37,8 +41,10 @@ namespace MTGCreateYourOwnCreature.Model
             Toughness = 0;
             Tags = new List<string>();
             Keywords = new List<string>();
+            OverridesDescription = false;
             Description = string.Empty;
-            Lore = string.Empty;
+            OverridesFlavorText = false;
+            FlavorText = string.Empty;
         }
 
         public static MTGCreatureCard CreateBaseCreatureCard()

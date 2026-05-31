@@ -31,7 +31,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="5"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
@@ -92,7 +92,22 @@
                      Tag="TopRight"
                      Header="Information"
                      Padding="10,1,10,0">
-                <TextBlock Text="Information content"/>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <local:CardInformationInspectorControl Label="Description"
+                                                               DataContext="{Binding Description}"/>
+
+                        <local:CardInformationInspectorControl Grid.Row="1"
+                                                               Label="Flavor Text"
+                                                               DataContext="{Binding FlavorText}"/>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
     </Grid>

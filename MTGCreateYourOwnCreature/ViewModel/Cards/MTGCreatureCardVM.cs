@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
+using System.Diagnostics;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
@@ -20,93 +21,21 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public string NewTag { get; set; }
 
-        public ObservableCollection<MTGTraitEntryVM> Keywords { get; set; }
-
-        public string NewKeyword { get; set; }
-
-
         protected readonly ICommand m_AddTagCommand;
         public ICommand AddTagCommand => m_AddTagCommand;
 
         protected readonly ICommand m_RemoveTagCommand;
         public ICommand RemoveTagCommand => m_RemoveTagCommand;
 
+        public ObservableCollection<MTGTraitEntryVM> Keywords { get; set; }
+
+        public string NewKeyword { get; set; }
+
         protected readonly ICommand m_AddKeywordCommand;
         public ICommand AddKeywordCommand => m_AddKeywordCommand;
 
         protected readonly ICommand m_RemoveKeywordCommand;
         public ICommand RemoveKeywordCommand => m_RemoveKeywordCommand;
-
-
-        public MTGCreatureCardVM(MTGCreatureCard card)
-        {
-            Card = card;
-
-            Mana = new ObservableCollection<MTGManaEntryVM>();
-            ManaType[] manaTypes = Enum.GetValues<ManaType>();
-            foreach (ManaType manaType in manaTypes)
-            {
-                MTGManaEntryVM manaEntry = new MTGManaEntryVM(manaType, Card.Mana[manaType], ResolvedInheritedMana[manaType]);
-                manaEntry.PropertyChanged += OnManaEntryChanged;
-
-                Mana.Add(manaEntry);
-            }
-
-            Tags = new ObservableCollection<MTGTraitEntryVM>(GetTagsFromCard(Card));
-            NewTag = string.Empty;
-
-            Keywords = new ObservableCollection<MTGTraitEntryVM>(GetKeywordsFromCard(Card));
-            NewKeyword = string.Empty;
-
-            m_AddTagCommand = new RelayCommand(_ =>
-            {
-                if (OnTraitAdded(Tags, NewTag, nameof(Tags)))
-                {
-                    Card.Tags.Add(NewTag);
-
-                    NewTag = string.Empty;
-                    OnPropertyChanged(nameof(NewTag));
-                }
-            });
-
-            m_RemoveTagCommand = new RelayCommand(param =>
-            {
-                if (param is not MTGTraitEntryVM trait)
-                {
-                    return;
-                }
-
-                Card.Tags.Remove(trait.Value);
-
-                Tags.Remove(trait);
-                OnPropertyChanged(nameof(Tags));
-            });
-
-            m_AddKeywordCommand = new RelayCommand(_ =>
-            {
-                if (OnTraitAdded(Keywords, NewKeyword, nameof(Keywords)))
-                {
-                    Card.Keywords.Add(NewKeyword);
-
-                    NewKeyword = string.Empty;
-                    OnPropertyChanged(nameof(NewKeyword));
-                }
-            });
-
-            m_RemoveKeywordCommand = new RelayCommand(param =>
-            {
-                if (param is not MTGTraitEntryVM trait)
-                {
-                    return;
-                }
-
-                Card.Keywords.Remove(trait.Value);
-
-                Keywords.Remove(trait);
-                OnPropertyChanged(nameof(Keywords));
-            });
-        }
-
 
         public bool HasParentCard => Card.ParentCreatureCard != null;
 
@@ -179,6 +108,95 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public int ResolvedTotalToughness => Card.Toughness + ResolvedInheritedToughness;
 
         public int ResolvedInheritedToughness => Card.ParentCreatureCard?.Toughness ?? 0;
+
+
+        public MTGInformationEntryVM Description { get; set; }
+
+        public MTGInformationEntryVM FlavorText { get; set; } 
+
+
+        public MTGCreatureCardVM(MTGCreatureCard card)
+        {
+            Card = card;
+
+            Mana = new ObservableCollection<MTGManaEntryVM>();
+            ManaType[] manaTypes = Enum.GetValues<ManaType>();
+            foreach (ManaType manaType in manaTypes)
+            {
+                MTGManaEntryVM manaEntry = new MTGManaEntryVM(manaType, Card.Mana[manaType], ResolvedInheritedMana[manaType]);
+                manaEntry.PropertyChanged += OnManaEntryChanged;
+
+                Mana.Add(manaEntry);
+            }
+
+            Tags = new ObservableCollection<MTGTraitEntryVM>(GetTagsFromCard(Card));
+            NewTag = string.Empty;
+
+            Keywords = new ObservableCollection<MTGTraitEntryVM>(GetKeywordsFromCard(Card));
+            NewKeyword = string.Empty;
+
+            m_AddTagCommand = new RelayCommand(_ =>
+            {
+                if (OnTraitAdded(Tags, NewTag, nameof(Tags)))
+                {
+                    Card.Tags.Add(NewTag);
+
+                    NewTag = string.Empty;
+                    OnPropertyChanged(nameof(NewTag));
+                }
+            });
+
+            m_RemoveTagCommand = new RelayCommand(param =>
+            {
+                if (param is not MTGTraitEntryVM trait)
+                {
+                    return;
+                }
+
+                Card.Tags.Remove(trait.Value);
+
+                Tags.Remove(trait);
+                OnPropertyChanged(nameof(Tags));
+            });
+
+            m_AddKeywordCommand = new RelayCommand(_ =>
+            {
+                if (OnTraitAdded(Keywords, NewKeyword, nameof(Keywords)))
+                {
+                    Card.Keywords.Add(NewKeyword);
+
+                    NewKeyword = string.Empty;
+                    OnPropertyChanged(nameof(NewKeyword));
+                }
+            });
+
+            m_RemoveKeywordCommand = new RelayCommand(param =>
+            {
+                if (param is not MTGTraitEntryVM trait)
+                {
+                    return;
+                }
+
+                Card.Keywords.Remove(trait.Value);
+
+                Keywords.Remove(trait);
+                OnPropertyChanged(nameof(Keywords));
+            });
+
+            if (!Card.OverridesDescription)
+            {
+                Card.Description = Card.ParentCreatureCard?.Description ?? "";
+            }
+            Description = new MTGInformationEntryVM(Card.Description, Card.ParentCreatureCard?.Description ?? "", Card.OverridesDescription);
+            Description.PropertyChanged += OnInformationPropertyChanged;
+
+            if (!Card.OverridesFlavorText)
+            {
+                Card.FlavorText = Card.ParentCreatureCard?.FlavorText ?? "";
+            }
+            FlavorText = new MTGInformationEntryVM(Card.FlavorText, Card.ParentCreatureCard?.FlavorText ?? "", Card.OverridesFlavorText);
+            Description.PropertyChanged += OnInformationPropertyChanged;
+        }
 
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -327,6 +345,20 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
+        public void UpdateDescription()
+        {
+            Description.InheritedValue = Card.ParentCreatureCard?.Description ?? "";
+
+            if (!Card.OverridesDescription)
+            {
+                Card.Description = Description.InheritedValue;
+            }
+
+            OnPropertyChanged(nameof(Description));
+            Description.UpdateInheritance();
+        }
+
+
         public void ChangeParent(MTGCreatureCard parent)
         {
             Card.ParentCreatureCard = parent;
@@ -350,6 +382,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
             UpdateTags();
             UpdateKeywords();
+
+            UpdateDescription();
         }
 
 
@@ -393,6 +427,34 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             OnPropertyChanged(traitsPropertyName);
 
             return true;
+        }
+
+        protected void OnInformationPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is not MTGInformationEntryVM entry)
+            {
+                return;
+            }
+
+            if (e.PropertyName != nameof(MTGInformationEntryVM.Value) && e.PropertyName != nameof(MTGInformationEntryVM.OverridesValue))
+            {
+                return;
+            }
+
+            if (entry == Description)
+            {
+                Card.Description = entry.ResolvedValue;
+                Card.OverridesDescription = entry.OverridesValue;
+
+                OnPropertyChanged(nameof(Description));
+            }
+            else if (entry == FlavorText)
+            {
+                Card.FlavorText = entry.ResolvedValue;
+                Card.OverridesFlavorText = entry.OverridesValue;
+
+                OnPropertyChanged(nameof(FlavorText));
+            }
         }
 
         protected virtual void OnPropertyChanged(string propertyName)
