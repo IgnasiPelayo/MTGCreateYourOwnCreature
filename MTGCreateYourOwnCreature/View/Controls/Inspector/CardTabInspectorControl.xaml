@@ -26,7 +26,8 @@
                      Header="Stats"
                      Padding="10,1,10,0">
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -65,7 +66,8 @@
                      Header="Traits"
                      Padding="10,1,10,0">
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -87,7 +89,8 @@
                      Header="Information"
                      Padding="10,1,10,0">
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

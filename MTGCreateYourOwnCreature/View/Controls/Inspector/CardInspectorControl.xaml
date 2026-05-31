@@ -6,34 +6,31 @@
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-        
-        <Grid Margin="12,12,6,12">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-        
-            <local:CardNameInspectorControl/>
-        
-            <local:CardParentInspectorControl Grid.Row="1"
+
+    <Grid Margin="12,12,6,12">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <local:CardNameInspectorControl/>
+
+        <local:CardParentInspectorControl Grid.Row="1"
                                               Padding="0,15,0,0"/>
-        
-            <local:CardCategoryInspectorControl Grid.Row="2"
+
+        <local:CardCategoryInspectorControl Grid.Row="2"
                                                 Padding="0,15,0,0"/>
-        
-            <Separator Grid.Row="3"
+
+        <Separator Grid.Row="3"
                        Margin="0,15,0,0"/>
 
-            <local:CardTabInspectorControl Grid.Row="4"
-                                           Padding="0,15,0,0"/>
+        <local:CardTabInspectorControl Grid.Row="4"
+                                       Padding="0,15,0,0"/>
 
-        </Grid>
-    </ScrollViewer>
+    </Grid>
 </UserControl>

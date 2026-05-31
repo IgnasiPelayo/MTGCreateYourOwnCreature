@@ -20,7 +20,6 @@
                    VerticalAlignment="Center"
                    Style="{StaticResource InspectorPropertyTitle}"/>
 
-
         <Border Grid.Row="1"
                 Margin="0,5,0,0">
 
@@ -36,14 +35,32 @@
                 </Style>
             </Border.Style>
 
-            <TextBox Text="{Binding ResolvedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     IsReadOnly="{Binding IsReadOnly}"
-                     TextWrapping="Wrap"
-                     AcceptsReturn="True"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     Padding="5"
-                     MinHeight="75"/>
+            <Grid>
+                <TextBox Text="{Binding ResolvedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsReadOnly="{Binding IsReadOnly}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="5"
+                         MinHeight="75"/>
+
+                <TextBlock Margin="0,5,4,0"
+                           VerticalAlignment="Center">
+
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource EditableTextIcon}">
+                            <Setter Property="Visibility" Value="Visible"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding OverridesValue}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
         </Border>
 
         <CheckBox Grid.Row="2"
@@ -78,10 +95,11 @@
                 </Style>
             </Border.Style>
 
-            <TextBlock Text="{Binding InheritedValue}"
-                       Background="Transparent"
-                       Padding="5"
-                       TextWrapping="Wrap"/>
+            <TextBox Text="{Binding InheritedValue}"
+                     Background="Transparent"
+                     Padding="5"
+                     TextWrapping="Wrap"
+                     IsReadOnly="True"/>
         </Border>
     </Grid>
 </UserControl>
