@@ -17,25 +17,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public ObservableCollection<MTGManaEntryVM> Mana { get; set; }
 
-        public ObservableCollection<MTGTraitEntryVM> Tags { get; set; }
+        public MTGTraitCollectionVM Tags { get; set; }
 
-        public string NewTag { get; set; }
-
-        protected readonly ICommand m_AddTagCommand;
-        public ICommand AddTagCommand => m_AddTagCommand;
-
-        protected readonly ICommand m_RemoveTagCommand;
-        public ICommand RemoveTagCommand => m_RemoveTagCommand;
-
-        public ObservableCollection<MTGTraitEntryVM> Keywords { get; set; }
-
-        public string NewKeyword { get; set; }
-
-        protected readonly ICommand m_AddKeywordCommand;
-        public ICommand AddKeywordCommand => m_AddKeywordCommand;
-
-        protected readonly ICommand m_RemoveKeywordCommand;
-        public ICommand RemoveKeywordCommand => m_RemoveKeywordCommand;
+        public MTGTraitCollectionVM Keywords { get; set; }
 
         public bool HasParentCard => Card.ParentCreatureCard != null;
 
@@ -129,59 +113,53 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                 Mana.Add(manaEntry);
             }
 
-            Tags = new ObservableCollection<MTGTraitEntryVM>(GetTagsFromCard(Card));
-            NewTag = string.Empty;
-
-            Keywords = new ObservableCollection<MTGTraitEntryVM>(GetKeywordsFromCard(Card));
-            NewKeyword = string.Empty;
-
-            m_AddTagCommand = new RelayCommand(_ =>
-            {
-                if (OnTraitAdded(Tags, NewTag, nameof(Tags)))
+            Tags = new MTGTraitCollectionVM(GetTagsFromCard(Card),
+                canAdd: value =>
                 {
-                    Card.Tags.Add(NewTag);
+                    foreach (string tag in Card.Tags)
+                    {
+                        if (string.Equals(tag, value, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                    }
 
-                    NewTag = string.Empty;
-                    OnPropertyChanged(nameof(NewTag));
-                }
-            });
-
-            m_RemoveTagCommand = new RelayCommand(param =>
-            {
-                if (param is not MTGTraitEntryVM trait)
+                    return true;
+                },
+                onAdd: trait =>
                 {
-                    return;
-                }
-
-                Card.Tags.Remove(trait.Value);
-
-                Tags.Remove(trait);
-                OnPropertyChanged(nameof(Tags));
-            });
-
-            m_AddKeywordCommand = new RelayCommand(_ =>
-            {
-                if (OnTraitAdded(Keywords, NewKeyword, nameof(Keywords)))
+                    Card.Tags.Add(trait.Value);
+                    OnPropertyChanged(nameof(Tags));
+                },
+                onRemove: trait =>
                 {
-                    Card.Keywords.Add(NewKeyword);
+                    Card.Tags.Remove(trait.Value);
+                    OnPropertyChanged(nameof(Tags));
+                });
 
-                    NewKeyword = string.Empty;
-                    OnPropertyChanged(nameof(NewKeyword));
-                }
-            });
-
-            m_RemoveKeywordCommand = new RelayCommand(param =>
-            {
-                if (param is not MTGTraitEntryVM trait)
+            Keywords = new MTGTraitCollectionVM(GetKeywordsFromCard(Card),
+                canAdd: value =>
                 {
-                    return;
-                }
+                    foreach (string keyword in Card.Keywords)
+                    {
+                        if (string.Equals(keyword, value, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return false;
+                        }
+                    }
 
-                Card.Keywords.Remove(trait.Value);
-
-                Keywords.Remove(trait);
-                OnPropertyChanged(nameof(Keywords));
-            });
+                    return true;
+                },
+                onAdd: trait =>
+                {
+                    Card.Keywords.Add(trait.Value);
+                    OnPropertyChanged(nameof(Keywords));
+                },
+                onRemove: trait =>
+                {
+                    Card.Keywords.Remove(trait.Value);
+                    OnPropertyChanged(nameof(Keywords));
+                });
 
             if (!Card.OverridesDescription)
             {
@@ -320,12 +298,12 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public void UpdateTags()
         {
-            Tags.Clear();
+            Tags.Traits.Clear();
 
             List<MTGTraitEntryVM> newTags = GetTagsFromCard(Card).ToList();
             foreach (MTGTraitEntryVM tag in newTags)
             {
-                Tags.Add(tag);
+                Tags.Traits.Add(tag);
             }
 
             OnPropertyChanged(nameof(Tags));
@@ -333,12 +311,12 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public void UpdateKeywords()
         {
-            Keywords.Clear();
+            Keywords.Traits.Clear();
 
             List<MTGTraitEntryVM> newKeywords = GetKeywordsFromCard(Card).ToList();
             foreach (MTGTraitEntryVM keyword in newKeywords)
             {
-                Keywords.Add(keyword);
+                Keywords.Traits.Add(keyword);
             }
 
             OnPropertyChanged(nameof(Keywords));
@@ -404,30 +382,6 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             OnPropertyChanged(nameof(ResolvedTotalMana));
         }
 
-
-        protected bool OnTraitAdded(ObservableCollection<MTGTraitEntryVM> traits, string newValue, string traitsPropertyName)
-        {
-            string value = newValue.Trim();
-
-            if (string.IsNullOrEmpty(value))
-            {
-                return false;
-            }
-
-            foreach (MTGTraitEntryVM trait in traits)
-            {
-                if (string.Equals(trait.Value, value, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-            }
-
-            traits.Add(new MTGTraitEntryVM(value, false));
-
-            OnPropertyChanged(traitsPropertyName);
-
-            return true;
-        }
 
         protected void OnInformationPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {

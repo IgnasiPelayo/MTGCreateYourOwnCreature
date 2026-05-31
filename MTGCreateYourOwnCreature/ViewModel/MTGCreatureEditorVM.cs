@@ -193,7 +193,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
             {
                 foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
                 {
-                    ancestorCard.UpdateTags();
+                    ancestorCard.UpdateKeywords();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.Description))

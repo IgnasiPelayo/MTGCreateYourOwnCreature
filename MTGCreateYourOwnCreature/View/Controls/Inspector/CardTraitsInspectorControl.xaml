@@ -26,13 +26,13 @@
                 MinHeight="25">
             <Grid VerticalAlignment="Center">
                 <TextBox x:Name="PART_Input"
-                         Text="{Binding NewValue, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding NewTrait, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Margin="8,0,0,0"
                          Background="Transparent"
                          BorderThickness="0">
 
                     <TextBox.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding AddCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                        <KeyBinding Key="Enter" Command="{Binding AddCommand, Mode=OneWay}"/>
                     </TextBox.InputBindings>
                 </TextBox>
 
@@ -63,7 +63,7 @@
             
         <ItemsControl Grid.Row="2"
                       Margin="0,5,0,0"
-                      ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                      ItemsSource="{Binding Traits}">
 
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -108,7 +108,7 @@
                                     BorderThickness="0"
                                     Cursor="Hand"
                                     FocusVisualStyle="{x:Null}"
-                                    Command="{Binding RemoveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     CommandParameter="{Binding}">
 
                                 <Button.Style>

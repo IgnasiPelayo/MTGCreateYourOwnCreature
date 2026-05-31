@@ -71,19 +71,13 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        
+
                         <local:CardTraitsInspectorControl Label="Tags"
-                                                          ItemsSource="{Binding Tags}"
-                                                          NewValue="{Binding NewTag}"
-                                                          AddCommand="{Binding AddTagCommand}"
-                                                          RemoveCommand="{Binding RemoveTagCommand}"/>
+                                                          DataContext="{Binding Tags}"/>
 
                         <local:CardTraitsInspectorControl Grid.Row="1"
                                                           Label="Keywords"
-                                                          ItemsSource="{Binding Keywords}"
-                                                          NewValue="{Binding NewKeyword}"
-                                                          AddCommand="{Binding AddKeywordCommand}"
-                                                          RemoveCommand="{Binding RemoveKeywordCommand}"/>
+                                                          DataContext="{Binding Keywords}"/>
                     </Grid>
                 </ScrollViewer>
             </TabItem>
