@@ -11,6 +11,7 @@
 
     <UserControl.Resources>
         <converters:ManaToSymbolsConverter x:Key="ManaConverter"/>
+        <converters:EnumDisplayConverter x:Key="EnumDisplayConverter"/>
     </UserControl.Resources>
 
     <Viewbox Stretch="Uniform">
@@ -20,7 +21,6 @@
                 Background="Black"
                 BorderThickness="30"
                 CornerRadius="10"
-                RenderOptions.EdgeMode="Aliased"
                 Width="635"
                 Height="889">
 
@@ -71,20 +71,112 @@
                     <Border Grid.Row="1"
                             Margin="5,5"
                             Background="Orange"/>
-                    
-                    <local:CardPreviewFrameControl Grid.Row="2"
-                                                   Fill="{StaticResource PreviewFrameBrush}"/>
-                    
+
+
+                    <Grid Grid.Row="2">
+
+                        <local:CardPreviewFrameControl Fill="{StaticResource PreviewFrameBrush}"/>
+
+                        <Grid Margin="15,0,0,0"
+                              VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock FontSize="28"
+                                       FontWeight="SemiBold">
+                                
+                                <Run Text="{Binding ResolvedCategory, Converter={StaticResource EnumDisplayConverter}}"/>
+                                
+                                <Run Text="—"/>
+                            </TextBlock>
+                        </Grid>
+                    </Grid>
+
                     <Border Grid.Row="3"
+                            x:Name="InformationBorder"
                             Margin="5,5,5,0"
-                            Background="{StaticResource PreviewInformationBrush}"/>
+                            Background="{StaticResource PreviewInformationBrush}">
+
+                        <Grid x:Name="InformationContainer"
+                              SizeChanged="OnInformationSizeChanged"
+                              Margin="10,10,10,35"
+                              VerticalAlignment="Center">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock x:Name="DescriptionTextBlock"
+                                       Text="{Binding Description.ResolvedValue}"
+                                       VerticalAlignment="Top"
+                                       FontSize="30"
+                                       Padding="10,0"
+                                       TextWrapping="Wrap"/>
+
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Setter Property="Visibility" Value="Visible"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FlavorText.HasValue}" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+
+                                <Border Height="1"
+                                        Margin="0,15,0,15"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Stretch"
+                                        Visibility="{Binding PreviewSeparatorVisibility}">
+
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Offset="0" Color="Transparent"/>
+                                            <GradientStop Offset="0.15" Color="Black"/>
+                                            <GradientStop Offset="0.85" Color="Black"/>
+                                            <GradientStop Offset="1" Color="Transparent"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <TextBlock Grid.Row="1"
+                                           x:Name="FlavorTextBlock"
+                                           Text="{Binding FlavorText.ResolvedValue}"
+                                           FontStyle="Italic"
+                                           VerticalAlignment="Top"
+                                           Padding="10,0"
+                                           FontSize="38"
+                                           FontFamily="Gabriola"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
                 </Grid>
 
-                <local:CardPreviewFrameControl Height="50"
-                                               Width="110"
-                                               Margin="445,730,0,0"
-                                               Fill="{StaticResource PreviewFrameBrush}"/>
 
+                <Grid Height="50"
+                      Width="110"
+                      Margin="445,730,0,0">
+
+                    <local:CardPreviewFrameControl Fill="{StaticResource PreviewFrameBrush}"/>
+
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="35"
+                               FontWeight="SemiBold"
+                               Text="{Binding ResolvedTotalPowerToughness}"/>
+
+                </Grid>
             </Grid>
         </Border>
     </Viewbox>

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 using System.Diagnostics;
+using System.Windows;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
@@ -19,7 +20,11 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public MTGTraitCollectionVM Tags { get; set; }
 
+        public string ResolvedTags => GetResolvedTraits(Tags);
+
         public MTGTraitCollectionVM Keywords { get; set; }
+
+        public string ResolvedKeywords => GetResolvedTraits(Tags);
 
         public bool HasParentCard => Card.ParentCreatureCard != null;
 
@@ -65,6 +70,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
                 OnPropertyChanged(nameof(Power));
                 OnPropertyChanged(nameof(ResolvedTotalPower));
+                OnPropertyChanged(nameof(ResolvedTotalPowerToughness));
             }
         }
 
@@ -86,6 +92,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
                 OnPropertyChanged(nameof(Toughness));
                 OnPropertyChanged(nameof(ResolvedTotalToughness));
+                OnPropertyChanged(nameof(ResolvedTotalPowerToughness));
             }
         }
 
@@ -94,9 +101,14 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public int ResolvedInheritedToughness => Card.ParentCreatureCard?.Toughness ?? 0;
 
 
+        public string ResolvedTotalPowerToughness => $"{ResolvedTotalPower}/{ResolvedTotalToughness}";
+
+
         public MTGInformationEntryVM Description { get; set; }
 
-        public MTGInformationEntryVM FlavorText { get; set; } 
+        public MTGInformationEntryVM FlavorText { get; set; }
+
+        public Visibility PreviewSeparatorVisibility => (Description?.HasValue == true && FlavorText?.HasValue == true) ? Visibility.Visible : Visibility.Collapsed;
 
 
         public MTGCreatureCardVM(MTGCreatureCard card)
@@ -130,11 +142,13 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                 {
                     Card.Tags.Add(trait.Value);
                     OnPropertyChanged(nameof(Tags));
+                    OnPropertyChanged(nameof(ResolvedTags));
                 },
                 onRemove: trait =>
                 {
                     Card.Tags.Remove(trait.Value);
                     OnPropertyChanged(nameof(Tags));
+                    OnPropertyChanged(nameof(ResolvedTags));
                 });
 
             Keywords = new MTGTraitCollectionVM(GetKeywordsFromCard(Card),
@@ -154,11 +168,13 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                 {
                     Card.Keywords.Add(trait.Value);
                     OnPropertyChanged(nameof(Keywords));
+                    OnPropertyChanged(nameof(ResolvedKeywords));
                 },
                 onRemove: trait =>
                 {
                     Card.Keywords.Remove(trait.Value);
                     OnPropertyChanged(nameof(Keywords));
+                    OnPropertyChanged(nameof(ResolvedKeywords));
                 });
 
             if (!Card.OverridesDescription)
@@ -264,6 +280,25 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
+        protected string GetResolvedTraits(MTGTraitCollectionVM traits, char separator = ' ')
+        {
+            string resolvedTraits = string.Empty;
+
+            foreach (MTGTraitEntryVM trait in traits.Traits)
+            {
+                string traitValue = trait.Value + separator;
+                if (!string.IsNullOrEmpty(resolvedTraits))
+                {
+                    traitValue = traitValue.ToLower();
+                }
+
+                resolvedTraits += traitValue;
+            }
+
+            return resolvedTraits;
+        }
+
+
         public Array AvailableCategories
         {
             get
@@ -307,6 +342,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
 
             OnPropertyChanged(nameof(Tags));
+            OnPropertyChanged(nameof(ResolvedTags));
         }
 
         public void UpdateKeywords()
@@ -320,6 +356,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
 
             OnPropertyChanged(nameof(Keywords));
+            OnPropertyChanged(nameof(ResolvedKeywords));
         }
 
 
@@ -334,6 +371,23 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
             OnPropertyChanged(nameof(Description));
             Description.UpdateInheritance();
+
+            OnPropertyChanged(nameof(PreviewSeparatorVisibility));
+        }
+
+        public void UpdateFlavorText()
+        {
+            FlavorText.InheritedValue = Card.ParentCreatureCard?.FlavorText ?? "";
+
+            if (!Card.OverridesFlavorText)
+            {
+                Card.FlavorText = FlavorText.InheritedValue;
+            }
+
+            OnPropertyChanged(nameof(FlavorText));
+            FlavorText.UpdateInheritance();
+
+            OnPropertyChanged(nameof(PreviewSeparatorVisibility));
         }
 
 
@@ -362,6 +416,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             UpdateKeywords();
 
             UpdateDescription();
+            UpdateFlavorText();
         }
 
 
@@ -401,6 +456,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                 Card.OverridesDescription = entry.OverridesValue;
 
                 OnPropertyChanged(nameof(Description));
+                OnPropertyChanged(nameof(PreviewSeparatorVisibility));
             }
             else if (entry == FlavorText)
             {
@@ -408,6 +464,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                 Card.OverridesFlavorText = entry.OverridesValue;
 
                 OnPropertyChanged(nameof(FlavorText));
+                OnPropertyChanged(nameof(PreviewSeparatorVisibility));
             }
         }
 

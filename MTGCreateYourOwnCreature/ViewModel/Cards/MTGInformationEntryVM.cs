@@ -26,6 +26,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
                 OnPropertyChanged(nameof(OverridesValue));
                 OnPropertyChanged(nameof(IsReadOnly));
                 OnPropertyChanged(nameof(ResolvedValue));
+                OnPropertyChanged(nameof(HasValue));
             }
         }
 
@@ -42,9 +43,12 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
                     OnPropertyChanged(nameof(Value));
                     OnPropertyChanged(nameof(ResolvedValue));
+                    OnPropertyChanged(nameof(HasValue));
                 }
             }
         }
+
+        public bool HasValue => !string.IsNullOrWhiteSpace(ResolvedValue);
             
         public MTGInformationEntryVM(string value, string inheritedValue, bool overridesValue)
         {

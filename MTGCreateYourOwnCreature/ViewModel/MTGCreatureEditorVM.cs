@@ -203,6 +203,13 @@ namespace MTGCreateYourOwnCreature.ViewModel
                     ancestorCard.UpdateDescription();
                 }
             }
+            else if (e.PropertyName == nameof(MTGCreatureCardVM.FlavorText))
+            {
+                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                {
+                    ancestorCard.UpdateFlavorText();
+                }
+            }
         }
 
         protected void OnParentPickerOpened()
