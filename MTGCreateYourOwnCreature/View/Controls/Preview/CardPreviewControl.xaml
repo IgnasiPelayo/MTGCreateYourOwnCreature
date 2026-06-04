@@ -77,21 +77,20 @@
 
                         <local:CardPreviewFrameControl Fill="{StaticResource PreviewFrameBrush}"/>
 
-                        <Grid Margin="15,0,0,0"
-                              VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
+                        <Viewbox Stretch="Uniform"
+                                    StretchDirection="DownOnly"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Margin="15,0">
 
                             <TextBlock FontSize="28"
                                        FontWeight="SemiBold">
                                 
                                 <Run Text="{Binding ResolvedCategory, Converter={StaticResource EnumDisplayConverter}}"/>
                                 
-                                <Run Text="—"/>
+                                <Run Text="{Binding ResolvedTags, Mode=OneWay}"/>
                             </TextBlock>
-                        </Grid>
+                        </Viewbox>
                     </Grid>
 
                     <Border Grid.Row="3"
@@ -110,11 +109,13 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock x:Name="DescriptionTextBlock"
-                                       Text="{Binding Description.ResolvedValue}"
-                                       VerticalAlignment="Top"
                                        FontSize="30"
                                        Padding="10,0"
-                                       TextWrapping="Wrap"/>
+                                       TextWrapping="Wrap">
+                                
+                                <Run Text="{Binding ResolvedKeywords, Mode=OneWay}"/><Run Text="{Binding Description.ResolvedValue}"/>
+
+                            </TextBlock>
 
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
@@ -136,7 +137,6 @@
 
                                 <Border Height="1"
                                         Margin="0,15,0,15"
-                                        VerticalAlignment="Center"
                                         HorizontalAlignment="Stretch"
                                         Visibility="{Binding PreviewSeparatorVisibility}">
 
@@ -154,7 +154,6 @@
                                            x:Name="FlavorTextBlock"
                                            Text="{Binding FlavorText.ResolvedValue}"
                                            FontStyle="Italic"
-                                           VerticalAlignment="Top"
                                            Padding="10,0"
                                            FontSize="38"
                                            FontFamily="Gabriola"/>

@@ -20,11 +20,11 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public MTGTraitCollectionVM Tags { get; set; }
 
-        public string ResolvedTags => GetResolvedTraits(Tags);
+        public string ResolvedTags => GetResolvedTags(Tags);
 
         public MTGTraitCollectionVM Keywords { get; set; }
 
-        public string ResolvedKeywords => GetResolvedTraits(Tags);
+        public string ResolvedKeywords => GetResolvedKeywords(Keywords);
 
         public bool HasParentCard => Card.ParentCreatureCard != null;
 
@@ -280,22 +280,49 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
-        protected string GetResolvedTraits(MTGTraitCollectionVM traits, char separator = ' ')
+        protected string GetResolvedTags(MTGTraitCollectionVM tags)
         {
-            string resolvedTraits = string.Empty;
+            string resolvedTags = string.Empty;
 
-            foreach (MTGTraitEntryVM trait in traits.Traits)
+            foreach (MTGTraitEntryVM tag in tags.Traits)
             {
-                string traitValue = trait.Value + separator;
-                if (!string.IsNullOrEmpty(resolvedTraits))
-                {
-                    traitValue = traitValue.ToLower();
-                }
-
-                resolvedTraits += traitValue;
+                resolvedTags += tag.Value + " ";
             }
 
-            return resolvedTraits;
+            if (!string.IsNullOrEmpty(resolvedTags))
+            {
+                resolvedTags = "— " + resolvedTags;
+            }
+
+            return resolvedTags.TrimEnd();
+        }
+
+
+        protected string GetResolvedKeywords(MTGTraitCollectionVM keywords)
+        {
+            string resolvedKeywords = string.Empty;
+
+            foreach (MTGTraitEntryVM keyword in keywords.Traits)
+            {
+                string keywordValue = keyword.Value;
+
+                if (!string.IsNullOrEmpty(resolvedKeywords))
+                {
+                    keywordValue = keywordValue.ToLower();
+                }
+
+                resolvedKeywords += keywordValue + ", ";
+            }
+
+            if (!string.IsNullOrEmpty(resolvedKeywords))
+            {
+                resolvedKeywords = resolvedKeywords.TrimEnd();
+                resolvedKeywords = resolvedKeywords.Remove(resolvedKeywords.Length - 1, 1);
+
+                resolvedKeywords += "\n\r";
+            }
+
+            return resolvedKeywords;
         }
 
 

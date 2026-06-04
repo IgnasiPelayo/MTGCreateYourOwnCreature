@@ -26,8 +26,7 @@ namespace MTGCreateYourOwnCreature.View.Controls.Preview
 
             UpdateLayout();
 
-
-            double availableHeight = InformationBorder.ActualHeight - InformationContainer.Margin.Top - InformationContainer.Margin.Bottom;
+            double availableHeight = InformationBorder.ActualHeight;
 
             double ratio = availableHeight / InformationContainer.ActualHeight;
 
@@ -41,6 +40,20 @@ namespace MTGCreateYourOwnCreature.View.Controls.Preview
                 }
 
                 UpdateLayout();
+
+                int safetyLimit = 10;
+
+                while (InformationContainer.ActualHeight > availableHeight && safetyLimit-- > 0)
+                {
+                    ResizeTextBlock(DescriptionTextBlock, DescriptionBaseSize, DescriptionTextBlock.FontSize - 0.5);
+
+                    if (FlavorTextBlock.Visibility == Visibility.Visible)
+                    {
+                        ResizeTextBlock(FlavorTextBlock, FlavorBaseSize, FlavorTextBlock.FontSize - 0.5);
+                    }
+
+                    UpdateLayout();
+                }
             }
         }
 
