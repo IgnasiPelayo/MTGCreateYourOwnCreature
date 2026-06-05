@@ -9,6 +9,7 @@ using System.Windows.Input;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
@@ -46,10 +47,13 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
                 OnPropertyChanged(nameof(ResolvedCategory));
                 OnPropertyChanged(nameof(HasInheritedCategory));
+                OnPropertyChanged(nameof(IsLegendaryCreature));
             }
         }
 
         public bool HasInheritedCategory => HasParentCard && ResolvedCategory == GetCategoryFromCard(Card.ParentCreatureCard);
+
+        public bool IsLegendaryCreature => IsLegendaryCategory(ResolvedCategory);
 
         public IReadOnlyDictionary<ManaType, int> ResolvedTotalMana => GetTotalManaFromCard(Card);
 
@@ -108,7 +112,26 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
         public MTGInformationEntryVM FlavorText { get; set; }
 
+
+
         public Visibility PreviewSeparatorVisibility => (Description?.HasValue == true && FlavorText?.HasValue == true) ? Visibility.Visible : Visibility.Collapsed;
+
+        protected Brush? m_PreviewBackgroundBrush;
+
+        public Brush? PreviewBackgroundBrush => m_PreviewBackgroundBrush;
+
+        protected Brush? m_PreviewBorderBrush;
+
+        public Brush? PreviewBorderBrush => m_PreviewBorderBrush;
+
+        protected Brush? m_PreviewFrameBrush;
+
+        public Brush? PreviewFrameBrush => m_PreviewFrameBrush;
+
+        protected Brush? m_PreviewInformationFrameBrush;
+
+        public Brush? PreviewInformationFrameBrush => m_PreviewInformationFrameBrush;
+
 
 
         public MTGCreatureCardVM(MTGCreatureCard card)
@@ -190,6 +213,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
             FlavorText = new MTGInformationEntryVM(Card.FlavorText, Card.ParentCreatureCard?.FlavorText ?? "", Card.OverridesFlavorText);
             Description.PropertyChanged += OnInformationPropertyChanged;
+
+            UpdatePreviewBrushes();
         }
 
 
@@ -210,6 +235,20 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
 
             return CategoryType.None;
+        }
+
+        protected static bool IsLegendaryCategory(CategoryType type)
+        {
+            switch (type)
+            {
+                case CategoryType.LegendaryCreature:
+                case CategoryType.LegendaryArtifactCreature:
+                case CategoryType.LegendaryEnchantmentCreature:
+                    return true;
+
+                default:
+                    return false;
+            }
         }
 
 
@@ -355,6 +394,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             }
 
             OnPropertyChanged(nameof(ResolvedInheritedMana));
+            UpdatePreviewBrushes();
         }
 
 
@@ -428,6 +468,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
 
             OnPropertyChanged(nameof(ResolvedCategory));
             OnPropertyChanged(nameof(HasInheritedCategory));
+            OnPropertyChanged(nameof(IsLegendaryCreature));
 
             RecalculateMana();
 
@@ -447,6 +488,100 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         }
 
 
+        protected static Dictionary<ManaType, Brush?> PreviewBackgroundBrushes = new Dictionary<ManaType, Brush?>()
+        {
+            { ManaType.Generic, App.Current.TryFindResource("GenericBackgroundBrush") as Brush },
+            { ManaType.White, App.Current.TryFindResource("WhiteBackgroundBrush") as Brush },
+            { ManaType.Blue, App.Current.TryFindResource("BlueBackgroundBrush") as Brush },
+            { ManaType.Black, App.Current.TryFindResource("BlackPreviewBackgroundBrush") as Brush },
+            { ManaType.Red, App.Current.TryFindResource("RedBackgroundBrush") as Brush },
+            { ManaType.Green, App.Current.TryFindResource("GreenBackgroundBrush") as Brush },
+        };
+
+        protected static Dictionary<ManaType, Brush?> PreviewBorderBrushes = new Dictionary<ManaType, Brush?>()
+        {
+            { ManaType.Generic, App.Current.TryFindResource("GenericPreviewBorderBrush") as Brush },
+            { ManaType.White, App.Current.TryFindResource("WhitePreviewBorderBrush") as Brush },
+            { ManaType.Blue, App.Current.TryFindResource("BluePreviewBorderBrush") as Brush },
+            { ManaType.Black, App.Current.TryFindResource("BlackPreviewBorderBrush") as Brush },
+            { ManaType.Red, App.Current.TryFindResource("RedPreviewBorderBrush") as Brush },
+            { ManaType.Green, App.Current.TryFindResource("GreenPreviewBorderBrush") as Brush },
+        };
+
+        protected static Dictionary<ManaType, Brush?> PreviewFrameBrushes = new Dictionary<ManaType, Brush?>()
+        {
+            { ManaType.Generic, App.Current.TryFindResource("GenericPreviewFrameBrush") as Brush },
+            { ManaType.White, App.Current.TryFindResource("WhitePreviewFrameBrush") as Brush },
+            { ManaType.Blue, App.Current.TryFindResource("BluePreviewFrameBrush") as Brush },
+            { ManaType.Black, App.Current.TryFindResource("BlackPreviewFrameBrush") as Brush },
+            { ManaType.Red, App.Current.TryFindResource("RedPreviewFrameBrush") as Brush },
+            { ManaType.Green, App.Current.TryFindResource("GreenPreviewFrameBrush") as Brush },
+        };
+
+        protected static Dictionary<ManaType, Brush?> PreviewInformationFrameBrushes = new Dictionary<ManaType, Brush?>()
+        {
+            { ManaType.Generic, App.Current.TryFindResource("GenericPreviewInformationFrameBrush") as Brush },
+            { ManaType.White, App.Current.TryFindResource("WhitePreviewInformationFrameBrush") as Brush },
+            { ManaType.Blue, App.Current.TryFindResource("BluePreviewInformationFrameBrush") as Brush },
+            { ManaType.Black, App.Current.TryFindResource("BlackPreviewInformationFrameBrush") as Brush },
+            { ManaType.Red, App.Current.TryFindResource("RedPreviewInformationFrameBrush") as Brush },
+            { ManaType.Green, App.Current.TryFindResource("GreenPreviewInformationFrameBrush") as Brush },
+        };
+
+        protected static Brush MultiColorBackgroundBrush = App.Current.TryFindResource("MultiColorPreviewBackgroundBrush") as Brush;
+        protected static Brush MultiColorBorderBrush = App.Current.TryFindResource("MultiColorPreviewBorderBrush") as Brush;
+        protected static Brush MultiColorFrameBrush = App.Current.TryFindResource("MultiColorPreviewFrameBrush") as Brush;
+        protected static Brush MultiColorInformationFrameBrush = App.Current.TryFindResource("MultiColorPreviewInformationFrameBrush") as Brush;
+
+        protected void UpdatePreviewBrushes()
+        {
+            Dictionary<ManaType, bool> manaTypesInCard = new Dictionary<ManaType, bool>();
+
+            foreach (KeyValuePair<ManaType, int> mana in ResolvedTotalMana)
+            {
+                if (mana.Value > 0)
+                {
+                    manaTypesInCard[mana.Key] = true;
+                }
+            }
+
+            int manaTypesInCardCount = manaTypesInCard.Count;
+
+            if (manaTypesInCardCount == 0 || (manaTypesInCardCount == 1 && manaTypesInCard.ContainsKey(ManaType.Generic)))
+            {
+                m_PreviewBackgroundBrush = PreviewBackgroundBrushes[ManaType.Generic];
+                m_PreviewBorderBrush = PreviewBorderBrushes[ManaType.Generic];
+                m_PreviewFrameBrush = PreviewFrameBrushes[ManaType.Generic];
+                m_PreviewInformationFrameBrush = PreviewInformationFrameBrushes[ManaType.Generic];
+            }
+            else if (manaTypesInCardCount == 2 && manaTypesInCard.ContainsKey(ManaType.Generic) || manaTypesInCardCount == 1)
+            {
+                foreach (ManaType manaType in manaTypesInCard.Keys)
+                {
+                    if (manaType != ManaType.Generic)
+                    {
+                        m_PreviewBackgroundBrush = PreviewBackgroundBrushes[manaType];
+                        m_PreviewBorderBrush = PreviewBorderBrushes[manaType];
+                        m_PreviewFrameBrush = PreviewFrameBrushes[manaType];
+                        m_PreviewInformationFrameBrush = PreviewInformationFrameBrushes[manaType];
+                    }
+                }
+            }
+            else
+            {
+                m_PreviewBackgroundBrush = MultiColorBackgroundBrush;
+                m_PreviewBorderBrush = MultiColorBorderBrush;
+                m_PreviewFrameBrush = MultiColorFrameBrush;
+                m_PreviewInformationFrameBrush = MultiColorInformationFrameBrush;
+            }
+
+            OnPropertyChanged(nameof(PreviewBackgroundBrush));
+            OnPropertyChanged(nameof(PreviewBorderBrush));
+            OnPropertyChanged(nameof(PreviewFrameBrush));
+            OnPropertyChanged(nameof(PreviewInformationFrameBrush));
+        }
+
+
         protected void OnManaEntryChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is not MTGManaEntryVM entry)
@@ -462,6 +597,7 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             Card.Mana[entry.Type] = entry.Value;
 
             OnPropertyChanged(nameof(ResolvedTotalMana));
+            UpdatePreviewBrushes();
         }
 
 

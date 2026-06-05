@@ -14,6 +14,13 @@
     <None Remove="Resources\ManaTextures\green.png" />
     <None Remove="Resources\ManaTextures\red.png" />
     <None Remove="Resources\ManaTextures\white.png" />
+    <None Remove="Resources\Preview\black_background.jpg" />
+    <None Remove="Resources\Preview\blue_background.jpg" />
+    <None Remove="Resources\Preview\generic_background.jpg" />
+    <None Remove="Resources\Preview\green_background.jpg" />
+    <None Remove="Resources\Preview\multicolor_background.jpg" />
+    <None Remove="Resources\Preview\red_background.jpg" />
+    <None Remove="Resources\Preview\white_background.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +29,13 @@
     <Resource Include="Resources\ManaTextures\green.png" />
     <Resource Include="Resources\ManaTextures\red.png" />
     <Resource Include="Resources\ManaTextures\white.png" />
+    <Resource Include="Resources\Preview\black_background.jpg" />
+    <Resource Include="Resources\Preview\blue_background.jpg" />
+    <Resource Include="Resources\Preview\generic_background.jpg" />
+    <Resource Include="Resources\Preview\green_background.jpg" />
+    <Resource Include="Resources\Preview\multicolor_background.jpg" />
+    <Resource Include="Resources\Preview\red_background.jpg" />
+    <Resource Include="Resources\Preview\white_background.jpg" />
   </ItemGroup>
 
 </Project>

@@ -25,12 +25,12 @@
                 Height="889">
 
             <Grid>
-                <Border Background="Red"
+                <Border Background="{Binding PreviewBackgroundBrush}"
                         Height="750"
                         VerticalAlignment="Top"
                         CornerRadius="10,10,30,30"/>
 
-                <Grid Margin="10,15,10,45">
+                <Grid Margin="12,17,12,42">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
@@ -40,7 +40,8 @@
                     </Grid.RowDefinitions>
 
                     <Grid>
-                        <local:CardPreviewFrameControl Fill="{StaticResource PreviewFrameBrush}"/>
+                        <local:CardPreviewFrameControl Fill="{Binding PreviewBorderBrush}" Margin="-5"/>
+                        <local:CardPreviewFrameControl Fill="{Binding PreviewFrameBrush}"/>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -68,14 +69,17 @@
                         </Grid>
                     </Grid>
 
+                    <Border Grid.Row="1" Background="{Binding PreviewBorderBrush}"/>
+
                     <Border Grid.Row="1"
                             Margin="5,5"
-                            Background="Orange"/>
+                            Background="Black"/>
 
 
                     <Grid Grid.Row="2">
 
-                        <local:CardPreviewFrameControl Fill="{StaticResource PreviewFrameBrush}"/>
+                        <local:CardPreviewFrameControl Fill="{Binding PreviewBorderBrush}" Margin="-5"/>
+                        <local:CardPreviewFrameControl Fill="{Binding PreviewFrameBrush}"/>
 
                         <Viewbox Stretch="Uniform"
                                     StretchDirection="DownOnly"
@@ -93,10 +97,12 @@
                         </Viewbox>
                     </Grid>
 
+                    <Border Grid.Row="3" Background="{Binding PreviewBorderBrush}" Margin="0,0,0,-5"/>
+
                     <Border Grid.Row="3"
                             x:Name="InformationBorder"
                             Margin="5,5,5,0"
-                            Background="{StaticResource PreviewInformationBrush}">
+                            Background="{Binding PreviewInformationFrameBrush}">
 
                         <Grid x:Name="InformationContainer"
                               SizeChanged="OnInformationSizeChanged"
@@ -167,7 +173,7 @@
                       Width="110"
                       Margin="445,730,0,0">
 
-                    <local:CardPreviewFrameControl Fill="{StaticResource PreviewFrameBrush}"/>
+                    <local:CardPreviewFrameControl Fill="{Binding PreviewFrameBrush}"/>
 
                     <TextBlock HorizontalAlignment="Center"
                                VerticalAlignment="Center"

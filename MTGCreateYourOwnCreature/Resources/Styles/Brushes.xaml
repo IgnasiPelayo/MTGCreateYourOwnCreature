@@ -9,13 +9,45 @@
     
     <SolidColorBrush x:Key="ControlInheritedBorderBrush" Color="RoyalBlue"/>
     
-    <SolidColorBrush x:Key="PreviewFrameBrush" Color="#FFD9D9D9"/>
-    <SolidColorBrush x:Key="PreviewInformationBrush" Color="#FFF8F8F8"/>
-
     <ImageBrush x:Key="WhiteManaBrush" ImageSource="/Resources/ManaTextures/white.png"/>
     <ImageBrush x:Key="BlueManaBrush" ImageSource="/Resources/ManaTextures/blue.png"/>
     <ImageBrush x:Key="BlackManaBrush" ImageSource="/Resources/ManaTextures/black.png"/>
     <ImageBrush x:Key="RedManaBrush" ImageSource="/Resources/ManaTextures/red.png"/>
     <ImageBrush x:Key="GreenManaBrush" ImageSource="/Resources/ManaTextures/green.png"/>
+
+    <ImageBrush x:Key="GenericBackgroundBrush" ImageSource="/Resources/Preview/generic_background.jpg"/>
+    <SolidColorBrush x:Key="GenericPreviewBorderBrush" Color="#FFDDDDDB"/>
+    <SolidColorBrush x:Key="GenericPreviewFrameBrush" Color="#FFC9C4C0"/>
+    <SolidColorBrush x:Key="GenericPreviewInformationFrameBrush" Color="#FFBFC0C4"/>
+    
+    <ImageBrush x:Key="WhiteBackgroundBrush" ImageSource="/Resources/Preview/white_background.jpg"/>
+    <SolidColorBrush x:Key="WhitePreviewBorderBrush" Color="#FFFDFDFB"/>
+    <SolidColorBrush x:Key="WhitePreviewFrameBrush" Color="#FFEFF0E9"/>
+    <SolidColorBrush x:Key="WhitePreviewInformationFrameBrush" Color="#FFFDFDFB"/>
+
+    <ImageBrush x:Key="BlueBackgroundBrush" ImageSource="/Resources/Preview/blue_background.jpg"/>
+    <SolidColorBrush x:Key="BluePreviewBorderBrush" Color="#FF194D98"/>
+    <SolidColorBrush x:Key="BluePreviewFrameBrush" Color="#FFC4CFEB"/>
+    <SolidColorBrush x:Key="BluePreviewInformationFrameBrush" Color="#FFECEDFF"/>
+
+    <ImageBrush x:Key="BlackPreviewBackgroundBrush" ImageSource="/Resources/Preview/black_background.jpg"/>
+    <SolidColorBrush x:Key="BlackPreviewBorderBrush" Color="#FF363636"/>
+    <SolidColorBrush x:Key="BlackPreviewFrameBrush" Color="#FFAEA599"/>
+    <SolidColorBrush x:Key="BlackPreviewInformationFrameBrush" Color="#FFE4E5E2"/>
+    
+    <ImageBrush x:Key="RedBackgroundBrush" ImageSource="/Resources/Preview/red_background.jpg"/>
+    <SolidColorBrush x:Key="RedPreviewBorderBrush" Color="#FFC84332"/>
+    <SolidColorBrush x:Key="RedPreviewFrameBrush" Color="#FFE6CDC9"/>
+    <SolidColorBrush x:Key="RedPreviewInformationFrameBrush" Color="#FFEBE0E6"/>
+    
+    <ImageBrush x:Key="GreenBackgroundBrush" ImageSource="/Resources/Preview/green_background.jpg"/>
+    <SolidColorBrush x:Key="GreenPreviewBorderBrush" Color="#FF0D6e41"/>
+    <SolidColorBrush x:Key="GreenPreviewFrameBrush" Color="#FFB4C5BD"/>
+    <SolidColorBrush x:Key="GreenPreviewInformationFrameBrush" Color="#FFD0E2D6"/>
+
+    <ImageBrush x:Key="MultiColorPreviewBackgroundBrush" ImageSource="/Resources/Preview/multicolor_background.jpg"/>
+    <SolidColorBrush x:Key="MultiColorPreviewBorderBrush" Color="#FFE9CC66"/>
+    <SolidColorBrush x:Key="MultiColorPreviewFrameBrush" Color="#FFD6C180"/>
+    <SolidColorBrush x:Key="MultiColorPreviewInformationFrameBrush" Color="#FFEEE7CD"/>
     
 </ResourceDictionary>
