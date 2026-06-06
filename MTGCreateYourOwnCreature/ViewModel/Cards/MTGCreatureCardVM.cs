@@ -570,15 +570,57 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             else
             {
                 m_PreviewBackgroundBrush = MultiColorBackgroundBrush;
-                m_PreviewBorderBrush = MultiColorBorderBrush;
+
+                if (manaTypesInCardCount == 2 || (manaTypesInCardCount == 3 && manaTypesInCard.ContainsKey(ManaType.Generic)))
+                {
+                    List<Brush> borderBrushes = new List<Brush>();
+                    List<Brush> informationFrameBrushes = new List<Brush>();
+
+                    foreach (ManaType manaType in manaTypesInCard.Keys)
+                    {
+                        if (manaType != ManaType.Generic)
+                        {
+                            borderBrushes.Add(PreviewBorderBrushes[manaType]);
+                            informationFrameBrushes.Add(PreviewInformationFrameBrushes[manaType]);
+                        }
+                    }
+
+                    m_PreviewBorderBrush = CreateGradient(borderBrushes[0], borderBrushes[1]);
+                    m_PreviewInformationFrameBrush = CreateGradient(informationFrameBrushes[0], informationFrameBrushes[1]);
+                }
+                else
+                { 
+                    m_PreviewBorderBrush = MultiColorBorderBrush;
+                    m_PreviewInformationFrameBrush = MultiColorInformationFrameBrush;
+                }
+
                 m_PreviewFrameBrush = MultiColorFrameBrush;
-                m_PreviewInformationFrameBrush = MultiColorInformationFrameBrush;
             }
 
             OnPropertyChanged(nameof(PreviewBackgroundBrush));
             OnPropertyChanged(nameof(PreviewBorderBrush));
             OnPropertyChanged(nameof(PreviewFrameBrush));
             OnPropertyChanged(nameof(PreviewInformationFrameBrush));
+        }
+
+
+        protected LinearGradientBrush CreateGradient(Brush startBrush, Brush endBrush)
+        {
+            Color startColor = ((SolidColorBrush)startBrush).Color;
+            Color endColor = ((SolidColorBrush)endBrush).Color;
+
+            return new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 0),
+                GradientStops =
+                {
+                    new GradientStop(startColor, 0.00),
+                    new GradientStop(startColor, 0.48),
+                    new GradientStop(endColor, 0.52),
+                    new GradientStop(endColor, 1.00)
+                }
+            };
         }
 
 
