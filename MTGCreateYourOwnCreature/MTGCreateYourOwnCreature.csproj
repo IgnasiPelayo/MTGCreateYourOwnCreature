@@ -19,6 +19,7 @@
     <None Remove="Resources\Preview\generic_background.jpg" />
     <None Remove="Resources\Preview\green_background.jpg" />
     <None Remove="Resources\Preview\multicolor_background.jpg" />
+    <None Remove="Resources\Preview\placeholder.jpg" />
     <None Remove="Resources\Preview\red_background.jpg" />
     <None Remove="Resources\Preview\white_background.jpg" />
   </ItemGroup>
@@ -34,6 +35,7 @@
     <Resource Include="Resources\Preview\generic_background.jpg" />
     <Resource Include="Resources\Preview\green_background.jpg" />
     <Resource Include="Resources\Preview\multicolor_background.jpg" />
+    <Resource Include="Resources\Preview\placeholder.jpg" />
     <Resource Include="Resources\Preview\red_background.jpg" />
     <Resource Include="Resources\Preview\white_background.jpg" />
   </ItemGroup>

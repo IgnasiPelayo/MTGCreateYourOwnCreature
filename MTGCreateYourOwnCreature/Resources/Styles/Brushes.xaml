@@ -50,4 +50,6 @@
     <SolidColorBrush x:Key="MultiColorPreviewFrameBrush" Color="#FFD6C180"/>
     <SolidColorBrush x:Key="MultiColorPreviewInformationFrameBrush" Color="#FFEEE7CD"/>
     
+    <ImageBrush x:Key="PlaceholderBrush" ImageSource="/Resources/Preview/placeholder.jpg"/>
+
 </ResourceDictionary>

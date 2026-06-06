@@ -73,7 +73,7 @@
 
                     <Border Grid.Row="1"
                             Margin="5,5"
-                            Background="Black"/>
+                            Background="{StaticResource PlaceholderBrush}"/>
 
 
                     <Grid Grid.Row="2">
