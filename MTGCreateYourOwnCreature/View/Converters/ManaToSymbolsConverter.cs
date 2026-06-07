@@ -1,57 +1,33 @@
-﻿using System.Windows.Data;
 using System.Globalization;
-using System.Windows.Media;
+using System.Windows.Data;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
-using MTGCreateYourOwnCreature.ViewModel.Cards;
+using MTGCreateYourOwnCreature.Rendering;
 
 namespace MTGCreateYourOwnCreature.View.Converters
 {
+    /// <summary>
+    /// Converts a mana dictionary into the symbol list shown by mana controls.
+    /// </summary>
     public class ManaToSymbolsConverter : IValueConverter
     {
-        public static Dictionary<ManaType, Brush?> ManaBrushes = new Dictionary<ManaType, Brush?>()
-        {
-            { ManaType.Generic, Brushes.LightGray },
-            { ManaType.White, App.Current.TryFindResource("WhiteManaBrush") as Brush },
-            { ManaType.Blue, App.Current.TryFindResource("BlueManaBrush") as Brush },
-            { ManaType.Black, App.Current.TryFindResource("BlackManaBrush") as Brush },
-            { ManaType.Red, App.Current.TryFindResource("RedManaBrush") as Brush },
-            { ManaType.Green, App.Current.TryFindResource("GreenManaBrush") as Brush },
-        };
-
+        /// <summary>
+        /// Converts a mana cost into UI-ready mana symbols.
+        /// </summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            IReadOnlyDictionary<ManaType, int> mana = value as IReadOnlyDictionary<ManaType, int>;
-            if (mana == null)
+            if (value is not IReadOnlyDictionary<ManaType, int> mana)
             {
-                return null;
+                return Array.Empty<MTGManaSymbol>();
             }
 
-            List<MTGManaSymbol> symbols = new List<MTGManaSymbol>();
-            foreach (KeyValuePair<ManaType, int> manaEntry in mana)
-            {
-                if (manaEntry.Value == 0)
-                {
-                    continue;
-                }
-
-                if (manaEntry.Key == ManaType.Generic)
-                {
-                    symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), ManaBrushes[manaEntry.Key]));
-                }
-                else
-                {
-                    for (int i = 0; i < manaEntry.Value; ++i)
-                    {
-                        symbols.Add(new MTGManaSymbol("", ManaBrushes[manaEntry.Key]));
-                    }
-                }
-            }
-
-            return symbols;
+            return ManaRenderService.CreateSymbols(mana);
         }
 
+        /// <summary>
+        /// ConvertBack is not needed because mana symbols are display-only.
+        /// </summary>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

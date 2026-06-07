@@ -1,24 +1,43 @@
-﻿using System.Windows;
+﻿
+using System.Windows;
 using Microsoft.Win32;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 using MTGCreateYourOwnCreature.Model;
+using MTGCreateYourOwnCreature.Model.Parsing;
 using MTGCreateYourOwnCreature.ViewModel.Cards;
-using MTGCreateYourOwnCreature.ViewModel.Helpers;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
+    /// <summary>
+    /// The primary ViewModel for the application window. 
+    /// Manages the collection of loaded cards, file importing, selection state, and the inheritance graph.
+    /// </summary>
     internal class MTGCreatureEditorVM : INotifyPropertyChanged
     {
+        /// <summary>
+        /// The observable collection of all loaded creature cards for UI binding.
+        /// </summary>
         public ObservableCollection<MTGCreatureCardVM> Cards { get; set; }
 
+        /// <summary>
+        /// A mapping from raw <see cref="MTGCreatureCard"/> models to their corresponding <see cref="MTGCreatureCardVM"/> wrappers.
+        /// Used to quickly resolve view models when traversing the model's inheritance chain.
+        /// </summary>
         protected Dictionary<MTGCreatureCard, MTGCreatureCardVM> m_CardsToVM = new Dictionary<MTGCreatureCard, MTGCreatureCardVM>();
 
-
+        /// <summary>
+        /// The backing field for the <see cref="CurrentCard"/> property.
+        /// </summary>
         protected MTGCreatureCardVM? m_CurrentCard = null;
+
+        /// <summary>
+        /// The currently selected card in the editor.
+        /// Changing this property updates UI bindings and command execution states.
+        /// </summary>
         public MTGCreatureCardVM? CurrentCard
         {
             get => m_CurrentCard;
@@ -26,24 +45,50 @@ namespace MTGCreateYourOwnCreature.ViewModel
             {
                 m_CurrentCard = value;
                 OnPropertyChanged(nameof(CurrentCard));
+                m_OpenParentPickerCommand.RaiseCanExecuteChanged();
             }
         }
 
-        protected readonly ICommand m_ImportCommand;
+        /// <summary>
+        /// The backing field for the <see cref="ImportCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_ImportCommand;
+
+        /// <summary>
+        /// The command that opens a file dialog and imports creature cards from a text file.
+        /// </summary>
         public ICommand ImportCommand => m_ImportCommand;
 
-
+        /// <summary>
+        /// A dictionary tracking the inverse inheritance graph (mapping a parent card to all of its direct children).
+        /// Used to efficiently cascade property updates down the tree.
+        /// </summary>
         protected Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>> m_Ancestors = new Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>>();
 
-
+        /// <summary>
+        /// The visibility state of the parent selection UI overlay.
+        /// </summary>
         public Visibility ParentPickerVisibility { get; set; }
 
+        /// <summary>
+        /// The observable collection of valid parent cards that the current card can inherit from.
+        /// </summary>
         public ObservableCollection<MTGCreatureCardVM> AvailableParentCards { get; set; }
 
+        /// <summary>
+        /// The virtual root card used to clear a card's inheritance.
+        /// </summary>
         protected MTGCreatureCardVM BaseCreatureCard { get; set; }
 
-
+        /// <summary>
+        /// The backing field for the <see cref="SelectedParentCard"/> property.
+        /// </summary>
         protected MTGCreatureCardVM? m_SelectedParentCard;
+
+        /// <summary>
+        /// The card chosen in the parent picker UI. 
+        /// Setting this property automatically re-parents the <see cref="CurrentCard"/> and updates the inheritance graph.
+        /// </summary>
         public MTGCreatureCardVM? SelectedParentCard
         {
             get => m_SelectedParentCard;
@@ -54,13 +99,14 @@ namespace MTGCreateYourOwnCreature.ViewModel
                     return;
                 }
 
-                MTGCreatureCardVM? newSelectedCard = value;
-                if (m_SelectedParentCard == value || (newSelectedCard != null && CurrentCard.Card.ParentCreatureCard == newSelectedCard.Card))
+                MTGCreatureCardVM newSelectedCard = value;
+                if (m_SelectedParentCard == value || CurrentCard.Card.ParentCreatureCard == newSelectedCard.Card)
                 {
                     OnParentPickerClosed();
                     return;
                 }
 
+                // Remove the current card from its old parent's child list.
                 if (CurrentCard.Card.ParentCreatureCard != null)
                 {
                     MTGCreatureCardVM parentCard = m_CardsToVM[CurrentCard.Card.ParentCreatureCard];
@@ -69,6 +115,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 
                 CurrentCard.ChangeParent(newSelectedCard == BaseCreatureCard ? null : newSelectedCard.Card);
 
+                // Add the current card to its new parent's child list.
                 if (newSelectedCard != BaseCreatureCard)
                 {
                     m_Ancestors[newSelectedCard].Add(CurrentCard);
@@ -81,16 +128,30 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
         }
 
+        /// <summary>
+        /// The backing field for the <see cref="OpenParentPickerCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_OpenParentPickerCommand;
 
-
-        protected readonly ICommand m_OpenParentPickerCommand;
+        /// <summary>
+        /// The command that populates and displays the parent picker UI.
+        /// </summary>
         public ICommand OpenParentPickerCommand => m_OpenParentPickerCommand;
 
-        protected readonly ICommand m_CloseParentPickerCommand;
+        /// <summary>
+        /// The backing field for the <see cref="CloseParentPickerCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_CloseParentPickerCommand;
+
+        /// <summary>
+        /// The command that hides the parent picker UI without making any changes.
+        /// </summary>
         public ICommand CloseParentPickerCommand => m_CloseParentPickerCommand;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MTGCreatureEditorVM"/> class.
+        /// Configures the base UI state, collections, and commands.
+        /// </summary>
         public MTGCreatureEditorVM()
         {
             Cards = new ObservableCollection<MTGCreatureCardVM>();
@@ -99,7 +160,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
             {
                 OpenFileDialog dialog = new OpenFileDialog()
                 {
-                    Multiselect = true,
+                    Multiselect = false,
                     DefaultExt = ".txt",
                     Filter = "Text documents (.txt)|*.txt"
                 };
@@ -121,7 +182,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
             m_OpenParentPickerCommand = new RelayCommand(_ =>
             {
                 OnParentPickerOpened();
-            });
+            }, _ => CurrentCard != null);
 
             m_CloseParentPickerCommand = new RelayCommand(_ =>
             {
@@ -129,16 +190,21 @@ namespace MTGCreateYourOwnCreature.ViewModel
             });
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-
+        /// <summary>
+        /// Parses a creature text file from the specified path, generates ViewModels, and builds the initial inheritance graph.
+        /// </summary>
+        /// <param name="filePath">The absolute path to the text file.</param>
         protected void ImportFile(string filePath)
         {
             Cards.Clear();
+            m_CardsToVM.Clear();
+            m_Ancestors.Clear();
+            CurrentCard = null;
 
             List<MTGCreatureCard> cards = MTGCreaturesParser.Parse(filePath);
             foreach (MTGCreatureCard card in cards)
@@ -168,6 +234,35 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
         }
 
+        /// <summary>
+        /// Traverses the inheritance chain to determine if a specific card is an ancestor of another.
+        /// Used strictly to prevent circular inheritance loops in the UI.
+        /// </summary>
+        /// <param name="potentialParent">The card that might be higher up in the chain.</param>
+        /// <param name="child">The starting card to trace upwards from.</param>
+        /// <returns>True if the <paramref name="potentialParent"/> is found in the <paramref name="child"/>'s inheritance chain; otherwise, false.</returns>
+        protected bool IsAncestorCard(MTGCreatureCard potentialParent, MTGCreatureCardVM child)
+        {
+            MTGCreatureCard? current = child.Card.ParentCreatureCard;
+
+            while (current != null)
+            {
+                if (current == potentialParent)
+                {
+                    return true;
+                }
+
+                current = current.ParentCreatureCard;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Event handler that cascades updates to child cards when an inherited property changes on a parent card.
+        /// </summary>
+        /// <param name="sender">The source <see cref="MTGCreatureCardVM"/>.</param>
+        /// <param name="e">Event data detailing the property change.</param>
         protected void OnCardChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is not MTGCreatureCardVM creatureCard)
@@ -212,8 +307,17 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
         }
 
+        /// <summary>
+        /// Prepares the parent picker UI by populating <see cref="AvailableParentCards"/> 
+        /// while filtering out invalid options to prevent circular inheritance dependencies.
+        /// </summary>
         protected void OnParentPickerOpened()
         {
+            if (CurrentCard == null)
+            {
+                return;
+            }
+
             ParentPickerVisibility = Visibility.Visible;
 
             AvailableParentCards.Clear();
@@ -221,6 +325,8 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             foreach (MTGCreatureCardVM card in Cards)
             {
+                // Prevent circular inheritance: A card cannot inherit from itself, 
+                // nor can it inherit from a card that is already one of its descendants.
                 if (card != CurrentCard && !IsAncestorCard(CurrentCard.Card, card))
                 {
                     AvailableParentCards.Add(card);
@@ -246,25 +352,9 @@ namespace MTGCreateYourOwnCreature.ViewModel
             OnPropertyChanged(nameof(ParentPickerVisibility));
         }
 
-
-        protected bool IsAncestorCard(MTGCreatureCard potentialParent, MTGCreatureCardVM child)
-        {
-            MTGCreatureCard? current = child.Card.ParentCreatureCard;
-
-            while (current != null)
-            {
-                if (current == potentialParent)
-                {
-                    return true;
-                }
-
-                current = current.ParentCreatureCard;
-            }
-
-            return false;
-        }
-
-
+        /// <summary>
+        /// Hides the parent picker UI and clears its temporary selection state to free up memory.
+        /// </summary>
         protected void OnParentPickerClosed()
         {
             ParentPickerVisibility = Visibility.Collapsed;
@@ -274,6 +364,15 @@ namespace MTGCreateYourOwnCreature.ViewModel
             m_SelectedParentCard = null;
 
             OnPropertyChanged(nameof(ParentPickerVisibility));
+        }
+
+        /// <summary>
+        /// Notifies listeners that a property value has changed.
+        /// </summary>
+        /// <param name="name">The name of the property that changed.</param>
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

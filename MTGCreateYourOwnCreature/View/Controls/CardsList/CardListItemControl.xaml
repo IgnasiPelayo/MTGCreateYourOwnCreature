@@ -49,11 +49,25 @@
             </Grid>
 
             <TextBlock Grid.Row="1"
-                       Text="{Binding ParentCardName}"
+                       Text="{Binding ResolvedParentCardName}"
                        TextWrapping="Wrap"
                        FontSize="10"
                        FontWeight="Light"
-                       FontStyle="Italic"/>
+                       FontStyle="Italic">
+
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasParentCard}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>                
+
+            </TextBlock>
+                       
         </Grid>
     </Border>
 </UserControl>

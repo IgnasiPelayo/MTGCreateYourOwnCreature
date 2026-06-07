@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-
     <SolidColorBrush x:Key="BorderBrush" Color="#FFD8D8D8"/>
     <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFF8F8F8"/>
     <SolidColorBrush x:Key="ControlBackgroundHoverBrush" Color="#FFF1F1F1"/>

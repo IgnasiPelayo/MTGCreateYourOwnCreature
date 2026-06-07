@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MTGCreateYourOwnCreature.View.Controls.CardsList
 {
+    /// <summary>
+    /// Interaction logic for CardListItemControl.xaml.
+    /// Represents a single selectable creature card entry within the <see cref="CardListControl"/>.
+    /// </summary>
     public partial class CardListItemControl : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CardListItemControl"/> class.
+        /// </summary>
         public CardListItemControl()
         {
             InitializeComponent();

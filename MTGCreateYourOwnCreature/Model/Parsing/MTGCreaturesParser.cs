@@ -4,12 +4,16 @@ using System.Text.RegularExpressions;
 
 using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Category;
+using MTGCreateYourOwnCreature.ViewModel.Helpers;
 
-namespace MTGCreateYourOwnCreature.ViewModel.Helpers
+namespace MTGCreateYourOwnCreature.Model.Parsing
 {
+    /// <summary>
+    /// Reads creature cards from the custom text format used by the editor.
+    /// </summary>
     public class MTGCreaturesParser
     {
-        protected static Dictionary<string, Action<MTGCreatureCard, string, List<MTGCreatureCard>>> ms_ParseActions = new Dictionary<string, Action<MTGCreatureCard, string, List<MTGCreatureCard>>>()
+        protected static readonly Dictionary<string, Action<MTGCreatureCard, string, List<MTGCreatureCard>>> ms_ParseActions = new Dictionary<string, Action<MTGCreatureCard, string, List<MTGCreatureCard>>>()
         {
             { "card", CardName },
             { "inherits", CardInherits },
@@ -20,21 +24,36 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             { "text", CardText },
         };
 
+        /// <summary>
+        /// Imports every creature card found in the selected text file.
+        /// </summary>
         public static List<MTGCreatureCard> Parse(string filePath)
         {
             List<MTGCreatureCard> cards = new List<MTGCreatureCard>();
 
             string fileText = File.ReadAllText(filePath);
+            if (string.IsNullOrWhiteSpace(fileText))
+            {
+                return cards;
+            }
 
-            string[] cardsText = fileText.Split(new string[] { "\r\n\r\n---\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] cardsText = Regex.Split(fileText.Trim(), @"\r?\n\r?\n---\r?\n\r?\n", RegexOptions.Multiline);
             for (int i = 0; i < cardsText.Length; ++i)
             {
+                if (string.IsNullOrWhiteSpace(cardsText[i]))
+                {
+                    continue;
+                }
+
                 cards.Add(CreateMTGCreatureCard(cardsText[i], cards));
             }
 
             return cards;
         }
 
+        /// <summary>
+        /// Builds one card from its text block.
+        /// </summary>
         protected static MTGCreatureCard CreateMTGCreatureCard(string cardEntry, List<MTGCreatureCard> cards)
         {
             MTGCreatureCard card = new MTGCreatureCard();
@@ -51,14 +70,14 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
                     string value = matches[i].Groups["value"].Value;
                     if (!string.IsNullOrEmpty(value))
                     {
-                        parseAction?.Invoke(card, value, cards);
+                        parseAction.Invoke(card, value, cards);
                         continue;
                     }
 
                     string block = matches[i].Groups["block"].Value.TrimStart();
                     if (!string.IsNullOrEmpty(block))
                     {
-                        parseAction?.Invoke(card, block, cards);
+                        parseAction.Invoke(card, block, cards);
                     }
                 }
             }
@@ -67,11 +86,17 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
         }
 
 
+        /// <summary>
+        /// Applies the parsed card name.
+        /// </summary>
         protected static void CardName(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             card.Name = data;
         }
 
+        /// <summary>
+        /// Links the card with a parent card that was imported before it.
+        /// </summary>
         protected static void CardInherits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             foreach (MTGCreatureCard creatureCard in cards)
@@ -86,16 +111,26 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             Debug.WriteLine($"Creature {card.Name} inherits from {data} but can't find base creature card.");
         }
 
+        /// <summary>
+        /// Applies the card category from the text value.
+        /// </summary>
         protected static void CardCategory(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
-            card.Category = Enum.Parse<CategoryType>(data.Replace(" ", ""), ignoreCase: true);
+            if (Enum.TryParse(data.Replace(" ", ""), ignoreCase: true, out CategoryType category))
+            {
+                card.Category = category;
+                return;
+            }
+
+            Debug.WriteLine($"Creature {card.Name} has an unknown category: {data}.");
         }
 
+        /// <summary>
+        /// Applies the local mana cost of the card.
+        /// </summary>
         protected static void CardMana(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> manaColors = GetBlockInformation(data);
-
-            card.Mana = new Dictionary<Model.Mana.ManaType, int>();
 
             card.Mana[Model.Mana.ManaType.Generic] = manaColors.GetInt("generic");
             card.Mana[Model.Mana.ManaType.White] = manaColors.GetInt("white");
@@ -105,6 +140,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             card.Mana[Model.Mana.ManaType.Green] = manaColors.GetInt("green");
         }
 
+        /// <summary>
+        /// Applies the local power and toughness of the card.
+        /// </summary>
         protected static void CardStats(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> stats = GetBlockInformation(data);
@@ -113,6 +151,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             card.Toughness = stats.GetInt("toughness");
         }
 
+        /// <summary>
+        /// Applies tags and keywords to the card.
+        /// </summary>
         protected static void CardTraits(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> traits = GetBlockInformation(data);
@@ -121,6 +162,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             card.Keywords = traits.GetStringArray("keywords").ToList();
         }
 
+        /// <summary>
+        /// Applies description and flavor text settings to the card.
+        /// </summary>
         protected static void CardText(MTGCreatureCard card, string data, List<MTGCreatureCard> cards)
         {
             Dictionary<string, string> texts = GetBlockInformation(data);
@@ -132,6 +176,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Helpers
             card.FlavorText = texts.GetString("flavor_text");
         }
 
+        /// <summary>
+        /// Converts an indented text block into key/value pairs.
+        /// </summary>
         protected static Dictionary<string, string> GetBlockInformation(string data)
         {
             Dictionary<string, string> blockInformation = new Dictionary<string, string>();
