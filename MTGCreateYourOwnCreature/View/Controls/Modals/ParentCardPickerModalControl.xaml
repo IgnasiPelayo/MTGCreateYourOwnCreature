@@ -48,7 +48,7 @@
 
                     <Grid Grid.Row="1">
                         <ScrollViewer VerticalScrollBarVisibility="Auto"
-                                      PreviewMouseWheel="ScrollViewer_PreviewMouseWheel"
+                                      PreviewMouseWheel="ScrollViewerPreviewMouseWheel"
                                       Padding="4">
 
                             <ListBox ItemsSource="{Binding AvailableParentCards}"

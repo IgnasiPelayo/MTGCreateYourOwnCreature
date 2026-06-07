@@ -27,7 +27,7 @@
                      Padding="10,1,10,0">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                              PreviewMouseWheel="ScrollViewerPreviewMouseWheel">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -67,7 +67,7 @@
                      Padding="10,1,10,0">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                              PreviewMouseWheel="ScrollViewerPreviewMouseWheel">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -90,7 +90,7 @@
                      Padding="10,1,10,0">
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
-                              PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                              PreviewMouseWheel="ScrollViewerPreviewMouseWheel">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

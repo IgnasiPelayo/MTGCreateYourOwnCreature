@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MTGCreateYourOwnCreature.View.Controls.Inspector
 {
     /// <summary>
-    /// Lógica de interacción para CardManaCostInspectorControl.xaml
+    /// Interaction logic for CardManaCostInspectorControl.xaml.
+    /// Represents the UI component within the card inspector used to view and edit the mana cost of a creature.
     /// </summary>
     public partial class CardManaCostInspectorControl : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CardManaCostInspectorControl"/> class.
+        /// </summary>
         public CardManaCostInspectorControl()
         {
             InitializeComponent();

@@ -30,6 +30,30 @@
                         VerticalAlignment="Top"
                         CornerRadius="10,10,30,30"/>
 
+                <Viewbox Stretch="Fill"
+                         StretchDirection="DownOnly"
+                         Margin="-1,-10,-18,0"
+                         VerticalAlignment="Top">
+                    <Viewbox.Style>
+                        <Style TargetType="Viewbox">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLegendaryCreature}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Viewbox.Style>
+
+                    <Grid>
+                        <Border Background="Black" Margin="0,0,0,100"/>
+
+                        <Path Data="M 6 4 C -1 12 -9 17 -11 35 C -12 47 -5 48 -5 52 C -6 55 -10.3333 55.3333 -13 57 C -13 67 -11 81 -2 88 C -2 96 -2 104 -2 112 C 3 120 9 126 12 138 C 12 147.3333 12 156.6667 12 166 H 564 C 563.6667 152.6667 563.3333 139.3333 563 126 C 566 120 570.3333 119.3333 573 116 C 573.3333 106.6667 572 95 574 88 C 587 82 585 69 588 58 C 584.3333 56.6667 580 54 579 50 C 586 45 587 40 586 35 C 585 20 576 13 568 4 C 550 17 542 18 504 19 C 501 11 495 7 489 2 C 425 29 406 15 348 2 L 345 9 C 327 7 302 -19 231 10 L 226 2 C 160 25 128 20 87 2 C 80 4 73 11 70 18 C 47 18 22 17 6 4"
+                         Fill="{Binding PreviewBorderBrush}"/>
+                    </Grid>
+                </Viewbox>
+                
                 <Grid Margin="12,17,12,42">
 
                     <Grid.RowDefinitions>
