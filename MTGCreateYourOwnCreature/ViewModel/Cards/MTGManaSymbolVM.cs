@@ -1,13 +1,13 @@
 ﻿
 using System.Windows.Media;
 
-namespace MTGCreateYourOwnCreature.Model
+namespace MTGCreateYourOwnCreature.ViewModel.Cards
 {
     /// <summary>
-    /// A bindable object representing a single mana symbol for rendering in the WPF UI.
-    /// Encapsulates both the raw data and its visual styling.
+    /// ViewModel representing a single visual Magic: The Gathering mana symbol for UI data binding.
+    /// Encapsulates the text value, color brush, and inheritance state.
     /// </summary>
-    public class MTGManaSymbol
+    public class MTGManaSymbolVM
     {
         /// <summary>
         /// The text or number displayed in the symbol (e.g. "X", "1", "2"...).
@@ -31,7 +31,7 @@ namespace MTGCreateYourOwnCreature.Model
         /// <param name="value">The raw string representation of the mana.</param>
         /// <param name="brush">The associated WPF color/brush, or null for default styling.</param>
         /// <param name="isInherited">True if the symbol is derived from a parent card.</param>
-        public MTGManaSymbol(string value, Brush? brush, bool isInherited = false)
+        public MTGManaSymbolVM(string value, Brush? brush, bool isInherited = false)
         {
             Value = value;
             Brush = brush;

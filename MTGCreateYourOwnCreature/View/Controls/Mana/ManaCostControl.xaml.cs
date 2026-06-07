@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-using MTGCreateYourOwnCreature.Model;
+using MTGCreateYourOwnCreature.ViewModel.Cards;
 
 namespace MTGCreateYourOwnCreature.View.Controls.Mana
 {
@@ -23,9 +23,9 @@ namespace MTGCreateYourOwnCreature.View.Controls.Mana
         /// <summary>
         /// The collection of mana symbols to be rendered by this control.
         /// </summary>
-        public IEnumerable<MTGManaSymbol> ItemsSource
+        public IEnumerable<MTGManaSymbolVM> ItemsSource
         {
-            get => (IEnumerable<MTGManaSymbol>)GetValue(ItemsSourceProperty);
+            get => (IEnumerable<MTGManaSymbolVM>)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
 
@@ -34,6 +34,6 @@ namespace MTGCreateYourOwnCreature.View.Controls.Mana
         /// Enables XAML data binding to a ViewModel's collection of generated mana symbols.
         /// </summary>
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
-            nameof(ItemsSource), typeof(IEnumerable<MTGManaSymbol>), typeof(ManaCostControl));
+            nameof(ItemsSource), typeof(IEnumerable<MTGManaSymbolVM>), typeof(ManaCostControl));
     }
 }

@@ -1,8 +1,8 @@
 ﻿
 using System.Windows.Media;
 
-using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
+using MTGCreateYourOwnCreature.ViewModel.Cards;
 
 namespace MTGCreateYourOwnCreature.Rendering
 {
@@ -30,10 +30,10 @@ namespace MTGCreateYourOwnCreature.Rendering
         /// Creates a static preview symbol, used as a label for one mana row in the inspector.
         /// </summary>
         /// <param name="manaType">The type of mana to generate a preview for.</param>
-        /// <returns>A single MTGManaSymbol, using "X" for Generic mana to denote a variable quantity.</returns>
-        public static MTGManaSymbol CreatePreviewSymbol(ManaType manaType)
+        /// <returns>A single MTGManaSymbolVM, using "X" for Generic mana to denote a variable quantity.</returns>
+        public static MTGManaSymbolVM CreatePreviewSymbol(ManaType manaType)
         {
-            return new MTGManaSymbol(manaType == ManaType.Generic ? "X" : "", ms_ManaBrushes[manaType]);
+            return new MTGManaSymbolVM(manaType == ManaType.Generic ? "X" : "", ms_ManaBrushes[manaType]);
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace MTGCreateYourOwnCreature.Rendering
         /// <param name="mana">The raw dictionary mapping mana types to their required quantities.</param>
         /// <param name="inherited">Flags the output symbols as inherited so the XAML can apply specialized UI styling.</param>
         /// <returns>A flat list of symbols ready to be bound to a WPF ItemsControl.</returns>
-        public static IReadOnlyList<MTGManaSymbol> CreateSymbols(IReadOnlyDictionary<ManaType, int> mana, bool inherited = false)
+        public static IReadOnlyList<MTGManaSymbolVM> CreateSymbols(IReadOnlyDictionary<ManaType, int> mana, bool inherited = false)
         {
-            List<MTGManaSymbol> symbols = new List<MTGManaSymbol>();
+            List<MTGManaSymbolVM> symbols = new List<MTGManaSymbolVM>();
 
             foreach (KeyValuePair<ManaType, int> manaEntry in mana)
             {
@@ -60,16 +60,16 @@ namespace MTGCreateYourOwnCreature.Rendering
 
                 if (manaEntry.Key == ManaType.Generic)
                 {
-                    // MTG Rule: Generic mana is grouped into a single circle with a number (e.g., "(3)").
-                    symbols.Add(new MTGManaSymbol(manaEntry.Value.ToString(), brush, inherited));
+                    // Generic mana is grouped into a single circle with a number (e.g., "(3)").
+                    symbols.Add(new MTGManaSymbolVM(manaEntry.Value.ToString(), brush, inherited));
                 }
                 else
                 {
-                    // MTG Rule: Colored mana is split into individual symbols (e.g., "(W)(W)(W)").
+                    // Colored mana is split into individual symbols (e.g., "(W)(W)(W)").
                     // We pass an empty string because the visual brush handles the rendering.
                     for (int i = 0; i < manaEntry.Value; ++i)
                     {
-                        symbols.Add(new MTGManaSymbol("", brush, inherited));
+                        symbols.Add(new MTGManaSymbolVM("", brush, inherited));
                     }
                 }
             }

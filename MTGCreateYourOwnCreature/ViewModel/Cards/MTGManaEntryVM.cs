@@ -86,19 +86,19 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         /// <summary>
         /// Static preview symbol for this mana type, typically used as a row label in the inspector UI.
         /// </summary>
-        public MTGManaSymbol PreviewManaSymbol => ManaRenderService.CreatePreviewSymbol(m_Type);
+        public MTGManaSymbolVM PreviewManaSymbol => ManaRenderService.CreatePreviewSymbol(m_Type);
 
         /// <summary>
         /// List of bindable visual mana symbols representing the explicitly set cost.
         /// Automatically formatted by the <see cref="ManaRenderService"/>.
         /// </summary>
-        public IReadOnlyList<MTGManaSymbol> ManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_Value } });
+        public IReadOnlyList<MTGManaSymbolVM> ManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_Value } });
 
         /// <summary>
         /// List of bindable visual mana symbols representing the inherited cost.
         /// Automatically formatted as inherited symbols by the <see cref="ManaRenderService"/>.
         /// </summary>
-        public IReadOnlyList<MTGManaSymbol> InheritedManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_InheritedValue } }, true);
+        public IReadOnlyList<MTGManaSymbolVM> InheritedManaSymbols => ManaRenderService.CreateSymbols(new Dictionary<ManaType, int> { { m_Type, m_InheritedValue } }, true);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MTGManaEntryVM"/> class.

@@ -92,18 +92,6 @@ namespace MTGCreateYourOwnCreature.Model
         }
 
         /// <summary>
-        /// Creates the virtual root parent used when a card does not inherit from an existing card in the database.
-        /// </summary>
-        /// <returns>A new base <see cref="MTGCreatureCard"/>.</returns>
-        public static MTGCreatureCard CreateBaseCreatureCard()
-        {
-            MTGCreatureCard baseCreatureCard = new MTGCreatureCard();
-            baseCreatureCard.Name = "Base Creature";
-
-            return baseCreatureCard;
-        }
-
-        /// <summary>
         /// Generates a dictionary pre-populated with every defined ManaType.
         /// </summary>
         /// <returns>A dictionary mapping all ManaType enum values to an initial cost of 0.</returns>

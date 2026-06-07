@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Windows.Data;
 
-using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Rendering;
 using MTGCreateYourOwnCreature.Model.Mana;
+using MTGCreateYourOwnCreature.ViewModel.Cards;
 
 namespace MTGCreateYourOwnCreature.View.Converters
 {
@@ -20,12 +20,12 @@ namespace MTGCreateYourOwnCreature.View.Converters
         /// <param name="targetType">The type of the binding target property.</param>
         /// <param name="parameter">An optional converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        /// <returns>A collection of generated <see cref="MTGManaSymbol"/> objects formatted by the <see cref="ManaRenderService"/>, or an empty array if the value is null or invalid.</returns>
+        /// <returns>A collection of generated <see cref="MTGManaSymbolVM"/> objects formatted by the <see cref="ManaRenderService"/>, or an empty array if the value is null or invalid.</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is not IReadOnlyDictionary<ManaType, int> mana)
             {
-                return Array.Empty<MTGManaSymbol>();
+                return Array.Empty<MTGManaSymbolVM>();
             }
 
             return ManaRenderService.CreateSymbols(mana);
