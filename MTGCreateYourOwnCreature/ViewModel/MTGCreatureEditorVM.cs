@@ -60,6 +60,17 @@ namespace MTGCreateYourOwnCreature.ViewModel
         public ICommand ImportCommand => m_ImportCommand;
 
         /// <summary>
+        /// The backing field for the <see cref="AddCreatureCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_AddCreatureCommand;
+
+        /// <summary>
+        /// The command executed when the user clicks the "Add New Creature" button in the UI.
+        /// Instantiates a new, default creature card, adds it to the collection, and automatically selects it for editing.
+        /// </summary>
+        public ICommand AddCreatureCommand => m_AddCreatureCommand;
+
+        /// <summary>
         /// A dictionary tracking the inverse inheritance graph (mapping a parent card to all of its direct children).
         /// Used to efficiently cascade property updates down the tree.
         /// </summary>
@@ -171,6 +182,26 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 }
             });
 
+            m_AddCreatureCommand = new RelayCommand(_ =>
+            {
+                MTGCreatureCard card = new MTGCreatureCard
+                {
+                    Name = "New Creature",
+                    Category = Model.Category.CategoryType.Creature
+                };
+
+                MTGCreatureCardVM creatureCard = new MTGCreatureCardVM(card);
+                creatureCard.PropertyChanged += OnCardChanged;
+
+                Cards.Add(creatureCard);
+
+                m_Ancestors[creatureCard] = new List<MTGCreatureCardVM>();
+
+                CurrentCard = creatureCard;
+
+                OnPropertyChanged(nameof(Cards));
+                OnPropertyChanged(nameof(CurrentCard));
+            });
 
             ParentPickerVisibility = Visibility.Collapsed;
 
@@ -282,7 +313,14 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 return;
             }
 
-            if (e.PropertyName == nameof(MTGCreatureCardVM.ResolvedTotalMana))
+            if (e.PropertyName == nameof(MTGCreatureCardVM.Name))
+            {
+                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                {
+                    ancestorCard.OnParentNameChanged();
+                }
+            }
+            else if (e.PropertyName == nameof(MTGCreatureCardVM.ResolvedTotalMana))
             {
                 foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
                 {

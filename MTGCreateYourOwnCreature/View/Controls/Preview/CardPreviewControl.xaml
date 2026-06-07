@@ -78,7 +78,7 @@
                                      HorizontalAlignment="Left"
                                      Margin="10,0,0,5">
 
-                                <TextBlock Text="{Binding Card.Name}"
+                                <TextBlock Text="{Binding Name}"
                                            FontWeight="SemiBold"
                                            FontSize="35"/>
                             </Viewbox>

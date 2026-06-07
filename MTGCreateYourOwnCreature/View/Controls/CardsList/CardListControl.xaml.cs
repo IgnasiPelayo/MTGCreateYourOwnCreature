@@ -36,5 +36,24 @@ namespace MTGCreateYourOwnCreature.View.Controls.CardsList
             scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - (e.Delta * 0.1));
             e.Handled = true;
         }
+
+        /// <summary>
+        /// Event handler triggered when the active selection within the list box changes.
+        /// Ensures that the newly selected card is automatically scrolled into the visible viewport.
+        /// </summary>
+        /// <param name="sender">The source of the event, expected to be a <see cref="ListBox"/>.</param>
+        /// <param name="e">Event data detailing the selection changes.</param>
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox? listBox = sender as ListBox;
+
+            if (listBox == null || listBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            // Automatically force the ListBox to scroll the newly active item into view.
+            listBox.ScrollIntoView(listBox.SelectedItem);
+        }
     }
 }

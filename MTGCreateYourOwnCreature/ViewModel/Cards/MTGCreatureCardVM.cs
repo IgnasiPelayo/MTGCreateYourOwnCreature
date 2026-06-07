@@ -23,6 +23,20 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public MTGCreatureCard Card { get; set; }
 
         /// <summary>
+        /// The given name of the creature card.
+        /// </summary>
+        public string Name
+        {
+            get => Card.Name;
+            set
+            {
+                Card.Name = value;
+
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        /// <summary>
         /// The observable collection of mana entries used for UI binding.
         /// </summary>
         public ObservableCollection<MTGManaEntryVM> Mana { get; set; }
@@ -632,6 +646,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             OnPropertyChanged(nameof(ResolvedTotalToughness));
             OnPropertyChanged(nameof(ResolvedInheritedToughness));
 
+            OnPropertyChanged(nameof(ResolvedTotalPowerToughness));
+
             UpdateTags();
             UpdateKeywords();
 
@@ -825,6 +841,15 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         protected static Brush FindBrush(string resourceKey)
         {
             return App.Current.TryFindResource(resourceKey) as Brush ?? Brushes.Pink;
+        }
+
+        /// <summary>
+        /// Invoked externally when the underlying assigned parent card's name is modified.
+        /// Triggers a UI refresh for the resolved parent name display.
+        /// </summary>
+        public void OnParentNameChanged()
+        {
+            OnPropertyChanged(nameof(ResolvedParentCardName));
         }
 
         /// <summary>
