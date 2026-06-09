@@ -10,7 +10,7 @@
       xmlns:preview="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Preview"
       xmlns:vm="clr-namespace:MTGCreateYourOwnCreature.ViewModel"
       mc:Ignorable="d"
-      Title="Magic the Gathering: Create your own Creature" Height="550" Width="980">
+      Title="Magic the Gathering: Create your own Creature" Height="580" Width="980">
 
     <Window.DataContext>
         <vm:MTGCreatureEditorVM/>
@@ -27,7 +27,7 @@
                     </Setter>
 
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ParentPickerVisibility}" Value="Visible">
+                        <DataTrigger Binding="{Binding IsModalOpen}" Value="True">
                             <Setter Property="Effect">
                                 <Setter.Value>
                                     <BlurEffect Radius="12"/>
@@ -37,7 +37,6 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            
             
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -73,7 +72,8 @@
                         BorderThickness="0,0,1,0"
                         Padding="4">
 
-                    <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"/>
+                    <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"
+                                                    RemoveCreatureCommand="{Binding DataContext.RemoveCreatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     
                 </Border>
 
@@ -89,6 +89,7 @@
         </Grid>
 
         <modals:ParentCardPickerModalControl Visibility="{Binding ParentPickerVisibility}"/>
+        <modals:DeleteConfirmationModalControl Visibility="{Binding DeleteModalVisibility}"/>
 
     </Grid>
 </Window>

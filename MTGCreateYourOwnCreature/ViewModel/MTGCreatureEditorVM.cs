@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 
-using MTGCreateYourOwnCreature.Model;
+using MTGCreateYourOwnCreature.Model.Cards;
 using MTGCreateYourOwnCreature.Model.Parsing;
 using MTGCreateYourOwnCreature.ViewModel.Cards;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
@@ -75,6 +75,48 @@ namespace MTGCreateYourOwnCreature.ViewModel
         /// Used to efficiently cascade property updates down the tree.
         /// </summary>
         protected Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>> m_Ancestors = new Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>>();
+
+        /// <summary>
+        /// The visibility state of the delete confirmation modal.
+        /// </summary>
+        public Visibility DeleteModalVisibility { get; set; }
+
+        /// <summary>
+        /// The dynamically generated warning text displayed in the delete confirmation modal,
+        /// which lists all specific child cards that will be affected by the deletion.
+        /// </summary>
+        public string DeleteWarningText { get; set; }
+
+        /// <summary>
+        /// The backing field for the <see cref="RemoveCreatureCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_RemoveCreatureCommand;
+
+        /// <summary>
+        /// The command that initiates the deletion sequence for the currently active card.
+        /// Bypasses the modal if the card has no inherited dependencies; otherwise, prompts for confirmation.
+        /// </summary>
+        public ICommand RemoveCreatureCommand => m_RemoveCreatureCommand;
+
+        /// <summary>
+        /// The backing field for the <see cref="CloseDeleteModalCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_CloseDeleteModalCommand;
+
+        /// <summary>
+        /// The command executed to cancel the deletion and hide the confirmation modal.
+        /// </summary>
+        public ICommand CloseDeleteModalCommand => m_CloseDeleteModalCommand;
+
+        /// <summary>
+        /// The backing field for the <see cref="ConfirmRemoveCreatureCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_ConfirmRemoveCreatureCommand;
+
+        /// <summary>
+        /// The command executed when the user explicitly confirms the destructive deletion operation from the modal.
+        /// </summary>
+        public ICommand ConfirmRemoveCreatureCommand => m_ConfirmRemoveCreatureCommand;
 
         /// <summary>
         /// The visibility state of the parent selection UI overlay.
@@ -160,6 +202,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
         public ICommand CloseParentPickerCommand => m_CloseParentPickerCommand;
 
         /// <summary>
+        /// Whether any modal overlay is currently visible.
+        /// </summary>
+        public bool IsModalOpen => DeleteModalVisibility == Visibility.Visible || ParentPickerVisibility == Visibility.Visible;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MTGCreatureEditorVM"/> class.
         /// Configures the base UI state, collections, and commands.
         /// </summary>
@@ -201,6 +248,61 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
                 OnPropertyChanged(nameof(Cards));
                 OnPropertyChanged(nameof(CurrentCard));
+            });
+
+            DeleteModalVisibility = Visibility.Collapsed;
+
+            m_RemoveCreatureCommand = new RelayCommand(_ =>
+            {
+                if (CurrentCard == null)
+                {
+                    return;
+                }
+
+                // Look up all cards that inherit directly from the card we are trying to delete.
+                List<MTGCreatureCardVM> ancestors = m_Ancestors[CurrentCard];
+                int numberOfAncestors = ancestors.Count;
+
+                if (numberOfAncestors == 0)
+                {
+                    // If no other cards inherit from this one, delete it immediately.
+                    PerformRemove();
+                }
+                else
+                {
+                    // Show the modal to warn the user about breaking inheritance.
+                    DeleteModalVisibility = Visibility.Visible;
+
+                    // Dynamically build a readable list of all affected child cards.
+                    DeleteWarningText = $"'{CurrentCard.Name}' is the parent of {numberOfAncestors} other creature(s).";
+                    foreach (MTGCreatureCardVM ancestor in ancestors)
+                    {
+                        DeleteWarningText += $"\n  — '{ancestor.Name}'";
+                    }
+                    DeleteWarningText += "\n\nDeleting it will break their inheritance. Are you sure you want to proceed?";
+
+                    OnPropertyChanged(nameof(DeleteModalVisibility));
+                    OnPropertyChanged(nameof(DeleteWarningText));
+                    OnPropertyChanged(nameof(IsModalOpen));
+                }
+            });
+
+            m_CloseDeleteModalCommand = new RelayCommand(_ =>
+            {
+                DeleteModalVisibility = Visibility.Collapsed;
+
+                OnPropertyChanged(nameof(DeleteModalVisibility));
+                OnPropertyChanged(nameof(IsModalOpen));
+            });
+
+            m_ConfirmRemoveCreatureCommand = new RelayCommand(_ =>
+            {
+                PerformRemove();
+
+                DeleteModalVisibility = Visibility.Collapsed;
+
+                OnPropertyChanged(nameof(DeleteModalVisibility));
+                OnPropertyChanged(nameof(IsModalOpen));
             });
 
             ParentPickerVisibility = Visibility.Collapsed;
@@ -302,6 +404,57 @@ namespace MTGCreateYourOwnCreature.ViewModel
         }
 
         /// <summary>
+        /// Executes the internal removal of the active card, safely handles UI selection fallback, 
+        /// and repairs the inheritance tree by bridging orphaned children to their grandparent card.
+        /// </summary>
+        protected void PerformRemove()
+        {
+            MTGCreatureCardVM cardToRemove = CurrentCard;
+
+            // Intelligently select an adjacent card in the list so the Inspector doesn't just go blank.
+            int currentCardIndex = Cards.IndexOf(CurrentCard);
+            if (currentCardIndex > 0)
+            {
+                // Select the previous card.
+                CurrentCard = Cards[currentCardIndex - 1];
+            }
+            else
+            {
+                // Select the next card, or null if list is now empty.
+                CurrentCard = Cards.Count > 1 ? Cards[1] : null;
+            }
+            
+            Cards.Remove(cardToRemove);
+
+            // Extract the "grandparent" card (the parent of the card we are deleting).
+            MTGCreatureCard? newParent = cardToRemove.Card.ParentCreatureCard;
+
+            // Re-parent all orphaned children to the grandparent, bridging the gap left by the deleted card.
+            List<MTGCreatureCardVM> ancestors = m_Ancestors[cardToRemove];
+            foreach (MTGCreatureCardVM ancestor in ancestors)
+            {
+                ancestor.ChangeParent(newParent);
+
+                // Re-register these children into the dictionary under their new parent's tracking list.
+                if (newParent != null)
+                {
+                    m_Ancestors[m_CardsToVM[newParent]].Add(ancestor);
+                }
+            }
+
+            m_Ancestors.Remove(cardToRemove);
+
+            if (cardToRemove.HasParentCard)
+            {
+                // Unregister the deleted card from its own parent's tracking list.
+                m_Ancestors[m_CardsToVM[cardToRemove.Card.ParentCreatureCard]].Remove(cardToRemove);
+            }
+
+            OnPropertyChanged(nameof(Cards));
+            OnPropertyChanged(nameof(CurrentCard));
+        }
+
+        /// <summary>
         /// Event handler that cascades updates to child cards when an inherited property changes on a parent card.
         /// </summary>
         /// <param name="sender">The source <see cref="MTGCreatureCardVM"/>.</param>
@@ -400,6 +553,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
             OnPropertyChanged(nameof(SelectedParentCard));
             OnPropertyChanged(nameof(AvailableParentCards));
             OnPropertyChanged(nameof(ParentPickerVisibility));
+            OnPropertyChanged(nameof(IsModalOpen));
         }
 
         /// <summary>
@@ -414,6 +568,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
             m_SelectedParentCard = null;
 
             OnPropertyChanged(nameof(ParentPickerVisibility));
+            OnPropertyChanged(nameof(IsModalOpen));
         }
 
         /// <summary>

@@ -4,12 +4,14 @@
                     xmlns:inspector_controls="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
                     xmlns:preview="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Preview">
 
-    <Style x:Key="RoundedBorder" TargetType="Border">
+    <Style x:Key="NoHoverRoundedBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="4"/>
+    </Style>
 
+    <Style x:Key="RoundedBorder" BasedOn="{StaticResource NoHoverRoundedBorder}" TargetType="Border">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource ControlBackgroundHoverBrush}"/>
@@ -89,6 +91,12 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+
+    <Style x:Key="RedRoundedButton" TargetType="Button" BasedOn="{StaticResource RoundedButton}">
+        <Setter Property="Foreground" Value="#FFFD1405"/>
+        <Setter Property="BorderBrush" Value="#FFFD1405"/>
     </Style>
 
 

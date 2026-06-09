@@ -44,7 +44,13 @@ namespace MTGCreateYourOwnCreature.View.Controls.Preview
 
             UpdateLayout();
 
-            double availableHeight = InformationBorder.ActualHeight;
+            double verticalMargins = InformationContainer.Margin.Top + InformationContainer.Margin.Bottom;
+            double availableHeight = InformationBorder.ActualHeight - verticalMargins;
+
+            if (availableHeight <= 0)
+            {
+                return;
+            }
 
             double ratio = availableHeight / InformationContainer.ActualHeight;
 
@@ -62,9 +68,9 @@ namespace MTGCreateYourOwnCreature.View.Controls.Preview
                 // In rare cases, fractional pixel rounding or line-wrapping shifts 
                 // might prevent the text from fitting perfectly after the first ratio calculation. 
                 // We use a strict safety limit of 20 iterations to inch the font size down without risking an infinite loop.
-                int safetyLimit = 20;
+                int safetyLimit = 30;
 
-                while (InformationContainer.ActualHeight > availableHeight && safetyLimit-- > 0)
+                while (InformationContainer.ActualHeight > availableHeight && safetyLimit-- > 0 && DescriptionTextBlock.FontSize > 5)
                 {
                     ResizeTextBlock(DescriptionTextBlock, DescriptionBaseSize, DescriptionTextBlock.FontSize - 0.5);
 

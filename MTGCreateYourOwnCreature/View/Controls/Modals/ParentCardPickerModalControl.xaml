@@ -32,7 +32,7 @@
 
             <Border Grid.Row="1"
                     Grid.Column="1"
-                    Style="{StaticResource RoundedBorder}">
+                    Style="{StaticResource NoHoverRoundedBorder}">
 
                 <Grid>
                     <Grid.RowDefinitions>

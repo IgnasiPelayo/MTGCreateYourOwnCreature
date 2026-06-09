@@ -4,8 +4,8 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 
-using MTGCreateYourOwnCreature.Model;
 using MTGCreateYourOwnCreature.Model.Mana;
+using MTGCreateYourOwnCreature.Model.Cards;
 using MTGCreateYourOwnCreature.Model.Category;
 
 namespace MTGCreateYourOwnCreature.ViewModel.Cards

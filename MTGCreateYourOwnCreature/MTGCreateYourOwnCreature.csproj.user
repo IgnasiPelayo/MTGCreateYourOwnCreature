@@ -46,6 +46,9 @@
     <Compile Update="View\Controls\Mana\ManaSymbolControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Controls\Modals\DeleteConfirmationModalControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\Controls\Modals\ParentCardPickerModalControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,6 +106,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Mana\ManaSymbolControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Controls\Modals\DeleteConfirmationModalControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\Controls\Modals\ParentCardPickerModalControl.xaml">

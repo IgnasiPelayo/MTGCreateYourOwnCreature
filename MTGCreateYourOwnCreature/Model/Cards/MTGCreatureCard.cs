@@ -2,7 +2,7 @@
 using MTGCreateYourOwnCreature.Model.Mana;
 using MTGCreateYourOwnCreature.Model.Category;
 
-namespace MTGCreateYourOwnCreature.Model
+namespace MTGCreateYourOwnCreature.Model.Cards
 {
     /// <summary>
     /// Stores the editable data of a single creature card.
