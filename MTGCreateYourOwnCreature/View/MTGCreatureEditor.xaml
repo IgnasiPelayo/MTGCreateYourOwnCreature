@@ -45,6 +45,8 @@
 
             <Menu Grid.Row="0">
                 <MenuItem Header="File">
+                    <MenuItem Header="New Collection"
+                              Command="{Binding NewCollectionCommand}"/>
                     <MenuItem Header="Import"
                               Command="{Binding ImportCommand}"/>
                     <MenuItem Header="Export"/>

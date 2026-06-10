@@ -54,6 +54,16 @@ namespace MTGCreateYourOwnCreature.ViewModel
         }
 
         /// <summary>
+        /// The backing field for the <see cref="NewCollectionCommand"/>.
+        /// </summary>
+        protected readonly RelayCommand m_NewCollectionCommand;
+
+        /// <summary>
+        /// The command executed when the user requests to start a completely new creature set.
+        /// </summary>
+        public ICommand NewCollectionCommand => m_NewCollectionCommand;
+
+        /// <summary>
         /// The backing field for the <see cref="ImportCommand"/>.
         /// </summary>
         protected readonly RelayCommand m_ImportCommand;
@@ -218,6 +228,12 @@ namespace MTGCreateYourOwnCreature.ViewModel
         {
             Cards = new ObservableCollection<MTGCreatureCardVM>();
 
+            m_NewCollectionCommand = new RelayCommand(_ =>
+            {
+                Cards.Clear();
+                AddNewCreature();
+            });
+
             m_ImportCommand = new RelayCommand(_ =>
             {
                 OpenFileDialog dialog = new OpenFileDialog()
@@ -235,26 +251,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             m_AddCreatureCommand = new RelayCommand(_ =>
             {
-                MTGCreatureCard card = new MTGCreatureCard
-                {
-                    Name = "New Creature",
-                    Category = Model.Category.CategoryType.Creature
-                };
-
-                MTGCreatureCardVM creatureCard = new MTGCreatureCardVM(card);
-                creatureCard.PropertyChanged += OnCardChanged;
-
-                Cards.Add(creatureCard);
-
-                m_Ancestors[creatureCard] = new List<MTGCreatureCardVM>();
-
-                CurrentCard = creatureCard;
-
-                OnPropertyChanged(nameof(Cards));
-                OnPropertyChanged(nameof(CurrentCard));
+                AddNewCreature();
             });
 
             DeleteModalVisibility = Visibility.Collapsed;
+            DeleteWarningText = string.Empty;
 
             m_RemoveCreatureCommand = new RelayCommand(_ =>
             {
@@ -405,6 +406,31 @@ namespace MTGCreateYourOwnCreature.ViewModel
             baseCreatureCard.Name = "Base Creature";
 
             return baseCreatureCard;
+        }
+
+        /// <summary>
+        /// Instantiates a new, default creature card, registers its event listeners, 
+        /// adds it to the main collection, and automatically selects it for editing.
+        /// </summary>
+        protected void AddNewCreature()
+        {
+            MTGCreatureCard card = new MTGCreatureCard
+            {
+                Name = "New Creature",
+                Category = Model.Category.CategoryType.Creature
+            };
+
+            MTGCreatureCardVM creatureCard = new MTGCreatureCardVM(card);
+            creatureCard.PropertyChanged += OnCardChanged;
+
+            Cards.Add(creatureCard);
+
+            m_Ancestors[creatureCard] = new List<MTGCreatureCardVM>();
+
+            CurrentCard = creatureCard;
+
+            OnPropertyChanged(nameof(Cards));
+            OnPropertyChanged(nameof(CurrentCard));
         }
 
         /// <summary>
