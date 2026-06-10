@@ -52,39 +52,157 @@
             </Menu>
 
             <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Cards.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
 
-                <Border Grid.Column="0"
-                        BorderBrush="#DDD"
-                        BorderThickness="0,0,1,0"
-                        Padding="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
 
-                    <cardslist:CardListControl/>
+                    <Border Grid.Column="0"
+                            BorderBrush="#DDD"
+                            BorderThickness="0,0,1,0"
+                            Padding="4">
 
-                </Border>
+                        <cardslist:CardListControl/>
 
-                <Border Grid.Column="1"
-                        BorderBrush="#DDD"
-                        BorderThickness="0,0,1,0"
-                        Padding="4">
+                    </Border>
 
-                    <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"
-                                                    RemoveCreatureCommand="{Binding DataContext.RemoveCreatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                    
-                </Border>
+                    <Border Grid.Column="1"
+                            BorderBrush="#DDD"
+                            BorderThickness="0,0,1,0"
+                            Padding="4">
 
-                <Border Grid.Column="2"
-                        BorderBrush="#DDD"
-                        BorderThickness="0,0,1,0"
-                        Padding="4">
+                        <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"
+                                    RemoveCreatureCommand="{Binding DataContext.RemoveCreatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
-                    <preview:CardPreviewControl DataContext="{Binding CurrentCard}"/>
+                    </Border>
 
-                </Border>
+                    <Border Grid.Column="2"
+                            BorderBrush="#DDD"
+                            BorderThickness="0,0,1,0"
+                            Padding="4">
+
+                        <preview:CardPreviewControl DataContext="{Binding CurrentCard}"/>
+
+                    </Border>
+                </Grid>
+
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Cards.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Grid.Row="1" 
+                             Grid.Column="1" 
+                             Stretch="Uniform" 
+                             HorizontalAlignment="Center" 
+                             VerticalAlignment="Center">
+
+                        <Border Background="#252526" 
+                                BorderBrush="#3E3E42" 
+                                BorderThickness="1" 
+                                CornerRadius="8"
+                                Padding="40,35">
+
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black"
+                                                  Direction="270"
+                                                  ShadowDepth="4" 
+                                                  BlurRadius="15" 
+                                                  Opacity="0.3"/>
+                            </Border.Effect>
+
+                            <StackPanel MaxWidth="480">
+                                <TextBlock Text="MAGIC: THE GATHERING" 
+                                           FontSize="13"
+                                           Foreground="#888888" 
+                                           FontWeight="Bold" 
+                                           TextAlignment="Center"
+                                           Margin="0,0,0,5"/>
+
+                                <TextBlock Text="Create Your Own Creature"
+                                           FontFamily="Georgia" 
+                                           FontSize="36"
+                                           Foreground="#EFEFEF"
+                                           TextAlignment="Center"
+                                           Margin="0,0,0,15"/>
+
+                                <Border Height="2" 
+                                        Width="50" 
+                                        Background="#C93B3B" 
+                                        HorizontalAlignment="Center"
+                                        CornerRadius="1" 
+                                        Margin="0,0,0,20"/>
+
+                                <TextBlock Text="Welcome to the visual card editor. Design custom creature profiles, define precise mana costs, and manage complex inheritance trees. Get started by importing a saved set or crafting your first card from scratch."
+                                           FontSize="15" 
+                                           Foreground="#B0B0B0" 
+                                           TextAlignment="Center" 
+                                           TextWrapping="Wrap" 
+                                           LineHeight="24"
+                                           Margin="0,0,0,35"/>
+
+                                <Grid HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" 
+                                            Content="Import Collection"
+                                            Command="{Binding ImportCommand}"
+                                            Style="{StaticResource RoundedButton}"
+                                            Width="170" 
+                                            Height="42" 
+                                            FontSize="14" 
+                                            FontWeight="SemiBold"/>
+
+                                    <Button Grid.Column="2" 
+                                            Content="Create New Creature"
+                                            Command="{Binding AddCreatureCommand}"
+                                            Style="{StaticResource RoundedButton}"
+                                            Width="170" 
+                                            Height="42" 
+                                            FontSize="14" 
+                                            FontWeight="SemiBold"/>
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+                    </Viewbox>
+                </Grid>
             </Grid>
         </Grid>
 
