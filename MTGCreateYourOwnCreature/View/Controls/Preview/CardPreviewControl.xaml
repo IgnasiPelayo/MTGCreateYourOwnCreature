@@ -54,13 +54,14 @@
                     </Grid>
                 </Viewbox>
                 
-                <Grid Margin="12,17,12,42">
+                <Grid Margin="12,17,12,2">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="250"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
 
                     <Grid>
@@ -190,6 +191,51 @@
                             </Grid>
                         </Grid>
                     </Border>
+
+                    <Grid Grid.Row="4"
+                          Margin="0,5,0,5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{Binding PreviewCollectorNumber}"
+                                       HorizontalAlignment="Left"
+                                       Foreground="White"
+                                       FontFamily="Cascadia Code Light"/>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock HorizontalAlignment="Left"
+                                           Foreground="White">
+                                    
+                                    <Run Text="MTG · EN "
+                                         FontFamily="Cascadia Code Light"/>
+                                    <InlineUIContainer>
+                                        <TextBlock Text="⚱ "
+                                                   Foreground="White"
+                                                   RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock.RenderTransform>
+                                                <RotateTransform Angle="-90"/>
+                                            </TextBlock.RenderTransform>
+                                        </TextBlock>
+                                    </InlineUIContainer>
+                                    <Run Text="  NACHET" FontFamily="Sylfaen"/>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="1"
+                                           HorizontalAlignment="Right"
+                                           Foreground="White"
+                                           FontWeight="Light"
+                                           Text="™ &amp; © 2026 MTG Creature Editor" FontFamily="Mongolian Baiti"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </Grid>
 
 

@@ -45,7 +45,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
             {
                 m_CurrentCard = value;
                 OnPropertyChanged(nameof(CurrentCard));
-                m_OpenParentPickerCommand.RaiseCanExecuteChanged();
+
+                if (CurrentCard != null)
+                {
+                    CurrentCard.UpdateCollectorNumber(Cards.IndexOf(CurrentCard), Cards.Count);
+                }
             }
         }
 
@@ -315,7 +319,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
             m_OpenParentPickerCommand = new RelayCommand(_ =>
             {
                 OnParentPickerOpened();
-            }, _ => CurrentCard != null);
+            });
 
             m_CloseParentPickerCommand = new RelayCommand(_ =>
             {

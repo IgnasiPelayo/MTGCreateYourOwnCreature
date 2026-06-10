@@ -239,6 +239,12 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
         public Brush PreviewInformationFrameBrush => m_PreviewInformationFrameBrush;
 
         /// <summary>
+        /// The formatted collector number string (e.g., "1/10") to be displayed at the bottom of the visual card preview.
+        /// </summary>
+        public string PreviewCollectorNumber { get; set; }
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MTGCreatureCardVM"/> class.
         /// </summary>
         /// <param name="card">The base creature card model to wrap.</param>
@@ -619,6 +625,17 @@ namespace MTGCreateYourOwnCreature.ViewModel.Cards
             FlavorText.UpdateInheritance();
 
             OnPropertyChanged(nameof(PreviewSeparatorVisibility));
+        }
+
+        /// <summary>
+        /// Updates the collector number display text based on the card's current ordinal position within the entire loaded set.
+        /// </summary>
+        /// <param name="collectorNumber">The 0-based index of this specific card within the global collection.</param>
+        /// <param name="total">The total number of creature cards currently loaded in the editor.</param>
+        public void UpdateCollectorNumber(int collectorNumber, int total)
+        {
+            PreviewCollectorNumber = $"{collectorNumber + 1}/{total}";
+            OnPropertyChanged(nameof(PreviewCollectorNumber));
         }
 
         /// <summary>
