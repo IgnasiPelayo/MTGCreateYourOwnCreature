@@ -9,6 +9,7 @@ using MTGCreateYourOwnCreature.Model.Cards;
 using MTGCreateYourOwnCreature.ViewModel.Cards;
 using MTGCreateYourOwnCreature.ViewModel.Parsing;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
+using System.Diagnostics;
 
 namespace MTGCreateYourOwnCreature.ViewModel
 {
@@ -328,7 +329,22 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             LinkedInCommand = new RelayCommand(_ =>
             {
-                Console.WriteLine("Open LinkedIn");
+                try
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "https://www.linkedin.com/in/ignasipelayo/",
+                        UseShellExecute = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Could not open LinkedIn page.{Environment.NewLine}{ex.Message}",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             });
 
             DeleteModalVisibility = Visibility.Collapsed;
