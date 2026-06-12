@@ -15,7 +15,34 @@
     <Window.DataContext>
         <vm:MTGCreatureEditorVM/>
     </Window.DataContext>
-    
+
+    <Window.InputBindings>
+
+        <KeyBinding Gesture="CTRL+SHIFT+N"
+                    Command="{Binding NewCollectionCommand}"/>
+
+        <KeyBinding Gesture="CTRL+N"
+                    Command="{Binding NewCreatureCardCommand}"/>
+
+        <KeyBinding Gesture="CTRL+O"
+                    Command="{Binding OpenCollectionCommand}"/>
+
+        <KeyBinding Gesture="CTRL+S"
+                    Command="{Binding SaveCollectionCommand}"/>
+
+        <KeyBinding Gesture="CTRL+SHIFT+S"
+                    Command="{Binding SaveCollectionAsCommand}"/>
+
+        <KeyBinding Gesture="CTRL+D"
+                    Command="{Binding DuplicateCreatureCardCommand}"/>
+
+        <KeyBinding Gesture="DELETE"
+                    Command="{Binding DeleteCreatureCardCommand}"/>
+
+        <KeyBinding Gesture="CTRL+F1"
+                    Command="{Binding HelpViewerCommand}"/>
+    </Window.InputBindings>
+
     <Grid>
         <Grid>
             <Grid.Style>
@@ -44,12 +71,61 @@
             </Grid.RowDefinitions>
 
             <Menu Grid.Row="0">
-                <MenuItem Header="File">
-                    <MenuItem Header="New Collection"
-                              Command="{Binding NewCollectionCommand}"/>
-                    <MenuItem Header="Import"
-                              Command="{Binding ImportCommand}"/>
-                    <MenuItem Header="Export"/>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New">
+                        <MenuItem Header="Collection"
+                                  InputGestureText="Ctrl+Shift+N"
+                                  Command="{Binding NewCollectionCommand}"/>
+
+                        <MenuItem Header="Creature Card"
+                                  InputGestureText="Ctrl+N"
+                                  Command="{Binding NewCreatureCardCommand}"/>
+                    </MenuItem>
+
+                    <MenuItem Header="_Open">
+                        <MenuItem Header="Collection"
+                                  InputGestureText="Ctrl+O"
+                                  Command="{Binding OpenCollectionCommand}"/>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="{Binding SaveMenuText}"
+                              InputGestureText="Ctrl+S"
+                              IsEnabled="{Binding HasCards}"
+                              Command="{Binding SaveCollectionCommand}"/>
+
+                    <MenuItem Header="{Binding SaveAsMenuText}"
+                              InputGestureText="Ctrl+Shift+S"
+                              IsEnabled="{Binding HasCards}"
+                              Command="{Binding SaveCollectionAsCommand}"/>
+
+                    <Separator/>
+
+                    <MenuItem Header="E_xit"
+                              InputGestureText="Alt+F4"
+                              Command="{Binding ExitCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="_Duplicate"
+                              InputGestureText="Ctrl+D"
+                              IsEnabled="{Binding HasCards}"
+                              Command="{Binding DuplicateCreatureCardCommand}"/>
+
+                    <MenuItem Header="_Delete"
+                              InputGestureText="Supr"
+                              IsEnabled="{Binding HasCards}"
+                              Command="{Binding DeleteCreatureCardCommand}"/>
+                </MenuItem>
+
+                <MenuItem Header="_Help">
+                    <MenuItem Header="Help Viewer"
+                              InputGestureText="Ctrl+F1"
+                              Command="{Binding HelpViewerCommand}"/>
+
+                    <MenuItem Header="LinkedIn"
+                              Command="{Binding LinkedInCommand}"/>
                 </MenuItem>
             </Menu>
 
@@ -87,7 +163,7 @@
                             Padding="4">
 
                         <inspector:CardInspectorControl DataContext="{Binding CurrentCard}"
-                                    RemoveCreatureCommand="{Binding DataContext.RemoveCreatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                    RemoveCreatureCommand="{Binding DataContext.DeleteCreatureCardCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
                     </Border>
 
@@ -106,7 +182,7 @@
                         <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Cards.Count}" Value="0">
+                                <DataTrigger Binding="{Binding HasCards}" Value="False">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -184,7 +260,7 @@
 
                                     <Button Grid.Column="0" 
                                             Content="Import Collection"
-                                            Command="{Binding ImportCommand}"
+                                            Command="{Binding OpenCollectionCommand}"
                                             Style="{StaticResource RoundedButton}"
                                             Width="170" 
                                             Height="42" 
@@ -193,7 +269,7 @@
 
                                     <Button Grid.Column="2" 
                                             Content="Create New Creature"
-                                            Command="{Binding AddCreatureCommand}"
+                                            Command="{Binding NewCreatureCardCommand}"
                                             Style="{StaticResource RoundedButton}"
                                             Width="170" 
                                             Height="42" 

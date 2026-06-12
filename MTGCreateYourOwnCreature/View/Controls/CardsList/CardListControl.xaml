@@ -21,7 +21,7 @@
             <Button Style="{StaticResource RoundedButton}"
                 Margin="5"
                 Content="Add New Creature"
-                Command="{Binding AddCreatureCommand}"/>
+                Command="{Binding NewCreatureCardCommand}"/>
 
             <Separator Grid.Row="1"
                        Margin="4,0"/>

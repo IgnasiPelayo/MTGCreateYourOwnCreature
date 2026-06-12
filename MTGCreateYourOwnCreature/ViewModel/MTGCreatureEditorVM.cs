@@ -6,8 +6,8 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 using MTGCreateYourOwnCreature.Model.Cards;
-using MTGCreateYourOwnCreature.Model.Parsing;
 using MTGCreateYourOwnCreature.ViewModel.Cards;
+using MTGCreateYourOwnCreature.ViewModel.Parsing;
 using MTGCreateYourOwnCreature.ViewModel.Commands;
 
 namespace MTGCreateYourOwnCreature.ViewModel
@@ -22,6 +22,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
         /// The observable collection of all loaded creature cards for UI binding.
         /// </summary>
         public ObservableCollection<MTGCreatureCardVM> Cards { get; set; }
+
+        /// <summary>
+        /// Whether the active collection currently contains any loaded creature cards.
+        /// </summary>
+        public bool HasCards { get; set; }
 
         /// <summary>
         /// A mapping from raw <see cref="MTGCreatureCard"/> models to their corresponding <see cref="MTGCreatureCardVM"/> wrappers.
@@ -54,41 +59,75 @@ namespace MTGCreateYourOwnCreature.ViewModel
         }
 
         /// <summary>
-        /// The backing field for the <see cref="NewCollectionCommand"/>.
-        /// </summary>
-        protected readonly RelayCommand m_NewCollectionCommand;
-
-        /// <summary>
         /// The command executed when the user requests to start a completely new creature set.
         /// </summary>
-        public ICommand NewCollectionCommand => m_NewCollectionCommand;
+        public ICommand NewCollectionCommand { get; }
 
         /// <summary>
-        /// The backing field for the <see cref="ImportCommand"/>.
+        /// The command executed to add a single new default creature card to the current collection.
         /// </summary>
-        protected readonly RelayCommand m_ImportCommand;
+        public ICommand NewCreatureCardCommand { get; }
 
         /// <summary>
-        /// The command that opens a file dialog and imports creature cards from a text file.
+        /// The command executed to open a file dialog and import a saved collection of creature cards.
         /// </summary>
-        public ICommand ImportCommand => m_ImportCommand;
+        public ICommand OpenCollectionCommand { get; }
 
         /// <summary>
-        /// The backing field for the <see cref="AddCreatureCommand"/>.
+        /// The absolute file path of the currently loaded or most recently saved collection.
         /// </summary>
-        protected readonly RelayCommand m_AddCreatureCommand;
+        protected string m_CollectionFilePath = string.Empty;
 
         /// <summary>
-        /// The command executed when the user clicks the "Add New Creature" button in the UI.
-        /// Instantiates a new, default creature card, adds it to the collection, and automatically selects it for editing.
+        /// The command executed to save the current collection. 
         /// </summary>
-        public ICommand AddCreatureCommand => m_AddCreatureCommand;
+        public ICommand SaveCollectionCommand { get; }
+
+        /// <summary>
+        /// The dynamic display text bound to the "Save" menu item.
+        /// </summary>
+        public string SaveMenuText { get; set; }
+
+        /// <summary>
+        /// The command executed to explicitly prompt the user for a new file location to save the collection.
+        /// </summary>
+        public ICommand SaveCollectionAsCommand { get; }
+
+        /// <summary>
+        /// The dynamic display text bound to the "Save As..." menu item.
+        /// </summary>
+        public string SaveAsMenuText { get; set; }
+
+        /// <summary>
+        /// The command executed to shut down and exit the application.
+        /// </summary>
+        public ICommand ExitCommand { get; }
+
+        /// <summary>
+        /// The command executed to create an identical copy of the currently selected creature card.
+        /// </summary>
+        public ICommand DuplicateCreatureCardCommand { get; }
+
+        /// <summary>
+        /// The command executed to initiate the deletion process for the currently selected card.
+        /// </summary>
+        public ICommand DeleteCreatureCardCommand { get; }
+
+        /// <summary>
+        /// The command executed to open external help documentation.
+        /// </summary>
+        public ICommand HelpViewerCommand { get; }
+
+        /// <summary>
+        /// The command executed to open the developer's LinkedIn profile in the default web browser.
+        /// </summary>
+        public ICommand LinkedInCommand { get; }
 
         /// <summary>
         /// A dictionary tracking the inverse inheritance graph (mapping a parent card to all of its direct children).
         /// Used to efficiently cascade property updates down the tree.
         /// </summary>
-        protected Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>> m_Ancestors = new Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>>();
+        protected Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>> m_Descendants = new Dictionary<MTGCreatureCardVM, List<MTGCreatureCardVM>>();
 
         /// <summary>
         /// The visibility state of the delete confirmation modal.
@@ -102,35 +141,14 @@ namespace MTGCreateYourOwnCreature.ViewModel
         public string DeleteWarningText { get; set; }
 
         /// <summary>
-        /// The backing field for the <see cref="RemoveCreatureCommand"/>.
-        /// </summary>
-        protected readonly RelayCommand m_RemoveCreatureCommand;
-
-        /// <summary>
-        /// The command that initiates the deletion sequence for the currently active card.
-        /// Bypasses the modal if the card has no inherited dependencies; otherwise, prompts for confirmation.
-        /// </summary>
-        public ICommand RemoveCreatureCommand => m_RemoveCreatureCommand;
-
-        /// <summary>
-        /// The backing field for the <see cref="CloseDeleteModalCommand"/>.
-        /// </summary>
-        protected readonly RelayCommand m_CloseDeleteModalCommand;
-
-        /// <summary>
         /// The command executed to cancel the deletion and hide the confirmation modal.
         /// </summary>
-        public ICommand CloseDeleteModalCommand => m_CloseDeleteModalCommand;
+        public ICommand CloseDeleteModalCommand { get; }
 
         /// <summary>
-        /// The backing field for the <see cref="ConfirmRemoveCreatureCommand"/>.
+        /// The command executed to confirm and finalize the deletion of a card after passing the modal warning.
         /// </summary>
-        protected readonly RelayCommand m_ConfirmRemoveCreatureCommand;
-
-        /// <summary>
-        /// The command executed when the user explicitly confirms the destructive deletion operation from the modal.
-        /// </summary>
-        public ICommand ConfirmRemoveCreatureCommand => m_ConfirmRemoveCreatureCommand;
+        public ICommand ConfirmDeleteCreatureCommand { get; }
 
         /// <summary>
         /// The visibility state of the parent selection UI overlay.
@@ -177,7 +195,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 if (CurrentCard.Card.ParentCreatureCard != null)
                 {
                     MTGCreatureCardVM parentCard = m_CardsToVM[CurrentCard.Card.ParentCreatureCard];
-                    m_Ancestors[parentCard].Remove(CurrentCard);
+                    m_Descendants[parentCard].Remove(CurrentCard);
                 }
                 
                 CurrentCard.ChangeParent(newSelectedCard == BaseCreatureCard ? null : newSelectedCard.Card);
@@ -185,10 +203,9 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 // Add the current card to its new parent's child list.
                 if (newSelectedCard != BaseCreatureCard)
                 {
-                    m_Ancestors[newSelectedCard].Add(CurrentCard);
+                    m_Descendants[newSelectedCard].Add(CurrentCard);
                 }
 
-                OnPropertyChanged(nameof(Cards));
                 OnPropertyChanged(nameof(CurrentCard));
 
                 OnParentPickerClosed();
@@ -196,24 +213,14 @@ namespace MTGCreateYourOwnCreature.ViewModel
         }
 
         /// <summary>
-        /// The backing field for the <see cref="OpenParentPickerCommand"/>.
-        /// </summary>
-        protected readonly RelayCommand m_OpenParentPickerCommand;
-
-        /// <summary>
         /// The command that populates and displays the parent picker UI.
         /// </summary>
-        public ICommand OpenParentPickerCommand => m_OpenParentPickerCommand;
-
-        /// <summary>
-        /// The backing field for the <see cref="CloseParentPickerCommand"/>.
-        /// </summary>
-        protected readonly RelayCommand m_CloseParentPickerCommand;
+        public ICommand OpenParentPickerCommand { get; }
 
         /// <summary>
         /// The command that hides the parent picker UI without making any changes.
         /// </summary>
-        public ICommand CloseParentPickerCommand => m_CloseParentPickerCommand;
+        public ICommand CloseParentPickerCommand { get; }
 
         /// <summary>
         /// Whether any modal overlay is currently visible.
@@ -228,13 +235,20 @@ namespace MTGCreateYourOwnCreature.ViewModel
         {
             Cards = new ObservableCollection<MTGCreatureCardVM>();
 
-            m_NewCollectionCommand = new RelayCommand(_ =>
+            HasCards = false;
+
+            NewCollectionCommand = new RelayCommand(_ =>
             {
                 Cards.Clear();
                 AddNewCreature();
             });
 
-            m_ImportCommand = new RelayCommand(_ =>
+            NewCreatureCardCommand = new RelayCommand(_ =>
+            {
+                AddNewCreature();
+            });
+
+            OpenCollectionCommand = new RelayCommand(_ =>
             {
                 OpenFileDialog dialog = new OpenFileDialog()
                 {
@@ -246,53 +260,81 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 if (dialog.ShowDialog() == true)
                 {
                     ImportFile(dialog.FileName);
+
+                    m_CollectionFilePath = dialog.FileName;
+
+                    SaveMenuText = $"Save {dialog.SafeFileName}";
+                    SaveAsMenuText = SaveMenuText + " as...";
+
+                    OnPropertyChanged(nameof(SaveMenuText));
+                    OnPropertyChanged(nameof(SaveAsMenuText));
                 }
             });
 
-            m_AddCreatureCommand = new RelayCommand(_ =>
+            SaveCollectionCommand = new RelayCommand(async _ =>
             {
-                AddNewCreature();
+                if (!HasCards)
+                {
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(m_CollectionFilePath))
+                {
+                    OpenSaveFileDialog();
+                }
+
+                if (!string.IsNullOrEmpty(m_CollectionFilePath))
+                {
+                    await MTGCreaturesParser.Export(GetExportOrder(), m_CollectionFilePath);
+                }
+            });
+
+            SaveMenuText = "Save collection";
+
+            SaveCollectionAsCommand = new RelayCommand(async _ =>
+            {
+                if (!HasCards)
+                {
+                    return;
+                }
+
+                if (OpenSaveFileDialog())
+                {
+                    await MTGCreaturesParser.Export(GetExportOrder(), m_CollectionFilePath);
+                }
+            });
+
+            SaveAsMenuText = SaveMenuText + " as...";
+
+            ExitCommand = new RelayCommand(_ =>
+            {
+                Application.Current.Shutdown();
+            });
+
+            DuplicateCreatureCardCommand = new RelayCommand(_ =>
+            {
+                DuplicateCreature(CurrentCard);
+            });
+
+            DeleteCreatureCardCommand = new RelayCommand(_ =>
+            {
+                DeleteCreature(CurrentCard);
+            });
+
+            HelpViewerCommand = new RelayCommand(_ =>
+            {
+                Console.WriteLine("Open Help Viewer");
+            });
+
+            LinkedInCommand = new RelayCommand(_ =>
+            {
+                Console.WriteLine("Open LinkedIn");
             });
 
             DeleteModalVisibility = Visibility.Collapsed;
             DeleteWarningText = string.Empty;
 
-            m_RemoveCreatureCommand = new RelayCommand(_ =>
-            {
-                if (CurrentCard == null)
-                {
-                    return;
-                }
-
-                // Look up all cards that inherit directly from the card we are trying to delete.
-                List<MTGCreatureCardVM> ancestors = m_Ancestors[CurrentCard];
-                int numberOfAncestors = ancestors.Count;
-
-                if (numberOfAncestors == 0)
-                {
-                    // If no other cards inherit from this one, delete it immediately.
-                    PerformRemove();
-                }
-                else
-                {
-                    // Show the modal to warn the user about breaking inheritance.
-                    DeleteModalVisibility = Visibility.Visible;
-
-                    // Dynamically build a readable list of all affected child cards.
-                    DeleteWarningText = $"'{CurrentCard.Name}' is the parent of {numberOfAncestors} other creature(s).";
-                    foreach (MTGCreatureCardVM ancestor in ancestors)
-                    {
-                        DeleteWarningText += $"\n  — '{ancestor.Name}'";
-                    }
-                    DeleteWarningText += "\n\nDeleting it will break their inheritance. Are you sure you want to proceed?";
-
-                    OnPropertyChanged(nameof(DeleteModalVisibility));
-                    OnPropertyChanged(nameof(DeleteWarningText));
-                    OnPropertyChanged(nameof(IsModalOpen));
-                }
-            });
-
-            m_CloseDeleteModalCommand = new RelayCommand(_ =>
+            CloseDeleteModalCommand = new RelayCommand(_ =>
             {
                 DeleteModalVisibility = Visibility.Collapsed;
 
@@ -300,7 +342,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 OnPropertyChanged(nameof(IsModalOpen));
             });
 
-            m_ConfirmRemoveCreatureCommand = new RelayCommand(_ =>
+            ConfirmDeleteCreatureCommand = new RelayCommand(_ =>
             {
                 PerformRemove();
 
@@ -317,12 +359,12 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             m_SelectedParentCard = null;
 
-            m_OpenParentPickerCommand = new RelayCommand(_ =>
+            OpenParentPickerCommand = new RelayCommand(_ =>
             {
                 OnParentPickerOpened();
             });
 
-            m_CloseParentPickerCommand = new RelayCommand(_ =>
+            CloseParentPickerCommand = new RelayCommand(_ =>
             {
                 OnParentPickerClosed();
             });
@@ -341,7 +383,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
         {
             Cards.Clear();
             m_CardsToVM.Clear();
-            m_Ancestors.Clear();
+            m_Descendants.Clear();
             CurrentCard = null;
 
             List<MTGCreatureCard> cards = MTGCreaturesParser.Parse(filePath);
@@ -352,7 +394,7 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
                 m_CardsToVM[card] = creatureCard;
 
-                m_Ancestors[creatureCard] = new List<MTGCreatureCardVM>();
+                m_Descendants[creatureCard] = new List<MTGCreatureCardVM>();
 
                 Cards.Add(creatureCard);
             }
@@ -360,6 +402,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
             if (cards.Count > 0)
             {
                 CurrentCard = Cards[0];
+                HasCards = true;
+            }
+            else
+            {
+                HasCards = false;
             }
 
             foreach (MTGCreatureCardVM card in Cards)
@@ -367,9 +414,12 @@ namespace MTGCreateYourOwnCreature.ViewModel
                 if (card.Card.ParentCreatureCard != null)
                 {
                     MTGCreatureCardVM parentCardVM = m_CardsToVM[card.Card.ParentCreatureCard];
-                    m_Ancestors[parentCardVM].Add(card);
+                    m_Descendants[parentCardVM].Add(card);
                 }
             }
+
+            OnPropertyChanged(nameof(HasCards));
+            OnPropertyChanged(nameof(CurrentCard));
         }
 
         /// <summary>
@@ -424,13 +474,89 @@ namespace MTGCreateYourOwnCreature.ViewModel
             creatureCard.PropertyChanged += OnCardChanged;
 
             Cards.Add(creatureCard);
+            HasCards = true;
+            m_CardsToVM[card] = creatureCard;
 
-            m_Ancestors[creatureCard] = new List<MTGCreatureCardVM>();
+            m_Descendants[creatureCard] = new List<MTGCreatureCardVM>();
 
             CurrentCard = creatureCard;
 
-            OnPropertyChanged(nameof(Cards));
+            OnPropertyChanged(nameof(HasCards));
             OnPropertyChanged(nameof(CurrentCard));
+        }
+
+        /// <summary>
+        /// Duplicates the specified card, registers its event listeners, adds it to the main,
+        /// collection, and automatically selects it for editing.
+        /// </summary>
+        /// <param name="sourceVM">The view model wrapper of the card to duplicate.</param>
+        protected void DuplicateCreature(MTGCreatureCardVM? sourceVM)
+        {
+            if (sourceVM == null)
+            {
+                return;
+            }
+
+            MTGCreatureCard duplicatedCard = new MTGCreatureCard(sourceVM.Card);
+            
+            MTGCreatureCardVM newCardVM = new MTGCreatureCardVM(duplicatedCard);
+            newCardVM.PropertyChanged += OnCardChanged;
+
+            int insertIndex = Cards.IndexOf(sourceVM) + 1;
+            Cards.Insert(insertIndex, newCardVM);
+            m_CardsToVM[duplicatedCard] = newCardVM;
+
+            m_Descendants[newCardVM] = new List<MTGCreatureCardVM>();
+
+            if (duplicatedCard.ParentCreatureCard != null)
+            {
+                MTGCreatureCardVM parentVM = m_CardsToVM[duplicatedCard.ParentCreatureCard];
+                m_Descendants[parentVM].Add(newCardVM);
+            }
+
+            CurrentCard = newCardVM;
+
+            OnPropertyChanged(nameof(CurrentCard));
+        }
+
+        /// <summary>
+        /// Evaluates a card prior to deletion. If the card acts as a parent to others, 
+        /// the user is prompted with a confirmation modal detailing the inheritance disruption.
+        /// </summary>
+        /// <param name="card">The specific <see cref="MTGCreatureCardVM"/> requested for deletion.</param>
+        protected void DeleteCreature(MTGCreatureCardVM? card)
+        {
+            if (CurrentCard == null)
+            {
+                return;
+            }
+
+            // Look up all cards that inherit directly from the card we are trying to delete.
+            List<MTGCreatureCardVM> descendants = m_Descendants[CurrentCard];
+            int numberOfDescendants = descendants.Count;
+
+            if (numberOfDescendants == 0)
+            {
+                // If no other cards inherit from this one, delete it immediately.
+                PerformRemove();
+            }
+            else
+            {
+                // Show the modal to warn the user about breaking inheritance.
+                DeleteModalVisibility = Visibility.Visible;
+
+                // Dynamically build a readable list of all affected child cards.
+                DeleteWarningText = $"'{CurrentCard.Name}' is the parent of {numberOfDescendants} other creature(s).";
+                foreach (MTGCreatureCardVM descentant in descendants)
+                {
+                    DeleteWarningText += $"\n  — '{descentant.Name}'";
+                }
+                DeleteWarningText += "\n\nDeleting it will break their inheritance. Are you sure you want to proceed?";
+
+                OnPropertyChanged(nameof(DeleteModalVisibility));
+                OnPropertyChanged(nameof(DeleteWarningText));
+                OnPropertyChanged(nameof(IsModalOpen));
+            }
         }
 
         /// <summary>
@@ -439,6 +565,11 @@ namespace MTGCreateYourOwnCreature.ViewModel
         /// </summary>
         protected void PerformRemove()
         {
+            if (CurrentCard == null)
+            {
+                return;
+            }
+
             MTGCreatureCardVM cardToRemove = CurrentCard;
 
             // Intelligently select an adjacent card in the list so the Inspector doesn't just go blank.
@@ -455,33 +586,135 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
             
             Cards.Remove(cardToRemove);
+            m_CardsToVM.Remove(cardToRemove.Card);
 
             // Extract the "grandparent" card (the parent of the card we are deleting).
             MTGCreatureCard? newParent = cardToRemove.Card.ParentCreatureCard;
 
             // Re-parent all orphaned children to the grandparent, bridging the gap left by the deleted card.
-            List<MTGCreatureCardVM> ancestors = m_Ancestors[cardToRemove];
-            foreach (MTGCreatureCardVM ancestor in ancestors)
+            List<MTGCreatureCardVM> descendants = m_Descendants[cardToRemove];
+            foreach (MTGCreatureCardVM descendant in descendants)
             {
-                ancestor.ChangeParent(newParent);
+                descendant.ChangeParent(newParent);
 
                 // Re-register these children into the dictionary under their new parent's tracking list.
                 if (newParent != null)
                 {
-                    m_Ancestors[m_CardsToVM[newParent]].Add(ancestor);
+                    m_Descendants[m_CardsToVM[newParent]].Add(descendant);
                 }
             }
 
-            m_Ancestors.Remove(cardToRemove);
+            m_Descendants.Remove(cardToRemove);
 
             if (cardToRemove.HasParentCard)
             {
                 // Unregister the deleted card from its own parent's tracking list.
-                m_Ancestors[m_CardsToVM[cardToRemove.Card.ParentCreatureCard]].Remove(cardToRemove);
+                m_Descendants[m_CardsToVM[cardToRemove.Card.ParentCreatureCard]].Remove(cardToRemove);
             }
 
-            OnPropertyChanged(nameof(Cards));
             OnPropertyChanged(nameof(CurrentCard));
+
+            if (Cards.Count == 0)
+            {
+                HasCards = false;
+                OnPropertyChanged(nameof(HasCards));
+
+                m_CollectionFilePath = string.Empty;
+
+                SaveMenuText = "Save collection";
+                SaveAsMenuText = SaveMenuText + " as...";
+
+                OnPropertyChanged(nameof(SaveMenuText));
+                OnPropertyChanged(nameof(SaveAsMenuText));
+            }
+        }
+
+        /// <summary>
+        /// Performs a topological sort of the active collection based on the inheritance graph.
+        /// Ensures that parent cards are ordered before their children to satisfy parsing constraints during export.
+        /// </summary>
+        /// <returns>A flat list of <see cref="MTGCreatureCard"/> models sorted chronologically by inheritance dependency.</returns>
+        protected List<MTGCreatureCard> GetExportOrder()
+        {
+            // Topological Sort (Kahn's Algorithm)
+            // Calculate the in-degree (number of dependencies) for each card.
+            Dictionary<MTGCreatureCardVM, int> inDegree = new Dictionary<MTGCreatureCardVM, int>();
+
+            foreach (MTGCreatureCardVM card in Cards)
+            {
+                inDegree[card] = 0;
+            }
+
+            foreach (KeyValuePair<MTGCreatureCardVM, List<MTGCreatureCardVM>> descendantInformation in m_Descendants)
+            {
+                foreach (MTGCreatureCardVM descendant in descendantInformation.Value)
+                {
+                    // Each child gets +1 degree because it depends on its parent.
+                    ++inDegree[descendant];
+                }
+            }
+
+            Queue<MTGCreatureCardVM> queue = new Queue<MTGCreatureCardVM>();
+
+            foreach (MTGCreatureCardVM card in Cards)
+            {
+                // Cards with an in-degree of 0 are root cards (they have no dependencies). Queue them first.
+                if (inDegree[card] == 0)
+                {
+                    queue.Enqueue(card);
+                }
+            }
+
+            List<MTGCreatureCard> orderedCards = new List<MTGCreatureCard>();
+
+            while (queue.Count > 0)
+            {
+                // Extract a card whose dependencies have all been met and add it to the final sorted output list.
+                MTGCreatureCardVM card = queue.Dequeue();
+
+                orderedCards.Add(card.Card);
+
+                // Now that this parent is processed, "release" its children by reducing their in-degree by 1.
+                foreach (MTGCreatureCardVM descendant in m_Descendants[card])
+                {
+                    --inDegree[descendant];
+
+                    // If the child's in-degree hits 0, all its dependencies are resolved, and it is ready to be queued.
+                    if (inDegree[descendant] == 0)
+                    {
+                        queue.Enqueue(descendant);
+                    }
+                }
+            }
+
+            return orderedCards;
+        }
+
+        /// <summary>
+        /// Prompts the user to select a destination file path using the standard Windows Save dialog.
+        /// </summary>
+        /// <returns>True if the user successfully selected a file path; otherwise, false.</returns>
+        protected bool OpenSaveFileDialog()
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+
+            dialog.Filter = "Creature Collection (*.txt)|*.txt";
+            dialog.DefaultExt = ".txt";
+
+            if (dialog.ShowDialog() == true)
+            {
+                m_CollectionFilePath = dialog.FileName;
+
+                SaveMenuText = $"Save {dialog.SafeFileName}";
+                SaveAsMenuText = SaveMenuText + " as...";
+
+                OnPropertyChanged(nameof(SaveMenuText));
+                OnPropertyChanged(nameof(SaveAsMenuText));
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -498,44 +731,44 @@ namespace MTGCreateYourOwnCreature.ViewModel
 
             if (e.PropertyName == nameof(MTGCreatureCardVM.Name))
             {
-                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                foreach (MTGCreatureCardVM descendantCard in m_Descendants[creatureCard])
                 {
-                    ancestorCard.OnParentNameChanged();
+                    descendantCard.OnParentNameChanged();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.ResolvedTotalMana))
             {
-                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                foreach (MTGCreatureCardVM descendantCard in m_Descendants[creatureCard])
                 {
-                    ancestorCard.RecalculateMana();
+                    descendantCard.RecalculateMana();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.Tags))
             {
-                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                foreach (MTGCreatureCardVM descendantCard in m_Descendants[creatureCard])
                 {
-                    ancestorCard.UpdateTags();
+                    descendantCard.UpdateTags();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.Keywords))
             {
-                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                foreach (MTGCreatureCardVM descendantCard in m_Descendants[creatureCard])
                 {
-                    ancestorCard.UpdateKeywords();
+                    descendantCard.UpdateKeywords();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.Description))
             {
-                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                foreach (MTGCreatureCardVM descendantCard in m_Descendants[creatureCard])
                 {
-                    ancestorCard.UpdateDescription();
+                    descendantCard.UpdateDescription();
                 }
             }
             else if (e.PropertyName == nameof(MTGCreatureCardVM.FlavorText))
             {
-                foreach (MTGCreatureCardVM ancestorCard in m_Ancestors[creatureCard])
+                foreach (MTGCreatureCardVM descendantCard in m_Descendants[creatureCard])
                 {
-                    ancestorCard.UpdateFlavorText();
+                    descendantCard.UpdateFlavorText();
                 }
             }
         }
@@ -581,7 +814,6 @@ namespace MTGCreateYourOwnCreature.ViewModel
             }
 
             OnPropertyChanged(nameof(SelectedParentCard));
-            OnPropertyChanged(nameof(AvailableParentCards));
             OnPropertyChanged(nameof(ParentPickerVisibility));
             OnPropertyChanged(nameof(IsModalOpen));
         }

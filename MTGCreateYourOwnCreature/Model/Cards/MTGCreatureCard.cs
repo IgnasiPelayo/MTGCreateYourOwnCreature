@@ -16,7 +16,7 @@ namespace MTGCreateYourOwnCreature.Model.Cards
         public string Name { get; set; }
 
         /// <summary>
-        /// The template card this creature inherits its base properties from. 
+        /// The template card this creature inherits its base properties from.
         /// Set to null if this is a root/base card.
         /// </summary>
         public MTGCreatureCard? ParentCreatureCard { get; set; }
@@ -79,16 +79,46 @@ namespace MTGCreateYourOwnCreature.Model.Cards
         {
             Name = string.Empty;
             ParentCreatureCard = null;
+
             Category = CategoryType.None;
+
             Mana = CreateEmptyManaCost();
+
             Power = 0;
             Toughness = 0;
+
             Tags = new List<string>();
             Keywords = new List<string>();
+
             OverridesDescription = false;
             Description = string.Empty;
             OverridesFlavorText = false;
             FlavorText = string.Empty;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MTGCreatureCard"/> class by performing a deep copy of another card.
+        /// </summary>
+        /// <param name="source">The original card to duplicate.</param>
+        public MTGCreatureCard(MTGCreatureCard source)
+        {
+            Name = $"{source.Name} (Copy)";
+            ParentCreatureCard = source.ParentCreatureCard;
+
+            Category = source.Category;
+
+            Mana = new Dictionary<ManaType, int>(source.Mana);
+
+            Power = source.Power;
+            Toughness = source.Toughness;
+
+            Tags = new List<string>(source.Tags);
+            Keywords = new List<string>(source.Keywords);
+
+            OverridesDescription = source.OverridesDescription;
+            Description = source.Description;
+            OverridesFlavorText = source.OverridesFlavorText;
+            FlavorText = source.FlavorText;
         }
 
         /// <summary>

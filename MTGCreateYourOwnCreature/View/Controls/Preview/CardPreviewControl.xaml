@@ -184,6 +184,7 @@
                                 <TextBlock Grid.Row="1"
                                            x:Name="FlavorTextBlock"
                                            Text="{Binding FlavorText.ResolvedValue}"
+                                           TextWrapping="Wrap"
                                            FontStyle="Italic"
                                            Padding="10,0"
                                            FontSize="38"

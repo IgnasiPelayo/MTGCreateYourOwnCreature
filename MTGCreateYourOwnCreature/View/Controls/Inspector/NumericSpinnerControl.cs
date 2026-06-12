@@ -29,7 +29,7 @@ namespace MTGCreateYourOwnCreature.View.Controls.Inspector
         /// </summary>
         public NumericSpinnerControl()
         {
-            m_IncrementCommand = new RelayCommand(_ =>
+            IncrementCommand = new RelayCommand(_ =>
             {
                 if (Value < Maximum)
                 {
@@ -37,7 +37,7 @@ namespace MTGCreateYourOwnCreature.View.Controls.Inspector
                 }
             });
 
-            m_DecrementCommand = new RelayCommand(_ =>
+            DecrementCommand = new RelayCommand(_ =>
             {
                 if (Value > Minimum)
                 {
@@ -93,24 +93,14 @@ namespace MTGCreateYourOwnCreature.View.Controls.Inspector
             nameof(Maximum), typeof(int), typeof(NumericSpinnerControl), new PropertyMetadata(100));
 
         /// <summary>
-        /// The backing field for the <see cref="IncrementCommand"/>.
-        /// </summary>
-        protected readonly ICommand m_IncrementCommand;
-
-        /// <summary>
         /// The command executed when the user clicks the increment (up) button in the control template.
         /// </summary>
-        public ICommand IncrementCommand => m_IncrementCommand;
-
-        /// <summary>
-        /// The backing field for the <see cref="DecrementCommand"/>.
-        /// </summary>
-        protected readonly ICommand m_DecrementCommand;
+        public ICommand IncrementCommand { get; }
 
         /// <summary>
         /// The command executed when the user clicks the decrement (down) button in the control template.
         /// </summary>
-        public ICommand DecrementCommand => m_DecrementCommand;
+        public ICommand DecrementCommand { get; }
 
         /// <summary>
         /// The cached reference to the text box defined in the control template.

@@ -71,7 +71,7 @@
                                 Content="Confirm"
                                 Margin="10,0" 
                                 Padding="20,0"
-                                Command="{Binding ConfirmRemoveCreatureCommand}"/>
+                                Command="{Binding ConfirmDeleteCreatureCommand}"/>
                     </Grid>
                 </Grid>
             </Border>
