@@ -13,7 +13,7 @@
         <Ellipse Margin="0,1,1,-1"
                  Fill="#FF000000"/>
 
-        <Ellipse Fill="{Binding Brush}"/>
+        <Ellipse Fill="{Binding Brush, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
 
         <Ellipse Fill="Transparent"
                  Margin="-2"
@@ -24,7 +24,7 @@
                 <Style TargetType="Ellipse">
                     <Setter Property="Opacity" Value="0"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsInherited}" Value="True">
+                        <DataTrigger Binding="{Binding IsInherited, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
                             <Setter Property="Opacity" Value="0.9"/>
                         </DataTrigger>
                     </Style.Triggers>
@@ -37,7 +37,7 @@
                  VerticalAlignment="Center"
                  HorizontalAlignment="Center">
 
-            <TextBlock Text="{Binding Value}"
+            <TextBlock Text="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     Foreground="Black"
                     FontSize="20"
                     FontWeight="Bold"/>

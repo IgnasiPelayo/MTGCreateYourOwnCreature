@@ -51,4 +51,6 @@
     
     <ImageBrush x:Key="PlaceholderBrush" ImageSource="/Resources/Preview/placeholder.jpg"/>
 
+    <ImageBrush x:Key="TapBrush" ImageSource="/Resources/Preview/tap.png"/>
+    
 </ResourceDictionary>

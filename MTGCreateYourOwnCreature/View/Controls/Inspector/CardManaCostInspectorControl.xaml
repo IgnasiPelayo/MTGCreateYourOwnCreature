@@ -39,7 +39,8 @@
                                  Height="15"
                                  VerticalAlignment="Center">
 
-                            <mana:ManaSymbolControl DataContext="{Binding PreviewManaSymbol}"/>
+                            <mana:ManaSymbolControl Value="{Binding PreviewManaSymbol.Value}"
+                                                    Brush="{Binding PreviewManaSymbol.Brush}"/>
                         </Viewbox>
 
                         <local:NumericSpinnerControl Grid.Column="1"

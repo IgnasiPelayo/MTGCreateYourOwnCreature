@@ -98,7 +98,8 @@
                         </Grid.RowDefinitions>
 
                         <local:CardInformationInspectorControl Label="Description"
-                                                               DataContext="{Binding Description}"/>
+                                                               DataContext="{Binding Description}"
+                                                               ShowTagPicker="True"/>
 
                         <local:CardInformationInspectorControl Grid.Row="1"
                                                                Label="Flavor Text"

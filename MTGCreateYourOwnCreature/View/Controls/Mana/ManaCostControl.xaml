@@ -23,6 +23,7 @@
                 <DataTemplate>
                     <local:ManaSymbolControl Brush="{Binding Brush}"
                                              Value="{Binding Value}"
+                                             IsInherited="{Binding IsInherited}"
                                              Padding="2,0,2,0"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

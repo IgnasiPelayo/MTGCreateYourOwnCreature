@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿
+using System.IO;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
@@ -131,6 +132,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Parsing
 
         /// <summary>
         /// Parses a single raw text chunk representing an individual card and populates a new data model.
+        /// Utilizes a strict, whitelist-based regex to guarantee that user-entered text (like "Note: ") 
+        /// inside descriptions is never accidentally parsed as a top-level file key.
         /// </summary>
         /// <param name="cardEntry">The raw, multi-line string block containing the specific card's data.</param>
         /// <param name="cards">The running list of previously parsed cards, used to resolve parent inheritance references.</param>
@@ -139,8 +142,9 @@ namespace MTGCreateYourOwnCreature.ViewModel.Parsing
         {
             MTGCreatureCard card = new MTGCreatureCard();
 
-            // Looks for a top level key (e.g., "mana:"), an optional inline value, and an optional indented multi-line block immediately following it.
-            Regex regex = new Regex(@"^(?<key>\w+):(?:\s(?<value>[^\r\n]+))?\r?\n?(?<block>(?:^  .*?(?:\r?\n|$))*)", RegexOptions.Multiline);
+            // Only stops capturing the block if it hits an EXACT reserved top-level key (card, inherits, category, etc.) or the --- separator.
+            // This prevents multi-line descriptions containing colons from breaking the parser.
+            Regex regex = new Regex(@"^(?<key>\w+):(?:\s(?<value>[^\r\n]+))?\r?\n?(?<block>(?:^(?!\w+:|---).*?(?:\r?\n|$))*)", RegexOptions.Multiline);
             MatchCollection matches = regex.Matches(cardEntry);
 
             for (int i = 0; i < matches.Count; ++i)
@@ -158,8 +162,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Parsing
                         continue;
                     }
 
-                    string block = matches[i].Groups["block"].Value.TrimStart();
-                    if (!string.IsNullOrEmpty(block))
+                    string block = matches[i].Groups["block"].Value.TrimStart('\r', '\n');
+                    if (!string.IsNullOrWhiteSpace(block))
                     {
                         // Multi-line block parsing (e.g., indented lines under "mana:").
                         parseAction.Invoke(card, block, cards);
@@ -282,6 +286,8 @@ namespace MTGCreateYourOwnCreature.ViewModel.Parsing
 
         /// <summary>
         /// Helper method that decomposes an indented multi-line text block into a dictionary of localized key/value string pairs.
+        /// Gracefully handles multi-line string values (e.g., descriptions containing raw newlines and unindented symbols like {R}) 
+        /// by appending orphan lines to the most recently discovered key.
         /// </summary>
         /// <param name="data">The raw, multi-line string block to process.</param>
         /// <returns>A dictionary containing the parsed sub-keys and their corresponding values.</returns>
@@ -289,15 +295,32 @@ namespace MTGCreateYourOwnCreature.ViewModel.Parsing
         {
             Dictionary<string, string> blockInformation = new Dictionary<string, string>();
 
-            string[] blockData = data.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            // Split by newline, but keep empty lines so we don't destroy intentional paragraph breaks in rules text.
+            string[] lines = data.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
-            foreach (string block in blockData)
+            string? currentKey = null;
+
+            foreach (string line in lines)
             {
-                // Each line within a block is expected to be a sub-key mapping (e.g., "power: 3")
-                string[] keyAndValue = block.Trim().Split(':', 2);
-                if (keyAndValue.Length == 2)
+                if (string.IsNullOrWhiteSpace(line) && currentKey == null)
                 {
-                    blockInformation[keyAndValue[0].Trim()] = keyAndValue[1].Trim();
+                    continue;
+                }
+
+                // Regex matches a sub-key. The '*' allows it to succeed even if leading whitespace was accidentally stripped.
+                Match match = Regex.Match(line, @"^[ \t]*(?<key>\w+):[ \t]*(?<value>.*)$");
+
+                if (match.Success)
+                {
+                    // A new key was found (e.g., "power: 1" or "  description: ...")
+                    currentKey = match.Groups["key"].Value;
+                    blockInformation[currentKey] = match.Groups["value"].Value.TrimEnd();
+                }
+                else if (currentKey != null)
+                {
+                    // No colon/key found. This means it is a continuation of the current multi-line value.
+                    // Append the raw line directly to the previous property with a newline break.
+                    blockInformation[currentKey] += "\n" + line.Trim();
                 }
             }
 

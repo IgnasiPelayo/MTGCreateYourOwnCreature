@@ -51,5 +51,20 @@ namespace MTGCreateYourOwnCreature.View.Controls.Mana
         /// </summary>
         public static readonly DependencyProperty BrushProperty = DependencyProperty.Register(
             nameof(Brush), typeof(Brush), typeof(ManaSymbolControl), new PropertyMetadata(null));
+
+        /// <summary>
+        /// Whether this mana symbol is inherited from a parent card rather than being explicitly defined on the current creature.
+        /// </summary>
+        public bool IsInherited
+        {
+            get => (bool)GetValue(IsInheritedProperty);
+            set => SetValue(IsInheritedProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the <see cref="IsInherited"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsInheritedProperty = DependencyProperty.Register(
+            nameof(IsInherited), typeof(bool), typeof(ManaSymbolControl), new PropertyMetadata(false));
     }
 }

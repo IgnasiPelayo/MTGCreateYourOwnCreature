@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Inspector"
+             xmlns:mana="clr-namespace:MTGCreateYourOwnCreature.View.Controls.Mana"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
     <Grid Margin="5">
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -36,7 +38,8 @@
             </Border.Style>
 
             <Grid>
-                <TextBox Text="{Binding ResolvedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox x:Name="ValueTextBox"
+                         Text="{Binding ResolvedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsReadOnly="{Binding IsReadOnly}"
                          TextWrapping="Wrap"
                          AcceptsReturn="True"
@@ -63,7 +66,92 @@
             </Grid>
         </Border>
 
-        <CheckBox Grid.Row="2"
+        <WrapPanel Grid.Row="2" 
+                   Margin="0,5,0,0" 
+                   Orientation="Horizontal">
+
+            <WrapPanel.Style>
+                <Style TargetType="WrapPanel">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ShowTagPicker, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True"/>
+                                <Condition Binding="{Binding OverridesValue}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                    
+                </Style>
+            </WrapPanel.Style>
+
+            <WrapPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0,0,4,4"/>
+                    <Setter Property="Padding" Value="5,2"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Background" Value="#333333"/>
+                    <Setter Property="Foreground" Value="#EFEFEF"/>
+                    <Setter Property="BorderBrush" Value="#555555"/>
+                </Style>
+            </WrapPanel.Resources>
+
+            <Button Tag="{}{W}" Click="OnTabButtonClicked" ToolTip="White Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="{StaticResource WhiteManaBrush}" Value=""/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{U}" Click="OnTabButtonClicked" ToolTip="Blue Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="{StaticResource BlueManaBrush}" Value=""/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{B}" Click="OnTabButtonClicked" ToolTip="Black Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="{StaticResource BlackManaBrush}" Value=""/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{R}" Click="OnTabButtonClicked" ToolTip="Red Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="{StaticResource RedManaBrush}" Value=""/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{G}" Click="OnTabButtonClicked" ToolTip="Green Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="{StaticResource GreenManaBrush}" Value=""/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{1}" Click="OnTabButtonClicked" ToolTip="Colorless Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="LightGray" Value="1"/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{X}" Click="OnTabButtonClicked" ToolTip="Variable Mana" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="LightGray" Value="X"/>
+                </Viewbox>
+            </Button>
+
+            <Button Tag="{}{T}" Click="OnTabButtonClicked" ToolTip="Tap Symbol" Style="{StaticResource RoundedButton}">
+                <Viewbox Width="15" Height="15">
+                    <mana:ManaSymbolControl Brush="{StaticResource TapBrush}" Value=""/>
+                </Viewbox>
+            </Button>
+            
+            <Button Content="Name" Tag="{}{Name}" Click="OnTabButtonClicked" ToolTip="Card Name" Style="{StaticResource RoundedButton}"/>
+
+        </WrapPanel>
+
+        <CheckBox Grid.Row="3"
                   Margin="0,5,0,0"
                   IsChecked="{Binding OverridesValue}"
                   Style="{StaticResource RoundedCheckBox}">
@@ -79,7 +167,7 @@
             </CheckBox.Content>
         </CheckBox>
 
-        <Border Grid.Row="3"
+        <Border Grid.Row="4"
                 Margin="0,5,0,0">
 
             <Border.Style>

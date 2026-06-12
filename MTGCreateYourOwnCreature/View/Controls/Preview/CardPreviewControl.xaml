@@ -141,12 +141,9 @@
 
                             <TextBlock x:Name="DescriptionTextBlock"
                                        FontSize="30"
+                                       LineHeight="25"
                                        Padding="10,0"
-                                       TextWrapping="Wrap">
-                                
-                                <Run Text="{Binding ResolvedKeywords, Mode=OneWay}"/><Run Text="{Binding Description.ResolvedValue}"/>
-
-                            </TextBlock>
+                                       TextWrapping="Wrap"/>
 
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
@@ -188,6 +185,7 @@
                                            FontStyle="Italic"
                                            Padding="10,0"
                                            FontSize="38"
+                                           LineHeight="30"
                                            FontFamily="Gabriola"/>
                             </Grid>
                         </Grid>
